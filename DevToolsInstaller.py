@@ -467,6 +467,11 @@ TOOLS_REGISTRY: Dict[str, Dict[str, Dict[str, str]]] = {
             "url": "https://github.com/github/copilot-cli",
             "note": "Extension για το GitHub CLI."
         },
+        "Antigravity": {
+            "id": "Google.Antigravity",
+            "url": "https://antigravity.google/download",
+            "note": "Η agent-first πλατφόρμα ανάπτυξης της Google για AI coding."
+        },
     },
     "Productivity": {
         "PowerToys": {
@@ -623,6 +628,7 @@ STACKS = {
         "Spotify",
         "Microsoft 365",
         "WhatsApp",
+        "Viber",
     ],
     "React / Web": [
         "Node.js (LTS)",
@@ -669,6 +675,7 @@ STACKS = {
         "Claude Code (CLI)",
         "Cursor IDE",
         "OpenCode",
+        "Antigravity",
         "Git",
         "GitHub CLI (gh)",
         "Windows Terminal",
@@ -1142,36 +1149,17 @@ class ScrollableFrame(tk.Frame):
 
         self.canvas.bind("<Configure>", self._on_canvas_configure)
         
-        # Mouse wheel support - Use add="+" to avoid clobbering other bindings
-        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel, add="+")
+        # Mouse wheel support - localized to this widget
+        self.canvas.bind("<Enter>", lambda _: self.canvas.bind_all("<MouseWheel>", self._on_mousewheel))
+        self.canvas.bind("<Leave>", lambda _: self.canvas.unbind_all("<MouseWheel>"))
 
     def _on_canvas_configure(self, event):
         # Update the width of the inner frame to match the canvas
         self.canvas.itemconfig(self.canvas_window, width=event.width)
 
     def _on_mousewheel(self, event):
-        # Only scroll if this specific instance is mapped (visible in the UI)
-        if not self.winfo_ismapped():
-            return
-            
-        # Check if the mouse is actually over this widget or its children
-        x, y = self.winfo_pointerxy()
-        target = self.winfo_containing(x, y)
-        
-        # If target is None or not a descendant of this widget, don't scroll
-        is_descendant = False
-        curr = target
-        while curr:
-            if curr == self:
-                is_descendant = True
-                break
-            try:
-                curr = self.nametowidget(curr.winfo_parent())
-            except:
-                break
-        
-        if is_descendant:
-            self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        # Simplified: if we're here, the listener is active only for this widget
+        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
 
 class ToolCard(tk.Frame):
@@ -1299,19 +1287,15 @@ class ToolCard(tk.Frame):
         
         self.config(bg=bg, highlightbackground=border)
         
-        # Recursively update bg for all children that support it
-        def _update_bg(widget):
-            try:
-                if not isinstance(widget, ToggleSwitch): # ToggleSwitch handles its own bg
-                    widget.config(bg=bg)
-            except:
-                pass
-            for child in widget.winfo_children():
-                _update_bg(child)
-
-        _update_bg(self)
-        
-        # Specific overrides
+        # Streamlined update: only target widgets that definitely need it
+        self.header_frame.config(bg=bg)
+        self.name_label.config(bg=bg)
+        self.link_btn.config(bg=bg)
+        self.id_label.config(bg=bg)
+        if hasattr(self, "note_label"):
+            self.note_label.config(bg=bg)
+        self.actions_frame.config(bg=bg)
+        self.status_dot.config(bg=bg)
         self.toggle.config(bg=bg)
         if hasattr(self.toggle, "canvas"):
             self.toggle.canvas.config(bg=bg)
@@ -1341,6 +1325,8 @@ class ModernInstaller(tk.Tk):
         self.cards: List[ToolCard] = []
         self.install_queue: queue.Queue = queue.Queue()
         self.is_installing = False
+        self._search_after_id: Optional[str] = None
+        self._resize_after_id: Optional[str] = None
 
         self._setup_styles()
         self._init_ui()
@@ -1387,7 +1373,10 @@ class ModernInstaller(tk.Tk):
         scrollable_frame = scroll_area.scrollable_frame
 
         def _on_resize(event):
-            _reposition_cards(event.width)
+            # Debounce resize: wait 200ms after resizing stops
+            if self._resize_after_id:
+                self.after_cancel(self._resize_after_id)
+            self._resize_after_id = self.after(200, lambda: _reposition_cards(event.width))
 
         scroll_area.canvas.bind("<Configure>", _on_resize, add="+")
 
@@ -1659,6 +1648,12 @@ class ModernInstaller(tk.Tk):
         pass
 
     def _on_search(self, *args):
+        # Debounce search: wait 300ms after last keystroke
+        if self._search_after_id:
+            self.after_cancel(self._search_after_id)
+        self._search_after_id = self.after(300, self._execute_search)
+
+    def _execute_search(self):
         try:
             query = self.search_var.get().lower()
         except:
