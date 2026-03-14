@@ -21,13 +21,6 @@ This project began as a personal solution to a recurring problem: after every fo
 - **Modern UI/UX** — Responsive grid‑based interface with dark/light themes, custom widgets, and smooth scrolling.
 - **European Focus** — Includes high‑quality European and open‑source alternatives (Vivaldi, Proton, pCloud, etc.) with emphasis on privacy.
 
-## Screenshots
-
-*Replace the image placeholders with your actual screenshots.*
-
-| Main Dashboard | Stacks View | Backup/Restore |
-| :---: | :---: | :---: |
-| ![Dashboard](https://via.placeholder.com/300x200?text=Dashboard) | ![Stacks](https://via.placeholder.com/300x200?text=Stacks) | ![Backup](https://via.placeholder.com/300x200?text=Backup) |
 
 ## Why the Greek Language?
 
