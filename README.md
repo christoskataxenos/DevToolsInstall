@@ -17,7 +17,11 @@ This project began as a personal solution to a recurring problem: after every fo
 
 - **Automated Installation** — Uses `winget` for silent, reliable installation of 100+ developer tools and essential applications.
 - **Environment Stacks** — Predefined bundles (Python/AI, React/Web, DevOps, etc.) for one‑click environment setup.
-- **Settings Backup & Restore** — Save and restore settings for VS Code, Cursor, Windsurf, and other popular tools.
+- **Settings Backup & Restore** — Save and restore settings for VS Code, Cursor, Windsurf, Antigravity, and other popular tools.
+  - **Selective Backup** — Choose exactly which items to backup via an interactive dialog.
+  - **Extension Backup** — Backs up VS Code extension list and Antigravity .vsix files.
+  - **Auto‑Restore Extensions** — Automatically reinstalls VS Code extensions during restore.
+  - **Smart Exclusions** — Automatically skips Cache, chat-plans, and other non‑essential data.
 - **Modern UI/UX** — Responsive grid‑based interface with dark/light themes, custom widgets, and smooth scrolling.
 - **European Focus** — Includes high‑quality European and open‑source alternatives (Vivaldi, Proton, pCloud, etc.) with emphasis on privacy.
 
@@ -70,7 +74,11 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 - **Αυτοματοποιημένη Εγκατάσταση** — Χρησιμοποιεί `winget` για αθόρυβη και αξιόπιστη εγκατάσταση 100+ εργαλείων.
 - **Environment Stacks** — Προκαθορισμένα πακέτα (Python/AI, React/Web, DevOps κ.λπ.) για setup με ένα κλικ.
-- **Backup & Επαναφορά Ρυθμίσεων** — Αποθήκευση και επαναφορά ρυθμίσεων για VS Code, Cursor, Windsurf κ.ά.
+- **Backup & Επαναφορά Ρυθμίσεων** — Αποθήκευση και επαναφορά ρυθμίσεων για VS Code, Cursor, Windsurf, Antigravity κ.ά.
+  - **Επιλεκτικό Backup** — Επιλέξτε ακριβώς τι να αποθηκεύσετε μέσω διαδραστικού dialog.
+  - **Backup Επεκτάσεων** — Αποθηκεύει τη λίστα επεκτάσεων VS Code και τα .vsix αρχεία Antigravity.
+  - **Αυτόματη Επανεγκατάσταση** — Επανεγκαθιστά αυτόματα τις επεκτάσεις VS Code κατά την επαναφορά.
+  - **Έξυπνες Εξαιρέσεις** — Παραλείπει αυτόματα τα Cache, chat-plans και άλλα μη απαραίτητα δεδομένα.
 - **Σύγχρονο UI/UX** — Responsive διεπαφή με dark/light theme και custom widgets.
 - **Έμφαση στην Ευρώπη** — Ευρωπαϊκές και open‑source εναλλακτικές με έμφαση στην ιδιωτικότητα.
 

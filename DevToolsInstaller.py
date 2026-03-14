@@ -37,589 +37,589 @@ TOOLS_REGISTRY: Dict[str, Dict[str, Dict[str, str]]] = {
         "Google Chrome": {
             "id": "Google.Chrome",
             "url": "https://www.google.com/chrome/",
-            "note": "Ο πιο δημοφιλής περιηγητής ιστού από την Google."
+            "note": "Ο πιο δημοφιλής περιηγητής ιστού από την Google.",
         },
         "Mozilla Firefox": {
             "id": "Mozilla.Firefox",
             "url": "https://www.mozilla.org/firefox/",
-            "note": "Περιηγητής ιστού με έμφαση στην ιδιωτικότητα και τον ανοιχτό κώδικα."
+            "note": "Περιηγητής ιστού με έμφαση στην ιδιωτικότητα και τον ανοιχτό κώδικα.",
         },
         "Brave Browser": {
             "id": "Brave.Brave",
             "url": "https://brave.com/",
-            "note": "Περιηγητής που εστιάζει στην ταχύτητα και τον αποκλεισμό διαφημίσεων."
+            "note": "Περιηγητής που εστιάζει στην ταχύτητα και τον αποκλεισμό διαφημίσεων.",
         },
         "Vivaldi Browser": {
             "id": "Vivaldi.Vivaldi",
             "url": "https://vivaldi.com/",
-            "note": "Ευρωπαϊκός περιηγητής με απαράμιλλη δυνατότητα παραμετροποίησης."
+            "note": "Ευρωπαϊκός περιηγητής με απαράμιλλη δυνατότητα παραμετροποίησης.",
         },
     },
     "Office & Documents": {
         "Microsoft 365": {
             "id": "Microsoft.Office",
             "url": "https://www.office.com/",
-            "note": "Η σουίτα εφαρμογών γραφείου της Microsoft (Word, Excel, κλπ)."
+            "note": "Η σουίτα εφαρμογών γραφείου της Microsoft (Word, Excel, κλπ).",
         },
         "Apache OpenOffice": {
             "id": "Apache.OpenOffice",
             "url": "https://www.openoffice.org/",
-            "note": "Κλασική ανοιχτού κώδικα σουίτα εφαρμογών γραφείου."
+            "note": "Κλασική ανοιχτού κώδικα σουίτα εφαρμογών γραφείου.",
         },
         "LibreOffice": {
             "id": "TheDocumentFoundation.LibreOffice",
             "url": "https://www.libreoffice.org/",
-            "note": "Η πιο ισχυρή δωρεάν και ανοιχτού κώδικα σουίτα γραφείου."
+            "note": "Η πιο ισχυρή δωρεάν και ανοιχτού κώδικα σουίτα γραφείου.",
         },
         "ONLYOFFICE": {
             "id": "ONLYOFFICE.DesktopEditors",
             "url": "https://www.onlyoffice.com/",
-            "note": "Ευρωπαϊκή σουίτα γραφείου με υψηλή συμβατότητα με αρχεία MS Office."
+            "note": "Ευρωπαϊκή σουίτα γραφείου με υψηλή συμβατότητα με αρχεία MS Office.",
         },
     },
     "Communication": {
         "Discord": {
             "id": "Discord.Discord",
             "url": "https://discord.com/",
-            "note": "Πλατφόρμα επικοινωνίας για κοινότητες και gamers."
+            "note": "Πλατφόρμα επικοινωνίας για κοινότητες και gamers.",
         },
         "WhatsApp": {
             "id": "WhatsApp.WhatsApp",
             "url": "https://www.whatsapp.com/",
-            "note": "Δημοφιλής εφαρμογή για μηνύματα και κλήσεις."
+            "note": "Δημοφιλής εφαρμογή για μηνύματα και κλήσεις.",
         },
         "Telegram": {
             "id": "Telegram.TelegramDesktop",
             "url": "https://telegram.org/",
-            "note": "Γρήγορη και ασφαλής εφαρμογή μηνυμάτων, ευρωπαϊκής προέλευσης."
+            "note": "Γρήγορη και ασφαλής εφαρμογή μηνυμάτων, ευρωπαϊκής προέλευσης.",
         },
         "Element": {
             "id": "Element.Element",
             "url": "https://element.io/",
-            "note": "Ανοιχτού κώδικα εφαρμογή επικοινωνίας βασισμένη στο πρωτόκολλο Matrix."
+            "note": "Ανοιχτού κώδικα εφαρμογή επικοινωνίας βασισμένη στο πρωτόκολλο Matrix.",
         },
         "Zoom": {
             "id": "Zoom.Zoom",
             "url": "https://zoom.us/",
-            "note": "Πλατφόρμα για βιντεοκλήσεις και τηλεδιασκέψεις."
+            "note": "Πλατφόρμα για βιντεοκλήσεις και τηλεδιασκέψεις.",
         },
         "Webex": {
             "id": "Cisco.Webex",
             "url": "https://www.webex.com/",
-            "note": "Επαγγελματικό εργαλείο για συναντήσεις και συνεργασία."
+            "note": "Επαγγελματικό εργαλείο για συναντήσεις και συνεργασία.",
         },
         "Slack": {
             "id": "SlackTechnologies.Slack",
             "url": "https://slack.com/",
-            "note": "Η standard εφαρμογή επικοινωνίας για ομάδες εργασίας."
+            "note": "Η standard εφαρμογή επικοινωνίας για ομάδες εργασίας.",
         },
         "Viber": {
             "id": "Rakuten.Viber",
             "url": "https://www.viber.com/",
-            "note": "Δημοφιλής εφαρμογή για δωρεάν μηνύματα και κλήσεις παγκοσμίως."
+            "note": "Δημοφιλής εφαρμογή για δωρεάν μηνύματα και κλήσεις παγκοσμίως.",
         },
     },
     "Media & Entertainment": {
         "VLC media player": {
             "id": "VideoLAN.VLC",
             "url": "https://www.videolan.org/",
-            "note": "Universal player για κάθε είδους αρχείο βίντεο και ήχου."
+            "note": "Universal player για κάθε είδους αρχείο βίντεο και ήχου.",
         },
         "Spotify": {
             "id": "Spotify.Spotify",
             "url": "https://www.spotify.com/",
-            "note": "Η κορυφαία υπηρεσία streaming μουσικής."
+            "note": "Η κορυφαία υπηρεσία streaming μουσικής.",
         },
         "K-Lite Codec Pack": {
             "id": "CodecGuide.K-LiteCodecPack.Full",
             "url": "https://codecguide.com/",
-            "note": "Συλλογή από codecs για αναπαραγωγή οποιασδήποτε ταινίας."
+            "note": "Συλλογή από codecs για αναπαραγωγή οποιασδήποτε ταινίας.",
         },
         "Steam": {
             "id": "Valve.Steam",
             "url": "https://store.steampowered.com/",
-            "note": "Η μεγαλύτερη πλατφόρμα διανομής παιχνιδιών."
+            "note": "Η μεγαλύτερη πλατφόρμα διανομής παιχνιδιών.",
         },
     },
     "System & Cloud": {
         "7-Zip": {
             "id": "7zip.7zip",
             "url": "https://www.7-zip.org/",
-            "note": "Κορυφαίο εργαλείο για συμπίεση και αποσυμπίεση αρχείων."
+            "note": "Κορυφαίο εργαλείο για συμπίεση και αποσυμπίεση αρχείων.",
         },
         "pCloud": {
             "id": "pCloudAG.pCloudDrive",
             "url": "https://www.pcloud.com/",
-            "note": "Ασφαλής ευρωπαϊκή υπηρεσία cloud storage (Ελβετία)."
+            "note": "Ασφαλής ευρωπαϊκή υπηρεσία cloud storage (Ελβετία).",
         },
         "Proton Drive": {
             "id": "Proton.ProtonDrive",
             "url": "https://proton.me/drive",
-            "note": "Πλήρως κρυπτογραφημένο cloud storage από την Proton (Ελβετία)."
+            "note": "Πλήρως κρυπτογραφημένο cloud storage από την Proton (Ελβετία).",
         },
         "Nextcloud Desktop": {
             "id": "Nextcloud.NextcloudDesktop",
             "url": "https://nextcloud.com/",
-            "note": "Ανοιχτού κώδικα πλατφόρμα για προσωπικό cloud και συγχρονισμό."
+            "note": "Ανοιχτού κώδικα πλατφόρμα για προσωπικό cloud και συγχρονισμό.",
         },
         "Google Earth Pro": {
             "id": "Google.EarthPro",
             "url": "https://www.google.com/earth/",
-            "note": "Εξερευνήστε τον κόσμο με τρισδιάστατες δορυφορικές εικόνες."
+            "note": "Εξερευνήστε τον κόσμο με τρισδιάστατες δορυφορικές εικόνες.",
         },
         "Everything": {
             "id": "voidtools.Everything",
             "url": "https://www.voidtools.com/",
-            "note": "Άμεση αναζήτηση αρχείων στο σύστημα."
+            "note": "Άμεση αναζήτηση αρχείων στο σύστημα.",
         },
     },
     "Privacy & Security": {
         "ProtonVPN": {
             "id": "Proton.ProtonVPN",
             "url": "https://protonvpn.com/",
-            "note": "Ασφαλές και γρήγορο VPN από την Proton."
+            "note": "Ασφαλές και γρήγορο VPN από την Proton.",
         },
         "Proton Mail": {
             "id": "Proton.ProtonMail",
             "url": "https://proton.me/mail",
-            "note": "Η κορυφαία υπηρεσία κρυπτογραφημένου email παγκοσμίως."
+            "note": "Η κορυφαία υπηρεσία κρυπτογραφημένου email παγκοσμίως.",
         },
     },
     "IDEs & Editors": {
         "VS Code": {
             "id": "Microsoft.VisualStudioCode",
             "url": "https://code.visualstudio.com/",
-            "note": "Ο πιο δημοφιλής open-source editor από την Microsoft."
+            "note": "Ο πιο δημοφιλής open-source editor από την Microsoft.",
         },
         "VS Code Insiders": {
             "id": "Microsoft.VisualStudioCode.Insiders",
             "url": "https://code.visualstudio.com/insiders/",
-            "note": "Η έκδοση προεπισκόπησης του VS Code με νέες δυνατότητες."
+            "note": "Η έκδοση προεπισκόπησης του VS Code με νέες δυνατότητες.",
         },
         "PyCharm Community": {
             "id": "JetBrains.PyCharm.Community",
             "url": "https://www.jetbrains.com/pycharm/",
-            "note": "Πανίσχυρο IDE για Python ανάπτυξη."
+            "note": "Πανίσχυρο IDE για Python ανάπτυξη.",
         },
         "Android Studio": {
             "id": "Google.AndroidStudio",
             "url": "https://developer.android.com/studio",
-            "note": "Το επίσημο IDE για ανάπτυξη εφαρμογών Android."
+            "note": "Το επίσημο IDE για ανάπτυξη εφαρμογών Android.",
         },
         "Arduino IDE": {
             "id": "Arduino.IDE.2",
             "url": "https://www.arduino.cc/en/software",
-            "note": "Περιβάλλον προγραμματισμού για Arduino και hardware."
+            "note": "Περιβάλλον προγραμματισμού για Arduino και hardware.",
         },
         "Notepad++": {
             "id": "Notepad++.Notepad++",
             "url": "https://notepad-plus-plus.org/",
-            "note": "Ελαφρύς και ταχύτατος text editor."
+            "note": "Ελαφρύς και ταχύτατος text editor.",
         },
         "Dev-C++": {
             "id": "Embarcadero.Dev-CPP",
             "url": "https://sourceforge.net/projects/orwelldevcpp/",
-            "note": "Κλασικό IDE για C/C++ (TDM-GCC)."
+            "note": "Κλασικό IDE για C/C++ (TDM-GCC).",
         },
     },
     "Version Control": {
         "Git": {
-            "id": "Git.Git", 
+            "id": "Git.Git",
             "url": "https://git-scm.com/",
-            "note": "Το standard σύστημα ελέγχου εκδόσεων."
+            "note": "Το standard σύστημα ελέγχου εκδόσεων.",
         },
         "GitHub Desktop": {
             "id": "GitHub.GitHubDesktop",
             "url": "https://desktop.github.com/",
-            "note": "Γραφικό περιβάλλον για την διαχείριση Git repos."
+            "note": "Γραφικό περιβάλλον για την διαχείριση Git repos.",
         },
         "GitHub CLI (gh)": {
-            "id": "GitHub.cli", 
+            "id": "GitHub.cli",
             "url": "https://cli.github.com/",
-            "note": "Εργαλείο γραμμής εντολών για το GitHub."
+            "note": "Εργαλείο γραμμής εντολών για το GitHub.",
         },
         "lazygit": {
             "id": "JesseDuffield.lazygit",
             "url": "https://github.com/jesseduffield/lazygit",
-            "note": "Τερματικό περιβάλλον (TUI) για Git."
+            "note": "Τερματικό περιβάλλον (TUI) για Git.",
         },
         "Git LFS": {
             "id": "GitHub.GitLFS",
             "url": "https://git-lfs.github.com/",
-            "note": "Διαχείριση μεγάλων αρχείων στο Git."
+            "note": "Διαχείριση μεγάλων αρχείων στο Git.",
         },
     },
     "Runtimes & Languages": {
         "Node.js (LTS)": {
-            "id": "OpenJS.NodeJS.LTS", 
+            "id": "OpenJS.NodeJS.LTS",
             "url": "https://nodejs.org/",
-            "note": "JavaScript runtime για server-side ανάπτυξη."
+            "note": "JavaScript runtime για server-side ανάπτυξη.",
         },
         "Python 3.14": {
-            "id": "Python.Python.3.14", 
+            "id": "Python.Python.3.14",
             "url": "https://www.python.org/",
-            "note": "Η τελευταία έκδοση της γλώσσας Python."
+            "note": "Η τελευταία έκδοση της γλώσσας Python.",
         },
         "Go": {
-            "id": "Google.Go", 
+            "id": "Google.Go",
             "url": "https://go.dev/",
-            "note": "Η γλώσσα προγραμματισμού της Google."
+            "note": "Η γλώσσα προγραμματισμού της Google.",
         },
         "TDM-GCC": {
             "id": "jmeubank.tdm-gcc",
             "url": "https://jmeubank.github.io/tdm-gcc/",
-            "note": "Compiler suite για C/C++ στα Windows."
+            "note": "Compiler suite για C/C++ στα Windows.",
         },
         "MSYS2": {
-            "id": "MSYS2.MSYS2", 
+            "id": "MSYS2.MSYS2",
             "url": "https://www.msys2.org/",
-            "note": "Περιβάλλον Unix-like για Windows ανάπτυξη."
+            "note": "Περιβάλλον Unix-like για Windows ανάπτυξη.",
         },
         "Rust (rustup)": {
             "id": "Rustlang.Rustup",
             "url": "https://rustup.rs/",
-            "note": "Installer για την γλώσσα Rust."
+            "note": "Installer για την γλώσσα Rust.",
         },
         "Zig": {
-            "id": "zig.zig", 
+            "id": "zig.zig",
             "url": "https://ziglang.org/",
-            "note": "Σύγχρονη και ασφαλής γλώσσα επιπέδου συστήματος."
+            "note": "Σύγχρονη και ασφαλής γλώσσα επιπέδου συστήματος.",
         },
         "Bun": {
-            "id": "Oven-sh.Bun", 
+            "id": "Oven-sh.Bun",
             "url": "https://bun.sh/",
-            "note": "Ταχύτατο JavaScript runtime & package manager."
+            "note": "Ταχύτατο JavaScript runtime & package manager.",
         },
         "Deno": {
-            "id": "DenoLand.Deno", 
+            "id": "DenoLand.Deno",
             "url": "https://deno.land/",
-            "note": "Ασφαλές runtime για JavaScript και TypeScript."
+            "note": "Ασφαλές runtime για JavaScript και TypeScript.",
         },
         "Java 21 (Temurin)": {
             "id": "EclipseAdoptium.Temurin.21.JDK",
             "url": "https://adoptium.net/",
-            "note": "Open source διανομή της Java (JDK)."
+            "note": "Open source διανομή της Java (JDK).",
         },
     },
     "Package Managers": {
         "Chocolatey": {
-            "id": "Chocolatey.Chocolatey", 
+            "id": "Chocolatey.Chocolatey",
             "url": "https://chocolatey.org/",
-            "note": "Package manager για Windows παρόμοιο με το apt."
+            "note": "Package manager για Windows παρόμοιο με το apt.",
         },
         "uv (Fast Python)": {
             "id": "astral-sh.uv",
             "url": "https://github.com/astral-sh/uv",
-            "note": "Ταχύτατος Python package & project manager."
+            "note": "Ταχύτατος Python package & project manager.",
         },
         "pnpm": {
-            "id": "pnpm.pnpm", 
+            "id": "pnpm.pnpm",
             "url": "https://pnpm.io/",
-            "note": "Αποδοτικός Node package manager με symlinks."
+            "note": "Αποδοτικός Node package manager με symlinks.",
         },
     },
     "Database Tools": {
         "DB Browser (SQLite)": {
             "id": "DBBrowserForSQLite.DBBrowserForSQLite",
             "url": "https://sqlitebrowser.org/",
-            "note": "Γραφικό περιβάλλον για βάσεις δεδομένων SQLite."
+            "note": "Γραφικό περιβάλλον για βάσεις δεδομένων SQLite.",
         },
         "DBeaver Community": {
-            "id": "dbeaver.dbeaver", 
+            "id": "dbeaver.dbeaver",
             "url": "https://dbeaver.io/",
-            "note": "Universal database manager για όλες τις βάσεις."
+            "note": "Universal database manager για όλες τις βάσεις.",
         },
     },
     "Virtualization": {
         "Docker Desktop": {
             "id": "Docker.DockerDesktop",
             "url": "https://www.docker.com/",
-            "note": "Διαχείριση containers για ανάπτυξη εφαρμογών."
+            "note": "Διαχείριση containers για ανάπτυξη εφαρμογών.",
         },
         "VMware Player": {
             "id": "VMware.WorkstationPlayer",
             "url": "https://www.vmware.com/",
-            "note": "Δωρεάν virtualization για εκτέλεση εικονικών μηχανών."
+            "note": "Δωρεάν virtualization για εκτέλεση εικονικών μηχανών.",
         },
         "WSL": {
             "id": "Microsoft.WSL",
             "url": "https://learn.microsoft.com/en-us/windows/wsl/",
-            "note": "Υποσύστημα Linux μέσα στα Windows."
+            "note": "Υποσύστημα Linux μέσα στα Windows.",
         },
     },
     "Hardware & AI": {
         "Raspberry Pi Imager": {
             "id": "RaspberryPi.RaspberryPiImager",
             "url": "https://www.raspberrypi.com/software/",
-            "note": "Εργαλείο εγγραφής OS σε SD κάρτες για Raspberry Pi."
+            "note": "Εργαλείο εγγραφής OS σε SD κάρτες για Raspberry Pi.",
         },
         "Logisim Evolution": {
             "id": "Logisim-Evolution.Logisim-Evolution",
             "url": "https://github.com/logisim-evolution/logisim-evolution",
-            "note": "Προσομοιωτής ψηφιακών κυκλωμάτων."
+            "note": "Προσομοιωτής ψηφιακών κυκλωμάτων.",
         },
         "LM Studio": {
-            "id": "LMStudio.LMStudio", 
+            "id": "LMStudio.LMStudio",
             "url": "https://lmstudio.ai/",
-            "note": "Τοπική εκτέλεση μεγάλων γλωσσικών μοντέλων (LLMs)."
+            "note": "Τοπική εκτέλεση μεγάλων γλωσσικών μοντέλων (LLMs).",
         },
     },
     "System & Shell": {
         "Windows Terminal": {
             "id": "Microsoft.WindowsTerminal",
             "url": "https://aka.ms/terminal",
-            "note": "Σύγχρονο τερματικό για command line εργαλεία."
+            "note": "Σύγχρονο τερματικό για command line εργαλεία.",
         },
         "Oh My Posh": {
-            "id": "JanDeDobbeleer.OhMyPosh", 
+            "id": "JanDeDobbeleer.OhMyPosh",
             "url": "https://ohmyposh.dev/",
-            "note": "Engine για πανέμορφα prompt στα shells."
+            "note": "Engine για πανέμορφα prompt στα shells.",
         },
         "zoxide": {
             "id": "ajeetdsouza.zoxide",
             "url": "https://github.com/ajeetdsouza/zoxide",
-            "note": "Έξυπνη εντολή cd που μαθαίνει τις συνήθειές σας."
+            "note": "Έξυπνη εντολή cd που μαθαίνει τις συνήθειές σας.",
         },
         "PowerShell 7": {
             "id": "Microsoft.PowerShell",
             "url": "https://github.com/PowerShell/PowerShell",
-            "note": "Η τελευταία έκδοση του PowerShell."
+            "note": "Η τελευταία έκδοση του PowerShell.",
         },
         "PuTTY": {
-            "id": "PuTTY.PuTTY", 
+            "id": "PuTTY.PuTTY",
             "url": "https://www.putty.org/",
-            "note": "SSH και Telnet client για Windows."
+            "note": "SSH και Telnet client για Windows.",
         },
         "fastfetch": {
             "id": "fastfetch-cli.fastfetch",
             "url": "https://github.com/fastfetch-cli/fastfetch",
-            "note": "Εργαλείο πληροφοριών συστήματος."
+            "note": "Εργαλείο πληροφοριών συστήματος.",
         },
         "FileZilla": {
             "id": "FileZilla.FileZilla",
             "url": "https://filezilla-project.org/",
-            "note": "Κλασικός FTP/SFTP client."
+            "note": "Κλασικός FTP/SFTP client.",
         },
         "Warp Terminal": {
             "id": "Warp.Warp",
             "url": "https://www.warp.dev/",
-            "note": "Σύγχρονο AI-powered τερματικό."
+            "note": "Σύγχρονο AI-powered τερματικό.",
         },
         "Starship Prompt": {
             "id": "Starship.Starship",
             "url": "https://starship.rs/",
-            "note": "Customizable και γρήγορο shell prompt."
+            "note": "Customizable και γρήγορο shell prompt.",
         },
         "bat": {
             "id": "sharkdp.bat",
             "url": "https://github.com/sharkdp/bat",
-            "note": "Βελτιωμένη έκδοση της εντολής cat με syntax highlighting."
+            "note": "Βελτιωμένη έκδοση της εντολής cat με syntax highlighting.",
         },
         "ripgrep": {
             "id": "BurntSushi.ripgrep.MSVC",
             "url": "https://github.com/BurntSushi/ripgrep",
-            "note": "Ταχύτατη αναζήτηση κειμένου σε αρχεία."
+            "note": "Ταχύτατη αναζήτηση κειμένου σε αρχεία.",
         },
         "fd": {
             "id": "sharkdp.fd",
             "url": "https://github.com/sharkdp/fd",
-            "note": "Γρήγορη και φιλική εναλλακτική της εντολής find."
+            "note": "Γρήγορη και φιλική εναλλακτική της εντολής find.",
         },
         "fzf": {
             "id": "junegunn.fzf",
             "url": "https://github.com/junegunn/fzf",
-            "note": "Fuzzy finder για την γραμμή εντολών."
+            "note": "Fuzzy finder για την γραμμή εντολών.",
         },
         "tldr": {
             "id": "tldr-pages.tlrc",
             "url": "https://tldr.sh/",
-            "note": "Συνοπτικά help pages για εντολές τερματικού."
+            "note": "Συνοπτικά help pages για εντολές τερματικού.",
         },
     },
     "AI Coding Assistants": {
         "Claude Code (CLI)": {
             "id": "Anthropic.ClaudeCode",
             "url": "https://claude.com/claude-code",
-            "note": "Agentic τερματικό για AI-assisted προγραμματισμό."
+            "note": "Agentic τερματικό για AI-assisted προγραμματισμό.",
         },
         "Cursor IDE": {
             "id": "Anysphere.Cursor",
             "url": "https://cursor.sh/",
-            "note": "AI-first editor, βασισμένος στον VS Code."
+            "note": "AI-first editor, βασισμένος στον VS Code.",
         },
         "Windsurf IDE": {
             "id": "Codeium.Windsurf",
             "url": "https://codeium.com/windsurf",
-            "note": "Agentic IDE από την ομάδα του Codeium."
+            "note": "Agentic IDE από την ομάδα του Codeium.",
         },
         "OpenCode": {
             "id": "SST.opencode",
             "url": "https://opencode.ai/",
-            "note": "AI coding agent για το τερματικό."
+            "note": "AI coding agent για το τερματικό.",
         },
         "Gemini CLI": {
             "id": "npm install -g @google/gemini-cli",
             "url": "https://github.com/google/gemini-cli",
-            "note": "CLI για το μοντέλο Gemini της Google."
+            "note": "CLI για το μοντέλο Gemini της Google.",
         },
         "GitHub Copilot": {
             "id": "gh extension install github/gh-copilot",
             "url": "https://github.com/github/copilot-cli",
-            "note": "Extension για το GitHub CLI."
+            "note": "Extension για το GitHub CLI.",
         },
         "Antigravity": {
             "id": "Google.Antigravity",
             "url": "https://antigravity.google/download",
-            "note": "Η agent-first πλατφόρμα ανάπτυξης της Google για AI coding."
+            "note": "Η agent-first πλατφόρμα ανάπτυξης της Google για AI coding.",
         },
     },
     "Productivity": {
         "PowerToys": {
-            "id": "Microsoft.PowerToys", 
+            "id": "Microsoft.PowerToys",
             "url": "https://aka.ms/powertoys",
-            "note": "Σχρήσιμα utilities για Windows power users."
+            "note": "Σχρήσιμα utilities για Windows power users.",
         },
         "Fira Code Font": {
             "id": "SoftwareDesign.FiraCode",
             "url": "https://github.com/tonsky/FiraCode",
-            "note": "Γραμματοσειρά με προγραμματιστικά ligatures."
+            "note": "Γραμματοσειρά με προγραμματιστικά ligatures.",
         },
         "Notion": {
-            "id": "Notion.Notion", 
+            "id": "Notion.Notion",
             "url": "https://www.notion.so/",
-            "note": "Πλατφόρμα οργάνωσης σημειώσεων και tasks."
+            "note": "Πλατφόρμα οργάνωσης σημειώσεων και tasks.",
         },
         "Obsidian": {
-            "id": "Obsidian.Obsidian", 
+            "id": "Obsidian.Obsidian",
             "url": "https://obsidian.md/",
-            "note": "Εργαλείο διαχείρισης γνώσης με Markdown."
+            "note": "Εργαλείο διαχείρισης γνώσης με Markdown.",
         },
         "Flameshot": {
             "id": "Flameshot.Flameshot",
             "url": "https://flameshot.org/",
-            "note": "Ευέλικτο εργαλείο για screenshots."
+            "note": "Ευέλικτο εργαλείο για screenshots.",
         },
         "Greenshot": {
             "id": "Greenshot.Greenshot",
             "url": "https://getgreenshot.org/",
-            "note": "Ελαφρύ και ισχυρό εργαλείο για λήψη και επεξεργασία screenshots."
+            "note": "Ελαφρύ και ισχυρό εργαλείο για λήψη και επεξεργασία screenshots.",
         },
     },
     "Remote": {
         "AnyDesk": {
-            "id": "AnyDeskSoftwareGmbH.AnyDesk", 
+            "id": "AnyDeskSoftwareGmbH.AnyDesk",
             "url": "https://anydesk.com/",
-            "note": "Εφαρμογή απομακρυσμένης επιφάνειας εργασίας."
+            "note": "Εφαρμογή απομακρυσμένης επιφάνειας εργασίας.",
         },
         "RealVNC Viewer": {
             "id": "RealVNC.VNCViewer",
             "url": "https://www.realvnc.com/",
-            "note": "Viewer για συνδέσεις VNC."
+            "note": "Viewer για συνδέσεις VNC.",
         },
         "RustDesk": {
-            "id": "RustDesk.RustDesk", 
+            "id": "RustDesk.RustDesk",
             "url": "https://rustdesk.com/",
-            "note": "Open source εναλλακτική του AnyDesk/TeamViewer."
+            "note": "Open source εναλλακτική του AnyDesk/TeamViewer.",
         },
         "TeamViewer": {
             "id": "TeamViewer.TeamViewer",
             "url": "https://www.teamviewer.com/",
-            "note": "Επαγγελματική απομακρυσμένη πρόσβαση και υποστήριξη."
+            "note": "Επαγγελματική απομακρυσμένη πρόσβαση και υποστήριξη.",
         },
     },
     "Design & Media": {
         "Figma": {
-            "id": "Figma.Figma", 
+            "id": "Figma.Figma",
             "url": "https://www.figma.com/",
-            "note": "Εργαλείο design για UI/UX επαγγελματίες."
+            "note": "Εργαλείο design για UI/UX επαγγελματίες.",
         },
         "DaVinci Resolve": {
             "id": "BlackmagicDesign.DaVinciResolve",
             "url": "https://www.blackmagicdesign.com/",
-            "note": "Κορυφαίο πρόγραμμα video editing & color grading."
+            "note": "Κορυφαίο πρόγραμμα video editing & color grading.",
         },
         "OBS Studio": {
-            "id": "OBSProject.OBSStudio", 
+            "id": "OBSProject.OBSStudio",
             "url": "https://obsproject.com/",
-            "note": "Λογισμικό για live streaming και εγγραφή οθόνης."
+            "note": "Λογισμικό για live streaming και εγγραφή οθόνης.",
         },
         "Adobe Cloud": {
-            "id": "Adobe.CreativeCloud", 
+            "id": "Adobe.CreativeCloud",
             "url": "https://www.adobe.com/",
-            "note": "Πρόσβαση στις εφαρμογές της Adobe (Photoshop, κλπ)."
+            "note": "Πρόσβαση στις εφαρμογές της Adobe (Photoshop, κλπ).",
         },
     },
     "C & Systems Dev": {
         "CMake": {
-            "id": "Kitware.CMake", 
+            "id": "Kitware.CMake",
             "url": "https://cmake.org/",
-            "note": "Standard εργαλείο build automation για C/C++."
+            "note": "Standard εργαλείο build automation για C/C++.",
         },
         "Ninja": {
-            "id": "ninja-build.ninja", 
+            "id": "ninja-build.ninja",
             "url": "https://ninja-build.org/",
-            "note": "Ταχύτατο build system με έμφαση στην ταχύτητα."
+            "note": "Ταχύτατο build system με έμφαση στην ταχύτητα.",
         },
         "LLVM / Clang": {
-            "id": "LLVM.LLVM", 
+            "id": "LLVM.LLVM",
             "url": "https://llvm.org/",
-            "note": "Σύγχρονο compiler infrastructure."
+            "note": "Σύγχρονο compiler infrastructure.",
         },
         "Make (GnuWin32)": {
             "id": "GnuWin32.Make",
             "url": "http://gnuwin32.sourceforge.net/",
-            "note": "Το κλασικό εργαλείο Make για Windows."
+            "note": "Το κλασικό εργαλείο Make για Windows.",
         },
     },
     "API & Testing": {
         "Postman": {
-            "id": "Postman.Postman", 
+            "id": "Postman.Postman",
             "url": "https://www.postman.com/",
-            "note": "Η κορυφαία πλατφόρμα για ανάπτυξη και δοκιμή APIs."
+            "note": "Η κορυφαία πλατφόρμα για ανάπτυξη και δοκιμή APIs.",
         },
         "Bruno": {
-            "id": "Bruno.Bruno", 
+            "id": "Bruno.Bruno",
             "url": "https://www.usebruno.com/",
-            "note": "Open-source, local-first API client (ελαφρύς)."
+            "note": "Open-source, local-first API client (ελαφρύς).",
         },
         "Insomnia": {
-            "id": "Insomnia.Insomnia", 
+            "id": "Insomnia.Insomnia",
             "url": "https://insomnia.rest/",
-            "note": "Σχεδιασμός και δοκιμή REST, GraphQL, gRPC APIs."
+            "note": "Σχεδιασμός και δοκιμή REST, GraphQL, gRPC APIs.",
         },
     },
     "Security & Networking": {
         "Wireshark": {
             "id": "WiresharkFoundation.Wireshark",
             "url": "https://www.wireshark.org/",
-            "note": "Αναλυτής πακέτων δικτύου (packet sniffer)."
+            "note": "Αναλυτής πακέτων δικτύου (packet sniffer).",
         },
         "Nmap": {
-            "id": "Insecure.Nmap", 
+            "id": "Insecure.Nmap",
             "url": "https://nmap.org/",
-            "note": "Εργαλείο ανακάλυψης δικτύου και ελέγχου ασφαλείας."
+            "note": "Εργαλείο ανακάλυψης δικτύου και ελέγχου ασφαλείας.",
         },
         "Burp Suite Community": {
             "id": "manual",
             "url": "https://portswigger.net/burp/communitydownload",
-            "note": "Manual λήψη: Εργαλείο ελέγχου ασφαλείας web εφαρμογών."
+            "note": "Manual λήψη: Εργαλείο ελέγχου ασφαλείας web εφαρμογών.",
         },
     },
     "Cloud & DevOps": {
         "Kubectl": {
             "id": "Kubernetes.kubectl",
             "url": "https://kubernetes.io/docs/tasks/tools/",
-            "note": "CLI για την διαχείριση clusters Kubernetes."
+            "note": "CLI για την διαχείριση clusters Kubernetes.",
         },
         "Terraform": {
             "id": "Hashicorp.Terraform",
             "url": "https://www.terraform.io/",
-            "note": "Infrastructure as Code (IaC) από την HashiCorp."
+            "note": "Infrastructure as Code (IaC) από την HashiCorp.",
         },
         "Azure CLI": {
             "id": "Microsoft.AzureCLI",
             "url": "https://docs.microsoft.com/en-us/cli/azure/install-azure-cli",
-            "note": "Εργαλείο γραμμής εντολών για το Microsoft Azure."
+            "note": "Εργαλείο γραμμής εντολών για το Microsoft Azure.",
         },
     },
 }
@@ -712,7 +712,7 @@ STACKS = {
 
 BACKUP_PATHS: Dict[str, str] = {
     "VS Code Settings": os.path.join(os.environ.get("APPDATA", ""), "Code", "User"),
-    "Gemini CLI Data": os.path.join(os.path.expanduser("~"), ".gemini"),
+    "Gemini CLI / Antigravity Rules": os.path.join(os.path.expanduser("~"), ".gemini"),
     "Antigravity Settings": os.path.join(os.environ.get("APPDATA", ""), "Antigravity"),
     "Cursor Settings": os.path.join(os.environ.get("APPDATA", ""), "Cursor", "User"),
     "Windsurf Settings": os.path.join(
@@ -720,6 +720,19 @@ BACKUP_PATHS: Dict[str, str] = {
     ),
     "Warp Config": os.path.join(os.path.expanduser("~"), ".warp"),
 }
+
+BACKUP_EXCLUDE_DIRS = {
+    "Cache",
+    "cache",
+    "node_modules",
+    ".git",
+    "Cache_Data",
+    "chat-plans",
+}
+
+ANTIGRAVITY_EXTENSIONS_PATH = os.path.join(
+    os.environ.get("APPDATA", ""), "Antigravity", "CachedExtensionVSIXs"
+)
 
 
 class ThemeManager:
@@ -842,25 +855,65 @@ class GradientButton(tk.Canvas):
         """Draws a rounded rectangle using arcs and rectangles."""
         fill = kwargs.pop("fill", None)
         outline = kwargs.pop("outline", "")
-        
+
         try:
             # Arcs for corners
-            self.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, 
-                           start=90, extent=90, fill=fill, outline=outline, **kwargs)
-            self.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, 
-                           start=0, extent=90, fill=fill, outline=outline, **kwargs)
-            self.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, 
-                           start=180, extent=90, fill=fill, outline=outline, **kwargs)
-            self.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, 
-                           start=270, extent=90, fill=fill, outline=outline, **kwargs)
+            self.create_arc(
+                x1,
+                y1,
+                x1 + 2 * radius,
+                y1 + 2 * radius,
+                start=90,
+                extent=90,
+                fill=fill,
+                outline=outline,
+                **kwargs,
+            )
+            self.create_arc(
+                x2 - 2 * radius,
+                y1,
+                x2,
+                y1 + 2 * radius,
+                start=0,
+                extent=90,
+                fill=fill,
+                outline=outline,
+                **kwargs,
+            )
+            self.create_arc(
+                x1,
+                y2 - 2 * radius,
+                x1 + 2 * radius,
+                y2,
+                start=180,
+                extent=90,
+                fill=fill,
+                outline=outline,
+                **kwargs,
+            )
+            self.create_arc(
+                x2 - 2 * radius,
+                y2 - 2 * radius,
+                x2,
+                y2,
+                start=270,
+                extent=90,
+                fill=fill,
+                outline=outline,
+                **kwargs,
+            )
         except Exception:
             # Fallback to plain rectangle if arcs fail (e.g. radius too large)
             self.create_rectangle(x1, y1, x2, y2, fill=fill, outline=outline, **kwargs)
             return
 
         # Rectangles for the middle
-        self.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill=fill, outline=outline, **kwargs)
-        self.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill=fill, outline=outline, **kwargs)
+        self.create_rectangle(
+            x1 + radius, y1, x2 - radius, y2, fill=fill, outline=outline, **kwargs
+        )
+        self.create_rectangle(
+            x1, y1 + radius, x2, y2 - radius, fill=fill, outline=outline, **kwargs
+        )
 
     def _on_enter(self, event):
         if self.enabled:
@@ -899,25 +952,35 @@ class ToggleSwitch(tk.Frame):
         self.canvas.delete("all")
         w = self.canvas.winfo_width() if self.canvas.winfo_width() > 1 else 44
         h = self.canvas.winfo_height() if self.canvas.winfo_height() > 1 else 24
-        
+
         # Center the toggle in the canvas
         r = min(w, h) - 4
         bg = COLORS["accent"] if self.var.get() else COLORS["border"]
-        
+
         # Draw track
-        self._rounded_rect(2, 4, w-2, h-4, 8, fill=bg, outline="")
-        
+        self._rounded_rect(2, 4, w - 2, h - 4, 8, fill=bg, outline="")
+
         # Draw knob
         knob_pos = w - h + 2 if self.var.get() else 2
-        self.canvas.create_oval(knob_pos, 2, knob_pos + h - 4, h - 2, fill="white", outline="")
+        self.canvas.create_oval(
+            knob_pos, 2, knob_pos + h - 4, h - 2, fill="white", outline=""
+        )
 
     def _rounded_rect(self, x1, y1, x2, y2, radius, **kwargs):
-        self.canvas.create_arc(x1, y1, x1+2*radius, y1+2*radius, start=90, extent=90, **kwargs)
-        self.canvas.create_arc(x2-2*radius, y1, x2, y1+2*radius, start=0, extent=90, **kwargs)
-        self.canvas.create_arc(x1, y2-2*radius, x1+2*radius, y2, start=180, extent=90, **kwargs)
-        self.canvas.create_arc(x2-2*radius, y2-2*radius, x2, y2, start=270, extent=90, **kwargs)
-        self.canvas.create_rectangle(x1+radius, y1, x2-radius, y2, **kwargs)
-        self.canvas.create_rectangle(x1, y1+radius, x2, y2-radius, **kwargs)
+        self.canvas.create_arc(
+            x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, **kwargs
+        )
+        self.canvas.create_arc(
+            x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, **kwargs
+        )
+        self.canvas.create_arc(
+            x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, **kwargs
+        )
+        self.canvas.create_arc(
+            x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, **kwargs
+        )
+        self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, **kwargs)
+        self.canvas.create_rectangle(x1, y1 + radius, x2, y2 - radius, **kwargs)
 
     def _toggle(self, event=None):
         self.var.set(not self.var.get())
@@ -935,18 +998,21 @@ class ToggleSwitch(tk.Frame):
 
 class CategoryButton(tk.Frame):
     """Modern sidebar button with active state indicator."""
+
     def __init__(self, parent, text, command, **kwargs):
         super().__init__(parent, bg=COLORS["sidebar_bg"], **kwargs)
         self.command = command
         self.text = text
         self.active = False
-        
-        self.canvas = tk.Canvas(self, height=40, highlightthickness=0, bg=COLORS["sidebar_bg"])
+
+        self.canvas = tk.Canvas(
+            self, height=40, highlightthickness=0, bg=COLORS["sidebar_bg"]
+        )
         self.canvas.pack(fill="x")
-        
+
         self.indicator = None
         self.text_id = None
-        
+
         self.canvas.bind("<Enter>", self._on_enter)
         self.canvas.bind("<Leave>", self._on_leave)
         self.canvas.bind("<Button-1>", self._on_click)
@@ -956,14 +1022,18 @@ class CategoryButton(tk.Frame):
         self.canvas.delete("all")
         w = self.canvas.winfo_width()
         h = self.canvas.winfo_height()
-        
+
         bg = COLORS["card_hover"] if self.active else self.canvas.cget("bg")
         indicator_color = COLORS["accent"] if self.active else COLORS["sidebar_bg"]
         text_color = "white" if self.active else COLORS["text"]
-        
+
         # We handle hover bg via config(bg=...) in events, but redraw ensures state is correct
-        self.indicator = self.canvas.create_rectangle(0, 4, 4, h-4, fill=indicator_color, outline="")
-        self.text_id = self.canvas.create_text(20, h // 2, text=self.text, fill=text_color, anchor="w", font=FONTS["body"])
+        self.indicator = self.canvas.create_rectangle(
+            0, 4, 4, h - 4, fill=indicator_color, outline=""
+        )
+        self.text_id = self.canvas.create_text(
+            20, h // 2, text=self.text, fill=text_color, anchor="w", font=FONTS["body"]
+        )
 
     def _on_enter(self, e):
         if not self.active:
@@ -1002,9 +1072,9 @@ class RoundedEntry(tk.Frame):
             relief="flat",
             bd=0,
         )
-        
+
         self.canvas.bind("<Configure>", self._draw)
-        
+
         if placeholder:
             self.entry.insert(0, placeholder)
             self.entry.config(fg=COLORS["text_dim"])
@@ -1015,19 +1085,27 @@ class RoundedEntry(tk.Frame):
         self.canvas.delete("all")
         w = self.canvas.winfo_width()
         h = self.canvas.winfo_height()
-        
+
         self._rounded_rect(
             1, 1, w - 2, h - 2, 8, fill=COLORS["card_bg"], outline=COLORS["border"]
         )
-        
+
         self.entry.place(x=12, y=h // 2, anchor="w", width=w - 24)
 
     def _rounded_rect(self, x1, y1, x2, y2, radius, **kwargs):
         try:
-            self.canvas.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, **kwargs)
-            self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, **kwargs)
-            self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, **kwargs)
-            self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, **kwargs)
+            self.canvas.create_arc(
+                x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, **kwargs
+            )
+            self.canvas.create_arc(
+                x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, **kwargs
+            )
+            self.canvas.create_arc(
+                x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, **kwargs
+            )
+            self.canvas.create_arc(
+                x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, **kwargs
+            )
         except Exception:
             self.canvas.create_rectangle(x1, y1, x2, y2, **kwargs)
         self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, **kwargs)
@@ -1079,11 +1157,11 @@ class StyledButton(tk.Canvas):
         self.delete("all")
         w = self.winfo_width()
         h = self.winfo_height()
-        
+
         bg_color = COLORS["accent"] if self.primary else COLORS["border"]
         if self.hovered and self.enabled:
             bg_color = COLORS["accent_hover"] if self.primary else "#444444"
-        
+
         if not self.enabled:
             bg_color = "#333333" if self.primary else "#222222"
 
@@ -1098,12 +1176,56 @@ class StyledButton(tk.Canvas):
         )
 
     def rounded_rect(self, x1, y1, x2, y2, radius, fill, **kwargs):
-        self.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, fill=fill, outline="", **kwargs)
-        self.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, fill=fill, outline="", **kwargs)
-        self.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, fill=fill, outline="", **kwargs)
-        self.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, fill=fill, outline="", **kwargs)
-        self.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill=fill, outline="", **kwargs)
-        self.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill=fill, outline="", **kwargs)
+        self.create_arc(
+            x1,
+            y1,
+            x1 + 2 * radius,
+            y1 + 2 * radius,
+            start=90,
+            extent=90,
+            fill=fill,
+            outline="",
+            **kwargs,
+        )
+        self.create_arc(
+            x2 - 2 * radius,
+            y1,
+            x2,
+            y1 + 2 * radius,
+            start=0,
+            extent=90,
+            fill=fill,
+            outline="",
+            **kwargs,
+        )
+        self.create_arc(
+            x1,
+            y2 - 2 * radius,
+            x1 + 2 * radius,
+            y2,
+            start=180,
+            extent=90,
+            fill=fill,
+            outline="",
+            **kwargs,
+        )
+        self.create_arc(
+            x2 - 2 * radius,
+            y2 - 2 * radius,
+            x2,
+            y2,
+            start=270,
+            extent=90,
+            fill=fill,
+            outline="",
+            **kwargs,
+        )
+        self.create_rectangle(
+            x1 + radius, y1, x2 - radius, y2, fill=fill, outline="", **kwargs
+        )
+        self.create_rectangle(
+            x1, y1 + radius, x2, y2 - radius, fill=fill, outline="", **kwargs
+        )
 
     def _on_enter(self, event):
         if self.enabled:
@@ -1131,21 +1253,26 @@ class ScrollableFrame(tk.Frame):
     Uses a Canvas to allow scrolling of
     a Frame containing widgets.
     """
+
     def __init__(self, parent, **kwargs):
         bg = kwargs.pop("bg", COLORS["bg"])
         width = kwargs.pop("width", None)
         super().__init__(parent, bg=bg, **kwargs)
 
         self.canvas = tk.Canvas(self, bg=bg, highlightthickness=0, width=width)
-        self.scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.scrollbar = ttk.Scrollbar(
+            self, orient="vertical", command=self.canvas.yview
+        )
         self.scrollable_frame = tk.Frame(self.canvas, bg=bg, width=width)
 
         self.scrollable_frame.bind(
             "<Configure>",
-            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")),
         )
 
-        self.canvas_window = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas_window = self.canvas.create_window(
+            (0, 0), window=self.scrollable_frame, anchor="nw"
+        )
 
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
@@ -1153,9 +1280,12 @@ class ScrollableFrame(tk.Frame):
         self.scrollbar.pack(side="right", fill="y")
 
         self.canvas.bind("<Configure>", self._on_canvas_configure)
-        
+
         # Mouse wheel support - localized to this widget
-        self.canvas.bind("<Enter>", lambda _: self.canvas.bind_all("<MouseWheel>", self._on_mousewheel))
+        self.canvas.bind(
+            "<Enter>",
+            lambda _: self.canvas.bind_all("<MouseWheel>", self._on_mousewheel),
+        )
         self.canvas.bind("<Leave>", lambda _: self.canvas.unbind_all("<MouseWheel>"))
 
     def _on_canvas_configure(self, event):
@@ -1196,7 +1326,7 @@ class ToolCard(tk.Frame):
             bg=COLORS["card_bg"],
             fg=COLORS["text"],
             font=FONTS["body"],
-            anchor="w"
+            anchor="w",
         )
         self.name_label.grid(row=0, column=0, sticky="w")
 
@@ -1221,7 +1351,7 @@ class ToolCard(tk.Frame):
             bg=COLORS["card_bg"],
             fg=COLORS["text_dim"],
             font=FONTS["small"],
-            anchor="w"
+            anchor="w",
         )
         self.id_label.grid(row=1, column=0, sticky="w", padx=10, pady=(0, 2))
 
@@ -1234,7 +1364,7 @@ class ToolCard(tk.Frame):
                 font=FONTS["small"],
                 anchor="w",
                 justify="left",
-                wraplength=260
+                wraplength=260,
             )
             # Give the note room and ensure it breathes
             self.note_label.grid(row=2, column=0, sticky="w", padx=10, pady=(0, 15))
@@ -1287,11 +1417,17 @@ class ToolCard(tk.Frame):
         self._update_style()
 
     def _update_style(self):
-        bg = COLORS["card_hover"] if (self._hovered or self._selected) else COLORS["card_bg"]
-        border = COLORS["accent"] if (self._hovered or self._selected) else COLORS["border"]
-        
+        bg = (
+            COLORS["card_hover"]
+            if (self._hovered or self._selected)
+            else COLORS["card_bg"]
+        )
+        border = (
+            COLORS["accent"] if (self._hovered or self._selected) else COLORS["border"]
+        )
+
         self.config(bg=bg, highlightbackground=border)
-        
+
         # Streamlined update: only target widgets that definitely need it
         self.header_frame.config(bg=bg)
         self.name_label.config(bg=bg)
@@ -1374,14 +1510,16 @@ class ModernInstaller(tk.Tk):
 
         scroll_area = ScrollableFrame(parent)
         scroll_area.pack(fill="both", expand=True)
-        
+
         scrollable_frame = scroll_area.scrollable_frame
 
         def _on_resize(event):
             # Debounce resize: wait 200ms after resizing stops
             if self._resize_after_id:
                 self.after_cancel(self._resize_after_id)
-            self._resize_after_id = self.after(200, lambda: _reposition_cards(event.width))
+            self._resize_after_id = self.after(
+                200, lambda: _reposition_cards(event.width)
+            )
 
         scroll_area.canvas.bind("<Configure>", _on_resize, add="+")
 
@@ -1390,24 +1528,33 @@ class ModernInstaller(tk.Tk):
 
         def _reposition_cards(width=None):
             if width is None:
-                width = scroll_area.canvas.winfo_width() / self.tk.call('tk', 'scaling') * 72 / 96 # Rough DPI compensation
-            
+                width = (
+                    scroll_area.canvas.winfo_width()
+                    / self.tk.call("tk", "scaling")
+                    * 72
+                    / 96
+                )  # Rough DPI compensation
+
             # Simple column calculation
-            card_width = 280 # Fixed target width for cards
+            card_width = 280  # Fixed target width for cards
             columns = max(1, int(width // card_width))
-            
-            visible_children = [c for c in scrollable_frame.winfo_children() if getattr(c, "visible", True)]
-            
+
+            visible_children = [
+                c
+                for c in scrollable_frame.winfo_children()
+                if getattr(c, "visible", True)
+            ]
+
             for i, child in enumerate(visible_children):
                 row = i // columns
                 col = i % columns
                 child.grid(row=row, column=col, sticky="nsew", padx=10, pady=10)
-            
+
             # Hide non-visible children
             for child in scrollable_frame.winfo_children():
                 if child not in visible_children:
                     child.grid_forget()
-            
+
             for col in range(columns):
                 scrollable_frame.columnconfigure(col, weight=1)
 
@@ -1420,13 +1567,13 @@ class ModernInstaller(tk.Tk):
                 on_link=lambda url: webbrowser.open(url),
             )
             self.cards.append(card)
-        
+
         self.after(200, _reposition_cards)
 
     def _init_ui(self):
         # Configure Root Grid
-        self.columnconfigure(0, weight=0, minsize=240) # Sidebar
-        self.columnconfigure(1, weight=1)              # Content
+        self.columnconfigure(0, weight=0, minsize=240)  # Sidebar
+        self.columnconfigure(1, weight=1)  # Content
         self.rowconfigure(0, weight=1)
 
         self.sidebar_area = ScrollableFrame(self, bg=COLORS["sidebar_bg"], width=240)
@@ -1436,11 +1583,11 @@ class ModernInstaller(tk.Tk):
 
         self.content = tk.Frame(self, bg=COLORS["bg"])
         self.content.grid(row=0, column=1, sticky="nsew")
-        
+
         # Content Grid
         self.content.columnconfigure(0, weight=1)
-        self.content.rowconfigure(1, weight=1) # Main category area
-        self.content.rowconfigure(3, weight=0) # Console area
+        self.content.rowconfigure(1, weight=1)  # Main category area
+        self.content.rowconfigure(3, weight=0)  # Console area
 
         self._build_sidebar(self.sidebar)
         self._build_content(self.content)
@@ -1449,7 +1596,7 @@ class ModernInstaller(tk.Tk):
         # Sidebar using Grid for better control
         sidebar.columnconfigure(0, weight=1)
         # We'll use several rows and push the last one to the bottom
-        sidebar.rowconfigure(10, weight=1) # Spacer row
+        sidebar.rowconfigure(10, weight=1)  # Spacer row
 
         logo = tk.Label(
             sidebar,
@@ -1460,7 +1607,9 @@ class ModernInstaller(tk.Tk):
         )
         logo.grid(row=0, column=0, sticky="w", padx=25, pady=(40, 10))
 
-        tk.Frame(sidebar, bg=COLORS["border"], height=1).grid(row=1, column=0, sticky="ew", padx=25, pady=20)
+        tk.Frame(sidebar, bg=COLORS["border"], height=1).grid(
+            row=1, column=0, sticky="ew", padx=25, pady=20
+        )
 
         tk.Label(
             sidebar,
@@ -1479,30 +1628,47 @@ class ModernInstaller(tk.Tk):
             cat_btn = CategoryButton(
                 cat_container,
                 text=category,
-                command=lambda c=category: self.show_category(c)
+                command=lambda c=category: self.show_category(c),
             )
             cat_btn.grid(row=i, column=0, sticky="ew")
             self.category_buttons[category] = cat_btn
 
-        tk.Frame(sidebar, bg=COLORS["border"], height=1).grid(row=4, column=0, sticky="ew", padx=25, pady=20)
+        tk.Frame(sidebar, bg=COLORS["border"], height=1).grid(
+            row=4, column=0, sticky="ew", padx=25, pady=20
+        )
 
         # Maintenance Section
         current_row = 5
-        self.backup_btn = StyledButton(sidebar, "Backup", command=self.start_backup, primary=True)
+        self.backup_btn = StyledButton(
+            sidebar, "Backup", command=self.start_backup, primary=True
+        )
         self.backup_btn.grid(row=current_row, column=0, sticky="ew", padx=20, pady=5)
-        
+
         current_row += 1
-        self.restore_btn = StyledButton(sidebar, "Restore", command=self.start_restore, primary=False)
+        self.restore_btn = StyledButton(
+            sidebar, "Restore", command=self.start_restore, primary=False
+        )
         self.restore_btn.grid(row=current_row, column=0, sticky="ew", padx=20, pady=5)
 
         current_row += 1
-        tk.Label(sidebar, text="STACKS", bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"], font=("Segoe UI", 8, "bold")
-                ).grid(row=current_row, column=0, sticky="w", padx=25, pady=(20, 5))
+        tk.Label(
+            sidebar,
+            text="STACKS",
+            bg=COLORS["sidebar_bg"],
+            fg=COLORS["text_dim"],
+            font=("Segoe UI", 8, "bold"),
+        ).grid(row=current_row, column=0, sticky="w", padx=25, pady=(20, 5))
 
         # Stacks in a small scrollable or limited area if many? Let's just grid them for now
-        for stack_name in list(STACKS.keys())[:4]: # Limit to first 4 to avoid overflow
+        for stack_name in list(STACKS.keys())[:4]:  # Limit to first 4 to avoid overflow
             current_row += 1
-            stack_btn = StyledButton(sidebar, f"{stack_name}", command=lambda s=stack_name: self.apply_stack(s), primary=False, height=28)
+            stack_btn = StyledButton(
+                sidebar,
+                f"{stack_name}",
+                command=lambda s=stack_name: self.apply_stack(s),
+                primary=False,
+                height=28,
+            )
             stack_btn.grid(row=current_row, column=0, sticky="ew", padx=20, pady=2)
 
         # Status at the very bottom
@@ -1533,7 +1699,9 @@ class ModernInstaller(tk.Tk):
         self.search_var = tk.StringVar()
         self.search_var.trace_add("write", self._on_search)
 
-        search_entry = RoundedEntry(header_frame, placeholder="🔍 Search tools...", width=300)
+        search_entry = RoundedEntry(
+            header_frame, placeholder="🔍 Search tools...", width=300
+        )
         search_entry.grid(row=0, column=1, sticky="e")
 
         # Main Area (Notebook/Category Grid)
@@ -1571,7 +1739,7 @@ class ModernInstaller(tk.Tk):
             relief="flat",
             cursor="hand2",
             activebackground=COLORS["bg"],
-            activeforeground=COLORS["accent_hover"]
+            activeforeground=COLORS["accent_hover"],
         )
         self.console_toggle.grid(row=0, column=0, sticky="w")
 
@@ -1581,7 +1749,7 @@ class ModernInstaller(tk.Tk):
 
         self.log_text = tk.Text(
             self.log_frame,
-            height=0, # Start hidden
+            height=0,  # Start hidden
             bg="#0d0d0d",
             fg="#00ff00",
             font=FONTS["mono"],
@@ -1592,7 +1760,7 @@ class ModernInstaller(tk.Tk):
         )
         # Use log_text.grid_remove() initially or height=0
         self.log_text.grid(row=0, column=0, sticky="ew")
-        
+
         self.progress_bar = ttk.Progressbar(
             self.log_frame,
             mode="determinate",
@@ -1606,10 +1774,22 @@ class ModernInstaller(tk.Tk):
         footer_frame.grid(row=4, column=0, sticky="ew", padx=25, pady=(15, 30))
         footer_frame.columnconfigure(1, weight=1)
 
-        self.select_all_btn = StyledButton(footer_frame, "Select All", command=self.select_all, width=140, primary=False)
+        self.select_all_btn = StyledButton(
+            footer_frame,
+            "Select All",
+            command=self.select_all,
+            width=140,
+            primary=False,
+        )
         self.select_all_btn.grid(row=0, column=0, padx=(0, 10))
 
-        self.deselect_all_btn = StyledButton(footer_frame, "Deselect All", command=self.deselect_all, width=140, primary=False)
+        self.deselect_all_btn = StyledButton(
+            footer_frame,
+            "Deselect All",
+            command=self.deselect_all,
+            width=140,
+            primary=False,
+        )
         self.deselect_all_btn.grid(row=0, column=1, sticky="w")
 
         self.install_btn = GradientButton(
@@ -1617,7 +1797,7 @@ class ModernInstaller(tk.Tk):
             "Install Selected",
             command=self.start_installation,
             width=240,
-            height=40
+            height=40,
         )
         self.install_btn.grid(row=0, column=2, sticky="e")
 
@@ -1627,7 +1807,7 @@ class ModernInstaller(tk.Tk):
 
         for cat, frame in self.category_frames.items():
             if cat == category:
-                frame.grid(row=0, column=0, sticky="nsew") # Inside category_notebook
+                frame.grid(row=0, column=0, sticky="nsew")  # Inside category_notebook
                 self.category_visible[cat] = True
                 if cat in self.category_buttons:
                     self.category_buttons[cat].set_active(True)
@@ -1667,7 +1847,7 @@ class ModernInstaller(tk.Tk):
         for card in self.cards:
             match = query in card.name.lower() or query in card.details["id"].lower()
             card.set_visible(match)
-        
+
         # Trigger repositioning in all visible frames
         self.event_generate("<<SearchUpdate>>")
 
@@ -1842,20 +2022,39 @@ class ModernInstaller(tk.Tk):
         """
         Create Backup
         =============
-        Starts backup creation in a separate thread.
+        Opens selection dialog before starting backup.
         """
-        threading.Thread(target=self._run_backup, daemon=True).start()
+        dialog = BackupSelectionDialog(self, BACKUP_PATHS)
+        self.wait_window(dialog)
 
-    def _run_backup(self):
+        selected_items = dialog.get_selected()
+        if selected_items:
+            from tkinter import filedialog
+
+            default_name = (
+                f"DevTools_Backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+            )
+            target_path = filedialog.asksaveasfilename(
+                title="Save Backup As",
+                defaultextension=".zip",
+                filetypes=[("Zip Files", "*.zip")],
+                initialfile=default_name,
+                initialdir=os.path.join(os.path.expanduser("~"), "Documents"),
+            )
+
+            if target_path:
+                threading.Thread(
+                    target=self._run_backup,
+                    args=(selected_items, target_path),
+                    daemon=True,
+                ).start()
+
+    def _run_backup(self, selected_items: List[str], target_zip: str):
         """
         Execute Backup - Create ZIP
         ===========================
-        Creates a backup of VS Code, Gemini CLI, Antigravity settings
-        and saves them to a ZIP file in Documents.
+        Creates a backup of selected settings and saves them to the specified ZIP file.
         """
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        doc_path = os.path.join(os.path.expanduser("~"), "Documents")
-        target_zip = os.path.join(doc_path, f"DevTools_Backup_{timestamp}.zip")
 
         try:
             self.install_queue.put(
@@ -1867,7 +2066,8 @@ class ModernInstaller(tk.Tk):
             )
 
             with zipfile.ZipFile(target_zip, "w", zipfile.ZIP_DEFLATED) as zipf:
-                ext_file = os.path.join(doc_path, "vscode_extensions.txt")
+                temp_dir = os.path.dirname(target_zip) or os.path.expanduser("~")
+                ext_file = os.path.join(temp_dir, "vscode_extensions.txt")
                 subprocess.run(
                     [
                         "powershell.exe",
@@ -1881,8 +2081,31 @@ class ModernInstaller(tk.Tk):
                     zipf.write(ext_file, "vscode_extensions.txt")
                     os.remove(ext_file)
 
-                for name, path in BACKUP_PATHS.items():
-                    if os.path.exists(path):
+                if os.path.exists(ANTIGRAVITY_EXTENSIONS_PATH):
+                    self.install_queue.put(
+                        {
+                            "type": "log",
+                            "text": "  > Compressing: Antigravity Extensions",
+                            "tag": "info",
+                        }
+                    )
+                    for root, _, files in os.walk(ANTIGRAVITY_EXTENSIONS_PATH):
+                        for file in files:
+                            if file.endswith(".vsix"):
+                                full_path = os.path.join(root, file)
+                                zipf.write(
+                                    full_path,
+                                    os.path.join(
+                                        "Antigravity_Extensions",
+                                        os.path.relpath(
+                                            full_path, ANTIGRAVITY_EXTENSIONS_PATH
+                                        ),
+                                    ),
+                                )
+
+                for name in selected_items:
+                    path = BACKUP_PATHS.get(name)
+                    if path and os.path.exists(path):
                         self.install_queue.put(
                             {
                                 "type": "log",
@@ -1893,12 +2116,19 @@ class ModernInstaller(tk.Tk):
                         for root, _, files in os.walk(path):
                             for file in files:
                                 full_path = os.path.join(root, file)
-                                zipf.write(
-                                    full_path,
-                                    os.path.join(
-                                        name, os.path.relpath(full_path, path)
-                                    ),
-                                )
+                                rel_path = os.path.relpath(full_path, path)
+                                if any(
+                                    excl in rel_path.split(os.sep)
+                                    for excl in BACKUP_EXCLUDE_DIRS
+                                ):
+                                    continue
+                                try:
+                                    zipf.write(
+                                        full_path,
+                                        os.path.join(name, rel_path),
+                                    )
+                                except PermissionError:
+                                    continue
 
             self.install_queue.put(
                 {
@@ -1972,6 +2202,65 @@ class ModernInstaller(tk.Tk):
                                 with zipf.open(m) as s, open(target, "wb") as t:
                                     shutil.copyfileobj(s, t)
 
+                if "vscode_extensions.txt" in zipf.namelist():
+                    self.install_queue.put(
+                        {
+                            "type": "log",
+                            "text": "  > Restoring VS Code extensions...",
+                            "tag": "info",
+                        }
+                    )
+                    with zipf.open("vscode_extensions.txt") as f:
+                        extensions = f.read().decode("utf-8").strip().split("\n")
+
+                    for ext in extensions:
+                        ext = ext.strip()
+                        if ext:
+                            self.install_queue.put(
+                                {
+                                    "type": "log",
+                                    "text": f"    > Installing: {ext}",
+                                    "tag": "info",
+                                }
+                            )
+                            subprocess.run(
+                                [
+                                    "powershell.exe",
+                                    "-Command",
+                                    f"code --install-extension {ext} --force",
+                                ],
+                                capture_output=True,
+                            )
+
+                if "Antigravity_Extensions/" in zipf.namelist():
+                    self.install_queue.put(
+                        {
+                            "type": "log",
+                            "text": "  > Restoring Antigravity extensions...",
+                            "tag": "info",
+                        }
+                    )
+                    os.makedirs(ANTIGRAVITY_EXTENSIONS_PATH, exist_ok=True)
+                    for name in zipf.namelist():
+                        if name.startswith(
+                            "Antigravity_Extensions/"
+                        ) and not name.endswith("/"):
+                            target = os.path.join(
+                                ANTIGRAVITY_EXTENSIONS_PATH,
+                                os.path.relpath(name, "Antigravity_Extensions"),
+                            )
+                            os.makedirs(os.path.dirname(target), exist_ok=True)
+                            with zipf.open(name) as s, open(target, "wb") as t:
+                                shutil.copyfileobj(s, t)
+                            ext_name = os.path.basename(target)
+                            self.install_queue.put(
+                                {
+                                    "type": "log",
+                                    "text": f"    > Restored: {ext_name}",
+                                    "tag": "info",
+                                }
+                            )
+
             self.install_queue.put(
                 {
                     "type": "log",
@@ -1984,7 +2273,8 @@ class ModernInstaller(tk.Tk):
             self.install_queue.put(
                 {
                     "type": "log",
-                    "text": "❌ Error during Restore: {e}", "tag": "error"
+                    "text": "❌ Error during Restore: {e}",
+                    "tag": "error",
                 }
             )
 
@@ -1994,9 +2284,7 @@ class ModernInstaller(tk.Tk):
 
         selected = [c.name for c in self.cards if c.is_checked()]
         if not selected:
-            self._append_log(
-                "⚠️ No tools selected for export.", "warning"
-            )
+            self._append_log("⚠️ No tools selected for export.", "warning")
             return
 
         path = filedialog.asksaveasfilename(
@@ -2075,6 +2363,114 @@ class ModernInstaller(tk.Tk):
             percentage = (current / total) * 100
             self.progress_bar["value"] = percentage
             self.update_idletasks()
+
+
+class BackupSelectionDialog(tk.Toplevel):
+    def __init__(self, parent, backup_paths: Dict[str, str]):
+        super().__init__(parent)
+        self.title("Select Backup Items")
+        self.geometry("400x400")
+        self.resizable(False, False)
+        self.configure(bg=COLORS["bg"])
+
+        self.transient(parent)
+        self.grab_set()
+
+        self.backup_paths = backup_paths
+        self.selected_items: List[str] = []
+        self.checkboxes: Dict[str, tk.BooleanVar] = {}
+
+        self._build_ui()
+
+        self.geometry(f"+{parent.winfo_x() + 50}+{parent.winfo_y() + 50}")
+
+    def _build_ui(self):
+        main_frame = tk.Frame(self, bg=COLORS["bg"])
+        main_frame.pack(fill="both", expand=True, padx=20, pady=20)
+
+        tk.Label(
+            main_frame,
+            text="Select items to backup:",
+            bg=COLORS["bg"],
+            fg=COLORS["text"],
+            font=FONTS["header"],
+        ).pack(anchor="w", pady=(0, 15))
+
+        scroll_frame = tk.Frame(main_frame, bg=COLORS["bg"])
+        scroll_frame.pack(fill="both", expand=True)
+
+        canvas = tk.Canvas(scroll_frame, bg=COLORS["bg"], highlightthickness=0)
+        scrollbar = ttk.Scrollbar(scroll_frame, orient="vertical", command=canvas.yview)
+        content_frame = tk.Frame(canvas, bg=COLORS["bg"])
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.bind(
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        canvas.create_window((0, 0), window=content_frame, anchor="nw")
+
+        for name, path in self.backup_paths.items():
+            frame = tk.Frame(content_frame, bg=COLORS["bg"])
+            frame.pack(fill="x", pady=5)
+
+            var = tk.BooleanVar(value=True)
+            exists = os.path.exists(path)
+
+            cb = tk.Checkbutton(
+                frame,
+                text=name,
+                variable=var,
+                bg=COLORS["bg"],
+                fg=COLORS["text"] if exists else COLORS["text_dim"],
+                selectcolor=COLORS["card_bg"],
+                font=FONTS["body"],
+                state="normal" if exists else "disabled",
+            )
+            cb.pack(side="left")
+
+            if not exists:
+                tk.Label(
+                    frame,
+                    text="(not found)",
+                    bg=COLORS["bg"],
+                    fg=COLORS["text_dim"],
+                    font=FONTS["small"],
+                ).pack(side="left", padx=5)
+
+            self.checkboxes[name] = var
+
+        button_frame = tk.Frame(main_frame, bg=COLORS["bg"])
+        button_frame.pack(fill="x", pady=(15, 0))
+
+        backup_all_btn = StyledButton(
+            button_frame,
+            "Backup Selected",
+            command=self._on_backup,
+            primary=True,
+            width=140,
+        )
+        backup_all_btn.pack(side="right")
+
+        cancel_btn = StyledButton(
+            button_frame,
+            "Cancel",
+            command=self.destroy,
+            primary=False,
+            width=100,
+        )
+        cancel_btn.pack(side="right", padx=(10, 0))
+
+    def _on_backup(self):
+        self.selected_items = [
+            name for name, var in self.checkboxes.items() if var.get()
+        ]
+        self.destroy()
+
+    def get_selected(self) -> List[str]:
+        return self.selected_items
 
 
 if __name__ == "__main__":
