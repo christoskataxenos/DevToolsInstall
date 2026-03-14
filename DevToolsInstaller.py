@@ -499,6 +499,11 @@ TOOLS_REGISTRY: Dict[str, Dict[str, Dict[str, str]]] = {
             "url": "https://flameshot.org/",
             "note": "Ευέλικτο εργαλείο για screenshots."
         },
+        "Greenshot": {
+            "id": "Greenshot.Greenshot",
+            "url": "https://getgreenshot.org/",
+            "note": "Ελαφρύ και ισχυρό εργαλείο για λήψη και επεξεργασία screenshots."
+        },
     },
     "Remote": {
         "AnyDesk": {
