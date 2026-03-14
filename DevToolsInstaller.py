@@ -21,7 +21,7 @@ Main Features:
 - Check for installed tools
 - Export/Import selection to JSON
 
-Author: EAP Workspace
+Author: Christos Kataxenos
 Version: 2.1
 """
 
@@ -112,6 +112,11 @@ TOOLS_REGISTRY: Dict[str, Dict[str, Dict[str, str]]] = {
             "id": "SlackTechnologies.Slack",
             "url": "https://slack.com/",
             "note": "Η standard εφαρμογή επικοινωνίας για ομάδες εργασίας."
+        },
+        "Viber": {
+            "id": "Rakuten.Viber",
+            "url": "https://www.viber.com/",
+            "note": "Δημοφιλής εφαρμογή για δωρεάν μηνύματα και κλήσεις παγκοσμίως."
         },
     },
     "Media & Entertainment": {
@@ -1980,7 +1985,6 @@ class ModernInstaller(tk.Tk):
                 {
                     "type": "log",
                     "text": "❌ Error during Restore: {e}", "tag": "error"
-                    "tag": "error",
                 }
             )
 
