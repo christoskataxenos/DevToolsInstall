@@ -2122,6 +2122,8 @@ class ToolCard(tk.Frame):
 
     def update_language(self):
         if hasattr(self, "note_label") and self.details.get("note"):
+            # Ανάκτηση της σωστής μετάφρασης για τη σημείωση
+            note_val = self.details["note"].get(TranslationManager.get_language(), "") if isinstance(self.details["note"], dict) else self.details["note"]
             self.note_label.config(text=note_val)
 
 

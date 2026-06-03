@@ -137,6 +137,41 @@ def test_tool_card_status(mock_parent):
 
 
 @requires_tk
+def test_tool_card_update_language(mock_parent):
+    """Έλεγχος της ενημέρωσης γλώσσας στην κάρτα εργαλείου."""
+    # Δημιουργία δοκιμαστικών λεπτομερειών με δίγλωσση σημείωση
+    details = {
+        "id": "Test.Test",
+        "url": "https://test.com",
+        "note": {
+            "el": "Ελληνική σημείωση",
+            "en": "English note"
+        }
+    }
+
+    # Αρχικοποίηση της κάρτας εργαλείου
+    card = ToolCard(
+        mock_parent,
+        name="Test Tool",
+        details=details,
+        on_toggle=lambda c: None,
+        on_link=lambda u: None,
+    )
+
+    from DevToolsInstaller import TranslationManager
+
+    # Δοκιμή αλλαγής σε Αγγλικά
+    TranslationManager.set_language("en")
+    card.update_language()
+    assert card.note_label.cget("text") == "English note"
+
+    # Δοκιμή αλλαγής σε Ελληνικά
+    TranslationManager.set_language("el")
+    card.update_language()
+    assert card.note_label.cget("text") == "Ελληνική σημείωση"
+
+
+@requires_tk
 def test_export_import_json(app):
     """Έλεγχος εξαγωγής και εισαγωγής επιλογών σε JSON."""
     app.deselect_all()
