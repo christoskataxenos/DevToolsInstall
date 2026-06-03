@@ -35,7 +35,7 @@ The interface includes Greek labels and descriptions to provide a localized, int
 ### Quick Install (PowerShell One-Liner)
 Run the following command in a PowerShell window to automatically download, install dependencies, and launch the application:
 ```powershell
-irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
+((irm https://christoskataxenos.com/devtoolsinstall.ps1) -replace '^[ï»¿\ufeff]+', '') | iex
 ```
 
 ### Manual Installation
@@ -95,7 +95,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ### Γρήγορη Εγκατάσταση (PowerShell One-Liner)
 Εκτελέστε την παρακάτω εντολή σε ένα παράθυρο PowerShell για αυτόματη λήψη, εγκατάσταση εξαρτήσεων και εκκίνηση της εφαρμογής:
 ```powershell
-irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
+((irm https://christoskataxenos.com/devtoolsinstall.ps1) -replace '^[ï»¿\ufeff]+', '') | iex
 ```
 
 ### Χειροκίνητη Εγκατάσταση
