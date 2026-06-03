@@ -1037,6 +1037,41 @@ STACKS = {
     ],
 }
 
+SUPER_CATEGORIES = {
+    "Dev & Languages": [
+        "IDEs & Editors",
+        "Runtimes & Languages",
+        "Package Managers",
+        "Version Control",
+        "Hardware & AI",
+        "AI Coding Assistants",
+        "C & Systems Dev"
+    ],
+    "Web & Data": [
+        "Browsers",
+        "API & Testing",
+        "Database Tools"
+    ],
+    "System & Shell": [
+        "System & Cloud",
+        "System & Shell",
+        "Virtualization",
+        "Cloud & DevOps",
+        "Privacy & Security",
+        "Security & Networking"
+    ],
+    "Productivity & Design": [
+        "Productivity",
+        "Design & Media",
+        "Office & Documents",
+        "Remote"
+    ],
+    "Media & Games": [
+        "Media & Entertainment",
+        "Communication"
+    ]
+}
+
 BACKUP_PATHS: Dict[str, str] = {
     "VS Code Settings": os.path.join(os.environ.get("APPDATA", ""), "Code", "User"),
     "Gemini CLI / Antigravity Rules": os.path.join(os.path.expanduser("~"), ".gemini"),
@@ -1877,12 +1912,13 @@ class ScrollableFrame(tk.Frame):
 
 
 class ToolCard(tk.Frame):
-    def __init__(self, parent, name, details, on_toggle, on_link, **kwargs):
+    def __init__(self, parent, name, details, on_toggle, on_link, on_retry=None, **kwargs):
         super().__init__(parent, bg=COLORS["card_bg"], relief="flat", bd=0, **kwargs)
         self.name = name
         self.details = details
         self.on_toggle = on_toggle
         self.on_link = on_link
+        self.on_retry = on_retry
         self._hovered = False
         self._selected = False
         self._status = "PENDING"
@@ -1946,10 +1982,8 @@ class ToolCard(tk.Frame):
                 justify="left",
                 wraplength=260,
             )
-            # Give the note room and ensure it breathes
             self.note_label.grid(row=2, column=0, sticky="w", padx=10, pady=(0, 15))
         else:
-            # Spacer
             tk.Frame(self, bg=COLORS["card_bg"], height=10).grid(row=2, column=0)
 
         # Bottom Section: Toggle and Status
@@ -1960,6 +1994,23 @@ class ToolCard(tk.Frame):
         self.toggle = ToggleSwitch(self.actions_frame, command=self._on_check)
         self.toggle.grid(row=0, column=0, sticky="w")
 
+        # Retry button (initially forgotten)
+        self.retry_btn = tk.Button(
+            self.actions_frame,
+            text="Retry",
+            command=self._on_retry_click,
+            bg=COLORS["border"],
+            fg=COLORS["text"],
+            activebackground=COLORS["card_hover"],
+            activeforeground="white",
+            relief="flat",
+            bd=0,
+            font=FONTS["small"],
+            cursor="hand2",
+            padx=6,
+            pady=2
+        )
+
         self.status_dot = tk.Label(
             self.actions_frame,
             text=TOOL_STATUS["PENDING"],
@@ -1967,19 +2018,29 @@ class ToolCard(tk.Frame):
             fg=COLORS["text"],
             font=("Segoe UI", 10),
         )
-        self.status_dot.grid(row=0, column=1, sticky="e")
+        self.status_dot.grid(row=0, column=2, sticky="e")
 
         # Events
         self.bind("<Enter>", self._on_enter)
         self.bind("<Leave>", self._on_leave)
         for child in self.winfo_children():
-            child.bind("<Enter>", self._on_enter)
-            child.bind("<Leave>", self._on_leave)
+            if child != self.retry_btn:
+                child.bind("<Enter>", self._on_enter)
+                child.bind("<Leave>", self._on_leave)
+
+    def _on_retry_click(self):
+        if self.on_retry:
+            self.on_retry(self)
 
     def set_status(self, status: str):
         self._status = status
         if status in TOOL_STATUS:
             self.status_dot.config(text=TOOL_STATUS[status])
+        
+        if status == "ERROR" and self.on_retry:
+            self.retry_btn.grid(row=0, column=1, sticky="e", padx=(0, 5))
+        else:
+            self.retry_btn.grid_forget()
 
     def get_status(self) -> str:
         return self._status
@@ -2036,14 +2097,289 @@ class ToolCard(tk.Frame):
 
     def update_language(self):
         if hasattr(self, "note_label") and self.details.get("note"):
-            note_val = self.details["note"].get(TranslationManager.get_language(), "") if isinstance(self.details["note"], dict) else self.details["note"]
             self.note_label.config(text=note_val)
+
+
+class StackCard(tk.Frame):
+    def __init__(self, parent, stack_name, tools_list, on_apply, **kwargs):
+        super().__init__(parent, bg=COLORS["card_bg"], relief="flat", bd=0, **kwargs)
+        self.stack_name = stack_name
+        self.tools_list = tools_list
+        self.on_apply = on_apply
+        self.hovered = False
+
+        self.config(highlightbackground=COLORS["border"], highlightthickness=1, bd=0)
+
+        # Name label
+        self.title_label = tk.Label(
+            self,
+            text=stack_name,
+            bg=COLORS["card_bg"],
+            fg=COLORS["text"],
+            font=FONTS["header"],
+            anchor="w"
+        )
+        self.title_label.pack(anchor="w", padx=15, pady=(15, 5))
+
+        # Tools description list
+        tools_text = ", ".join(tools_list)
+        self.desc_label = tk.Label(
+            self,
+            text=tools_text,
+            bg=COLORS["card_bg"],
+            fg=COLORS["text_dim"],
+            font=FONTS["body"],
+            anchor="w",
+            justify="left",
+            wraplength=260
+        )
+        self.desc_label.pack(fill="both", expand=True, padx=15, pady=(0, 15))
+
+        # Apply button
+        self.apply_btn = StyledButton(
+            self,
+            text=_("apply_stack"),
+            command=lambda: self.on_apply(self.stack_name),
+            primary=True,
+            width=140,
+            height=30
+        )
+        self.apply_btn.pack(anchor="sw", padx=15, pady=(0, 15))
+
+        self.bind("<Enter>", self._on_enter)
+        self.bind("<Leave>", self._on_leave)
+        for child in self.winfo_children():
+            if not isinstance(child, StyledButton):
+                child.bind("<Enter>", self._on_enter)
+                child.bind("<Leave>", self._on_leave)
+
+    def _on_enter(self, event):
+        self.hovered = True
+        self._update_style()
+
+    def _on_leave(self, event):
+        self.hovered = False
+        self._update_style()
+
+    def _update_style(self):
+        bg = COLORS["card_hover"] if self.hovered else COLORS["card_bg"]
+        border = COLORS["accent"] if self.hovered else COLORS["border"]
+        self.config(bg=bg, highlightbackground=border)
+        self.title_label.config(bg=bg)
+        self.desc_label.config(bg=bg)
+        self.apply_btn.config(bg=bg)
+
+    def update_colors(self):
+        self.config(bg=COLORS["card_bg"], highlightbackground=COLORS["border"])
+        self.title_label.config(bg=COLORS["card_bg"], fg=COLORS["text"])
+        self.desc_label.config(bg=COLORS["card_bg"], fg=COLORS["text_dim"])
+        self.apply_btn.config(bg=COLORS["card_bg"])
+        self.apply_btn._draw()
+
+    def update_language(self):
+        self.apply_btn.text = _("apply_stack")
+        self.apply_btn._draw()
+
+
+class StacksPanel(tk.Frame):
+    def __init__(self, parent, app_instance, **kwargs):
+        super().__init__(parent, bg=COLORS["bg"], **kwargs)
+        self.app = app_instance
+        self.cards = []
+
+        # Title Header
+        self.header_label = tk.Label(
+            self,
+            text=_("stacks"),
+            bg=COLORS["bg"],
+            fg="white" if ThemeManager.get_current_theme() == "dark" else "black",
+            font=FONTS["title"]
+        )
+        self.header_label.pack(anchor="w", padx=25, pady=(30, 20))
+
+        # Scrollable container for stacks
+        self.scroll_area = ScrollableFrame(self)
+        self.scroll_area.pack(fill="both", expand=True)
+        self.grid_frame = self.scroll_area.scrollable_frame
+
+        self.scroll_area.canvas.bind("<Configure>", self._on_resize)
+
+        self._build_grid()
+
+    def _build_grid(self):
+        for card in self.cards:
+            card.destroy()
+        self.cards.clear()
+
+        for stack_name, tools in STACKS.items():
+            card = StackCard(
+                self.grid_frame,
+                stack_name=stack_name,
+                tools_list=tools,
+                on_apply=self.app.apply_stack
+            )
+            self.cards.append(card)
+
+        self._reposition_cards()
+
+    def _on_resize(self, event):
+        self._reposition_cards(event.width)
+
+    def _reposition_cards(self, width=None):
+        if width is None:
+            width = self.scroll_area.canvas.winfo_width()
+
+        card_width = 300
+        columns = max(1, int(width // card_width))
+        if columns < 1:
+            columns = 1
+
+        for i, card in enumerate(self.cards):
+            row = i // columns
+            col = i % columns
+            card.grid(row=row, column=col, sticky="nsew", padx=15, pady=15)
+
+        for col in range(columns):
+            self.grid_frame.columnconfigure(col, weight=1)
+
+    def update_theme(self):
+        self.config(bg=COLORS["bg"])
+        self.header_label.config(bg=COLORS["bg"], fg="white" if ThemeManager.get_current_theme() == "dark" else "black")
+        self.scroll_area.config(bg=COLORS["bg"])
+        self.scroll_area.canvas.config(bg=COLORS["bg"])
+        self.scroll_area.scrollable_frame.config(bg=COLORS["bg"])
+        for card in self.cards:
+            card.update_colors()
+
+    def update_language(self):
+        self.header_label.config(text=_("stacks"))
+        for card in self.cards:
+            card.update_language()
+
+
+class BackupRestorePanel(tk.Frame):
+    def __init__(self, parent, app_instance, **kwargs):
+        super().__init__(parent, bg=COLORS["bg"], **kwargs)
+        self.app = app_instance
+
+        # Header Title
+        self.header_label = tk.Label(
+            self,
+            text=_("backup_restore_title"),
+            bg=COLORS["bg"],
+            fg="white" if ThemeManager.get_current_theme() == "dark" else "black",
+            font=FONTS["title"]
+        )
+        self.header_label.pack(anchor="w", padx=25, pady=(30, 20))
+
+        # Outer container for centering cards
+        self.cards_container = tk.Frame(self, bg=COLORS["bg"])
+        self.cards_container.pack(fill="both", expand=True, padx=25, pady=10)
+        self.cards_container.columnconfigure(0, weight=1)
+        self.cards_container.columnconfigure(1, weight=1)
+
+        # Backup Card Frame
+        self.backup_card = tk.Frame(self.cards_container, bg=COLORS["card_bg"], highlightbackground=COLORS["border"], highlightthickness=1, bd=0)
+        self.backup_card.grid(row=0, column=0, sticky="nsew", padx=15, pady=15)
+        
+        self.backup_title = tk.Label(
+            self.backup_card,
+            text=_("backup"),
+            bg=COLORS["card_bg"],
+            fg=COLORS["text"],
+            font=FONTS["header"]
+        )
+        self.backup_title.pack(anchor="w", padx=20, pady=(20, 10))
+
+        self.backup_desc = tk.Label(
+            self.backup_card,
+            text=_("backup_desc"),
+            bg=COLORS["card_bg"],
+            fg=COLORS["text_dim"],
+            font=FONTS["body"],
+            justify="left",
+            wraplength=350
+        )
+        self.backup_desc.pack(anchor="w", padx=20, pady=(0, 20))
+
+        self.backup_btn = StyledButton(
+            self.backup_card,
+            text=_("backup"),
+            command=self.app.start_backup,
+            primary=True,
+            width=160,
+            height=36
+        )
+        self.backup_btn.pack(anchor="w", padx=20, pady=(0, 20))
+
+        # Restore Card Frame
+        self.restore_card = tk.Frame(self.cards_container, bg=COLORS["card_bg"], highlightbackground=COLORS["border"], highlightthickness=1, bd=0)
+        self.restore_card.grid(row=0, column=1, sticky="nsew", padx=15, pady=15)
+
+        self.restore_title = tk.Label(
+            self.restore_card,
+            text=_("restore"),
+            bg=COLORS["card_bg"],
+            fg=COLORS["text"],
+            font=FONTS["header"]
+        )
+        self.restore_title.pack(anchor="w", padx=20, pady=(20, 10))
+
+        self.restore_desc = tk.Label(
+            self.restore_card,
+            text=_("restore_desc"),
+            bg=COLORS["card_bg"],
+            fg=COLORS["text_dim"],
+            font=FONTS["body"],
+            justify="left",
+            wraplength=350
+        )
+        self.restore_desc.pack(anchor="w", padx=20, pady=(0, 20))
+
+        self.restore_btn = StyledButton(
+            self.restore_card,
+            text=_("restore"),
+            command=self.app.start_restore,
+            primary=False,
+            width=160,
+            height=36
+        )
+        self.restore_btn.pack(anchor="w", padx=20, pady=(0, 20))
+
+    def update_theme(self):
+        self.config(bg=COLORS["bg"])
+        self.header_label.config(bg=COLORS["bg"], fg="white" if ThemeManager.get_current_theme() == "dark" else "black")
+        self.cards_container.config(bg=COLORS["bg"])
+        
+        self.backup_card.config(bg=COLORS["card_bg"], highlightbackground=COLORS["border"])
+        self.backup_title.config(bg=COLORS["card_bg"], fg=COLORS["text"])
+        self.backup_desc.config(bg=COLORS["card_bg"], fg=COLORS["text_dim"])
+        self.backup_btn.config(bg=COLORS["card_bg"])
+        self.backup_btn._draw()
+
+        self.restore_card.config(bg=COLORS["card_bg"], highlightbackground=COLORS["border"])
+        self.restore_title.config(bg=COLORS["card_bg"], fg=COLORS["text"])
+        self.restore_desc.config(bg=COLORS["card_bg"], fg=COLORS["text_dim"])
+        self.restore_btn.config(bg=COLORS["card_bg"])
+        self.restore_btn._draw()
+
+    def update_language(self):
+        self.header_label.config(text=_("backup_restore_title"))
+        self.backup_title.config(text=_("backup"))
+        self.backup_desc.config(text=_("backup_desc"))
+        self.backup_btn.text = _("backup")
+        self.backup_btn._draw()
+
+        self.restore_title.config(text=_("restore"))
+        self.restore_desc.config(text=_("restore_desc"))
+        self.restore_btn.text = _("restore")
+        self.restore_btn._draw()
 
 
 class ModernInstaller(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("DevTools Installer v2.0")
+        self.title(_("app_title"))
         self.geometry("1400x850")
         self.minsize(1000, 700)
         self.configure(bg=COLORS["bg"])
@@ -2069,6 +2405,15 @@ class ModernInstaller(tk.Tk):
             troughcolor=COLORS["bg"],
         )
         style.map("Vertical.TScrollbar", background=[("active", COLORS["accent"])])
+
+        style.configure(
+            "TCombobox",
+            fieldbackground=COLORS["card_bg"],
+            background=COLORS["border"],
+            foreground=COLORS["text"],
+            darkrow=0,
+            arrowcolor=COLORS["text"]
+        )
 
         style.configure(
             "TNotebook", background=COLORS["bg"], borderwidth=0, tabposition="n"
@@ -2099,7 +2444,6 @@ class ModernInstaller(tk.Tk):
         scrollable_frame = scroll_area.scrollable_frame
 
         def _on_resize(event):
-            # Debounce resize: wait 200ms after resizing stops
             if self._resize_after_id:
                 self.after_cancel(self._resize_after_id)
             self._resize_after_id = self.after(
@@ -2107,8 +2451,6 @@ class ModernInstaller(tk.Tk):
             )
 
         scroll_area.canvas.bind("<Configure>", _on_resize, add="+")
-
-        # Listen for search updates to reposition the grid
         self.bind("<<SearchUpdate>>", lambda e: _reposition_cards(), add="+")
 
         def _reposition_cards(width=None):
@@ -2118,10 +2460,9 @@ class ModernInstaller(tk.Tk):
                     / self.tk.call("tk", "scaling")
                     * 72
                     / 96
-                )  # Rough DPI compensation
+                )
 
-            # Simple column calculation
-            card_width = 280  # Fixed target width for cards
+            card_width = 280
             columns = max(1, int(width // card_width))
 
             visible_children = [
@@ -2135,7 +2476,6 @@ class ModernInstaller(tk.Tk):
                 col = i % columns
                 child.grid(row=row, column=col, sticky="nsew", padx=10, pady=10)
 
-            # Hide non-visible children
             for child in scrollable_frame.winfo_children():
                 if child not in visible_children:
                     child.grid_forget()
@@ -2150,15 +2490,15 @@ class ModernInstaller(tk.Tk):
                 tools[name],
                 on_toggle=self._on_card_toggle,
                 on_link=lambda url: webbrowser.open(url),
+                on_retry=lambda c: self.retry_tool(c.name, c.details["id"]),
             )
             self.cards.append(card)
 
         self.after(200, _reposition_cards)
 
     def _init_ui(self):
-        # Configure Root Grid
-        self.columnconfigure(0, weight=0, minsize=240)  # Sidebar
-        self.columnconfigure(1, weight=1)  # Content
+        self.columnconfigure(0, weight=0, minsize=240)
+        self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
 
         self.sidebar_area = ScrollableFrame(self, bg=COLORS["sidebar_bg"], width=240)
@@ -2169,182 +2509,22 @@ class ModernInstaller(tk.Tk):
         self.content = tk.Frame(self, bg=COLORS["bg"])
         self.content.grid(row=0, column=1, sticky="nsew")
 
-        # Content Grid
         self.content.columnconfigure(0, weight=1)
-        self.content.rowconfigure(1, weight=1)  # Main category area
-        self.content.rowconfigure(3, weight=0)  # Console area
+        self.content.rowconfigure(0, weight=1)
+        self.content.rowconfigure(1, weight=0)
+        self.content.rowconfigure(2, weight=0)
 
         self._build_sidebar(self.sidebar)
-        self._build_content(self.content)
 
-    def _build_sidebar(self, sidebar: tk.Frame):
-        # Sidebar using Grid for better control
-        # Το sidebar χρησιμοποιεί grid για καλύτερη ευθυγράμμιση
-        sidebar.columnconfigure(0, weight=1)
-        # We'll use several rows and push the last one to the bottom
-        sidebar.rowconfigure(12, weight=1)  # Spacer row
+        self.install_panel = tk.Frame(self.content, bg=COLORS["bg"])
+        self._build_install_panel(self.install_panel)
 
-        self.sidebar_logo = tk.Label(
-            sidebar,
-            text="DevTools",
-            bg=COLORS["sidebar_bg"],
-            fg="white",
-            font=FONTS["title"],
-        )
-        self.sidebar_logo.grid(row=0, column=0, sticky="w", padx=25, pady=(40, 10))
+        self.stacks_panel = StacksPanel(self.content, self)
+        self.backup_restore_panel = BackupRestorePanel(self.content, self)
 
-        self.sidebar_divider1 = tk.Frame(sidebar, bg=COLORS["border"], height=1)
-        self.sidebar_divider1.grid(
-            row=1, column=0, sticky="ew", padx=25, pady=20
-        )
-
-        self.categories_header = tk.Label(
-            sidebar,
-            text=_("categories"),
-            bg=COLORS["sidebar_bg"],
-            fg=COLORS["text_dim"],
-            font=("Segoe UI", 9, "bold"),
-        )
-        self.categories_header.grid(row=2, column=0, sticky="w", padx=25, pady=(0, 10))
-
-        self.cat_container = tk.Frame(sidebar, bg=COLORS["sidebar_bg"])
-        self.cat_container.grid(row=3, column=0, sticky="ew")
-        self.cat_container.columnconfigure(0, weight=1)
-
-        self.category_buttons = {}
-        for i, category in enumerate(TOOLS_REGISTRY.keys()):
-            cat_btn = CategoryButton(
-                self.cat_container,
-                text=_(category),
-                command=lambda c=category: self.show_category(c),
-            )
-            cat_btn.grid(row=i, column=0, sticky="ew")
-            self.category_buttons[category] = cat_btn
-
-        self.sidebar_divider2 = tk.Frame(sidebar, bg=COLORS["border"], height=1)
-        self.sidebar_divider2.grid(
-            row=4, column=0, sticky="ew", padx=25, pady=20
-        )
-
-        # Maintenance Section
-        # Κουμπιά συντήρησης (Backup / Επαναφορά)
-        current_row = 5
-        self.backup_btn = StyledButton(
-            sidebar, _("backup"), command=self.start_backup, primary=True
-        )
-        self.backup_btn.grid(row=current_row, column=0, sticky="ew", padx=20, pady=5)
-
-        current_row += 1
-        self.restore_btn = StyledButton(
-            sidebar, _("restore"), command=self.start_restore, primary=False
-        )
-        self.restore_btn.grid(row=current_row, column=0, sticky="ew", padx=20, pady=5)
-
-        # Theme & Language Controls Frame
-        # Panel για την αλλαγή θέματος (Light/Dark) και γλώσσας
-        current_row += 1
-        self.theme_frame = tk.Frame(sidebar, bg=COLORS["sidebar_bg"])
-        self.theme_frame.grid(row=current_row, column=0, sticky="ew", padx=25, pady=(20, 5))
-        
-        self.theme_label = tk.Label(
-            self.theme_frame,
-            text=_("Dark Mode"),
-            bg=COLORS["sidebar_bg"],
-            fg=COLORS["text"],
-            font=FONTS["body"]
-        )
-        self.theme_label.pack(side="left")
-        
-        self.theme_toggle = ToggleSwitch(self.theme_frame, command=self._toggle_theme)
-        self.theme_toggle.set(ThemeManager.get_current_theme() == "dark")
-        self.theme_toggle.pack(side="right")
-
-        current_row += 1
-        self.lang_switcher = LanguageSwitcher(sidebar, on_change=self.update_ui_languages)
-        self.lang_switcher.grid(row=current_row, column=0, sticky="ew", padx=20, pady=5)
-
-        current_row += 1
-        self.stacks_header = tk.Label(
-            sidebar,
-            text=_("stacks"),
-            bg=COLORS["sidebar_bg"],
-            fg=COLORS["text_dim"],
-            font=("Segoe UI", 8, "bold"),
-        )
-        self.stacks_header.grid(row=current_row, column=0, sticky="w", padx=25, pady=(20, 5))
-
-        # Stacks list
-        self.stack_buttons = []
-        for stack_name in list(STACKS.keys())[:4]:  # Limit to first 4 to avoid overflow
-            current_row += 1
-            stack_btn = StyledButton(
-                sidebar,
-                f"{stack_name}",
-                command=lambda s=stack_name: self.apply_stack(s),
-                primary=False,
-                height=28,
-            )
-            stack_btn.grid(row=current_row, column=0, sticky="ew", padx=20, pady=2)
-            self.stack_buttons.append(stack_btn)
-
-        # Status at the very bottom
-        # Ετικέτα κατάστασης στο κάτω μέρος του sidebar
-        self.status_label = tk.Label(
-            sidebar,
-            text=_("status_ready"),
-            bg=COLORS["sidebar_bg"],
-            fg=COLORS["text_dim"],
-            font=FONTS["small"],
-            wraplength=200,
-        )
-        self.status_label.grid(row=13, column=0, sticky="sw", padx=15, pady=15)
-
-    def _build_content(self, content: tk.Frame):
-        # Header
-        self.header_frame = tk.Frame(content, bg=COLORS["bg"])
-        self.header_frame.grid(row=0, column=0, sticky="ew", padx=25, pady=(30, 10))
-        self.header_frame.columnconfigure(0, weight=1)
-
-        self.tool_mgmt_header = tk.Label(
-            self.header_frame,
-            text=_("tool_management"),
-            bg=COLORS["bg"],
-            fg="white" if ThemeManager.get_current_theme() == "dark" else "black",
-            font=FONTS["title"],
-        )
-        self.tool_mgmt_header.grid(row=0, column=0, sticky="w")
-
-        self.search_var = tk.StringVar()
-        self.search_var.trace_add("write", self._on_search)
-
-        self.search_entry = RoundedEntry(
-            self.header_frame, placeholder=_("search_placeholder"), width=300
-        )
-        self.search_entry.grid(row=0, column=1, sticky="e")
-
-        # Main Area (Notebook/Category Grid)
-        self.category_notebook = tk.Frame(content, bg=COLORS["bg"])
-        self.category_notebook.grid(row=1, column=0, sticky="nsew", padx=15, pady=5)
-        self.category_notebook.columnconfigure(0, weight=1)
-        self.category_notebook.rowconfigure(0, weight=1)
-
-        self.category_frames = {}
-        self.category_visible = {}
-
-        for category in TOOLS_REGISTRY.keys():
-            frame = tk.Frame(self.category_notebook, bg=COLORS["bg"])
-            self.category_frames[category] = frame
-            # frame is gridded in show_category
-            self._build_category_grid(frame, category)
-            self.category_visible[category] = False
-
-        self.current_category = None
-        self.show_category(list(TOOLS_REGISTRY.keys())[0])
-
-        # Console area
         self.console_expanded = False
-        self.console_container = tk.Frame(content, bg=COLORS["bg"])
-        self.console_container.grid(row=2, column=0, sticky="ew", padx=25, pady=(10, 0))
+        self.console_container = tk.Frame(self.content, bg=COLORS["bg"])
+        self.console_container.grid(row=1, column=0, sticky="ew", padx=25, pady=(10, 0))
         self.console_container.columnconfigure(0, weight=1)
 
         self.console_toggle = tk.Button(
@@ -2361,13 +2541,13 @@ class ModernInstaller(tk.Tk):
         )
         self.console_toggle.grid(row=0, column=0, sticky="w")
 
-        self.log_frame = tk.Frame(content, bg=COLORS["bg"])
-        self.log_frame.grid(row=3, column=0, sticky="ew", padx=25, pady=(0, 5))
+        self.log_frame = tk.Frame(self.content, bg=COLORS["bg"])
+        self.log_frame.grid(row=2, column=0, sticky="ew", padx=25, pady=(0, 20))
         self.log_frame.columnconfigure(0, weight=1)
 
         self.log_text = tk.Text(
             self.log_frame,
-            height=0,  # Start hidden
+            height=0,
             bg="#0d0d0d" if ThemeManager.get_current_theme() == "dark" else "#ffffff",
             fg="#00ff00" if ThemeManager.get_current_theme() == "dark" else "#000000",
             font=FONTS["mono"],
@@ -2376,7 +2556,6 @@ class ModernInstaller(tk.Tk):
             highlightthickness=1,
             highlightbackground=COLORS["border"],
         )
-        # Use log_text.grid_remove() initially or height=0
         self.log_text.grid(row=0, column=0, sticky="ew")
 
         self.progress_bar = ttk.Progressbar(
@@ -2387,9 +2566,181 @@ class ModernInstaller(tk.Tk):
         )
         self.progress_bar.grid(row=1, column=0, sticky="ew", pady=(10, 0))
 
-        # Footer Actions
-        self.footer_frame = tk.Frame(content, bg=COLORS["bg"])
-        self.footer_frame.grid(row=4, column=0, sticky="ew", padx=25, pady=(15, 30))
+        self.show_panel("install")
+
+    def show_panel(self, name: str):
+        self.install_panel.grid_forget()
+        self.stacks_panel.grid_forget()
+        self.backup_restore_panel.grid_forget()
+
+        for k, btn in self.nav_buttons.items():
+            btn.set_active(k == name)
+
+        if name == "install":
+            self.install_panel.grid(row=0, column=0, sticky="nsew")
+        elif name == "stacks":
+            self.stacks_panel.grid(row=0, column=0, sticky="nsew")
+            self.stacks_panel._reposition_cards()
+        elif name == "backup_restore":
+            self.backup_restore_panel.grid(row=0, column=0, sticky="nsew")
+
+    def _build_sidebar(self, sidebar: tk.Frame):
+        sidebar.columnconfigure(0, weight=1)
+        sidebar.rowconfigure(10, weight=1)
+
+        self.sidebar_logo = tk.Label(
+            sidebar,
+            text="DevTools",
+            bg=COLORS["sidebar_bg"],
+            fg="white",
+            font=FONTS["title"],
+        )
+        self.sidebar_logo.grid(row=0, column=0, sticky="w", padx=25, pady=(40, 10))
+
+        self.sidebar_divider1 = tk.Frame(sidebar, bg=COLORS["border"], height=1)
+        self.sidebar_divider1.grid(row=1, column=0, sticky="ew", padx=25, pady=20)
+
+        self.menu_header = tk.Label(
+            sidebar,
+            text=_("menu_header"),
+            bg=COLORS["sidebar_bg"],
+            fg=COLORS["text_dim"],
+            font=("Segoe UI", 9, "bold"),
+        )
+        self.menu_header.grid(row=2, column=0, sticky="w", padx=25, pady=(0, 10))
+
+        self.nav_buttons = {}
+        nav_items = [
+            ("install", _("nav_install")),
+            ("stacks", _("nav_stacks")),
+            ("backup_restore", _("nav_backup_restore"))
+        ]
+        
+        for i, (key, label) in enumerate(nav_items):
+            btn = CategoryButton(
+                sidebar,
+                text=label,
+                command=lambda k=key: self.show_panel(k)
+            )
+            btn.grid(row=3 + i, column=0, sticky="ew")
+            self.nav_buttons[key] = btn
+
+        self.bottom_frame = tk.Frame(sidebar, bg=COLORS["sidebar_bg"])
+        self.bottom_frame.grid(row=11, column=0, sticky="ew", padx=20, pady=(20, 5))
+        self.bottom_frame.columnconfigure(0, weight=1)
+
+        self.theme_frame = tk.Frame(self.bottom_frame, bg=COLORS["sidebar_bg"])
+        self.theme_frame.pack(fill="x", pady=5)
+        
+        self.theme_label = tk.Label(
+            self.theme_frame,
+            text=_("Dark Mode"),
+            bg=COLORS["sidebar_bg"],
+            fg=COLORS["text"],
+            font=FONTS["body"]
+        )
+        self.theme_label.pack(side="left")
+        
+        self.theme_toggle = ToggleSwitch(self.theme_frame, command=self._toggle_theme)
+        self.theme_toggle.set(ThemeManager.get_current_theme() == "dark")
+        self.theme_toggle.pack(side="right")
+
+        self.lang_switcher = LanguageSwitcher(self.bottom_frame, on_change=self.update_ui_languages)
+        self.lang_switcher.pack(fill="x", pady=5)
+
+        self.status_label = tk.Label(
+            sidebar,
+            text=_("status_ready"),
+            bg=COLORS["sidebar_bg"],
+            fg=COLORS["text_dim"],
+            font=FONTS["small"],
+            wraplength=200,
+        )
+        self.status_label.grid(row=12, column=0, sticky="sw", padx=15, pady=15)
+
+    def _build_install_panel(self, panel: tk.Frame):
+        panel.columnconfigure(0, weight=1)
+        panel.rowconfigure(1, weight=0)
+        panel.rowconfigure(2, weight=0)
+        panel.rowconfigure(3, weight=1)
+        panel.rowconfigure(4, weight=0)
+
+        self.install_header = tk.Frame(panel, bg=COLORS["bg"])
+        self.install_header.grid(row=0, column=0, sticky="ew", padx=25, pady=(30, 10))
+        self.install_header.columnconfigure(0, weight=1)
+
+        self.tool_mgmt_header = tk.Label(
+            self.install_header,
+            text=_("tool_management"),
+            bg=COLORS["bg"],
+            fg="white" if ThemeManager.get_current_theme() == "dark" else "black",
+            font=FONTS["title"],
+        )
+        self.tool_mgmt_header.grid(row=0, column=0, sticky="w")
+
+        self.search_container = tk.Frame(self.install_header, bg=COLORS["bg"])
+        self.search_container.grid(row=0, column=1, sticky="e")
+
+        self.search_var = tk.StringVar()
+        self.search_var.trace_add("write", self._on_search)
+
+        self.search_entry = RoundedEntry(
+            self.search_container, placeholder=_("search_placeholder"), width=200
+        )
+        self.search_entry.pack(side="left", padx=(0, 10))
+        self.search_entry.entry.config(textvariable=self.search_var)
+
+        self.filter_var = tk.StringVar(value=_("filter_all"))
+        self.filter_dropdown = ttk.Combobox(
+            self.search_container,
+            textvariable=self.filter_var,
+            values=[_("filter_all"), _("filter_selected"), _("filter_installed"), _("filter_pending")],
+            state="readonly",
+            width=14,
+            style="TCombobox"
+        )
+        self.filter_dropdown.pack(side="left")
+        self.filter_dropdown.bind("<<ComboboxSelected>>", self._on_search)
+
+        self.super_tabs_frame = tk.Frame(panel, bg=COLORS["bg"])
+        self.super_tabs_frame.grid(row=1, column=0, sticky="ew", padx=25, pady=5)
+
+        self.super_tab_buttons = {}
+        for idx, super_cat in enumerate(SUPER_CATEGORIES.keys()):
+            btn = StyledButton(
+                self.super_tabs_frame,
+                text=super_cat,
+                command=lambda sc=super_cat: self.show_super_category(sc),
+                primary=False,
+                width=160,
+                height=30
+            )
+            btn.pack(side="left", padx=5)
+            self.super_tab_buttons[super_cat] = btn
+
+        self.sub_tabs_frame = tk.Frame(panel, bg=COLORS["bg"])
+        self.sub_tabs_frame.grid(row=2, column=0, sticky="ew", padx=25, pady=5)
+        self.sub_tab_buttons = []
+
+        self.category_notebook = tk.Frame(panel, bg=COLORS["bg"])
+        self.category_notebook.grid(row=3, column=0, sticky="nsew", padx=15, pady=5)
+        self.category_notebook.columnconfigure(0, weight=1)
+        self.category_notebook.rowconfigure(0, weight=1)
+
+        self.category_frames = {}
+        self.category_visible = {}
+
+        for category in TOOLS_REGISTRY.keys():
+            frame = tk.Frame(self.category_notebook, bg=COLORS["bg"])
+            self.category_frames[category] = frame
+            self._build_category_grid(frame, category)
+            self.category_visible[category] = False
+
+        self.current_category = None
+        self.current_super_category = None
+
+        self.footer_frame = tk.Frame(panel, bg=COLORS["bg"])
+        self.footer_frame.grid(row=4, column=0, sticky="ew", padx=25, pady=(15, 20))
         self.footer_frame.columnconfigure(1, weight=1)
 
         self.select_all_btn = StyledButton(
@@ -2419,21 +2770,56 @@ class ModernInstaller(tk.Tk):
         )
         self.install_btn.grid(row=0, column=2, sticky="e")
 
+        self.show_super_category(list(SUPER_CATEGORIES.keys())[0])
+
+    def show_super_category(self, super_cat: str):
+        if self.current_super_category == super_cat:
+            return
+
+        self.current_super_category = super_cat
+
+        for sc, btn in self.super_tab_buttons.items():
+            btn.primary = (sc == super_cat)
+            btn._draw()
+
+        for btn in self.sub_tab_buttons:
+            btn.destroy()
+        self.sub_tab_buttons.clear()
+
+        sub_cats = SUPER_CATEGORIES[super_cat]
+        for sub_cat in sub_cats:
+            btn = StyledButton(
+                self.sub_tabs_frame,
+                text=_(sub_cat),
+                command=lambda sc=sub_cat: self.show_category(sc),
+                primary=False,
+                width=140,
+                height=26
+            )
+            btn.pack(side="left", padx=3)
+            self.sub_tab_buttons.append(btn)
+
+        if sub_cats:
+            self.show_category(sub_cats[0])
+
     def show_category(self, category: str):
         if self.current_category == category:
             return
 
+        sub_cats = SUPER_CATEGORIES[self.current_super_category]
+        category_index = sub_cats.index(category) if category in sub_cats else -1
+        
+        for idx, btn in enumerate(self.sub_tab_buttons):
+            btn.primary = (idx == category_index)
+            btn._draw()
+
         for cat, frame in self.category_frames.items():
             if cat == category:
-                frame.grid(row=0, column=0, sticky="nsew")  # Inside category_notebook
+                frame.grid(row=0, column=0, sticky="nsew")
                 self.category_visible[cat] = True
-                if cat in self.category_buttons:
-                    self.category_buttons[cat].set_active(True)
             else:
                 frame.grid_forget()
                 self.category_visible[cat] = False
-                if cat in self.category_buttons:
-                    self.category_buttons[cat].set_active(False)
 
         self.current_category = category
 
@@ -2448,21 +2834,21 @@ class ModernInstaller(tk.Tk):
         self.update_idletasks()
 
     def update_ui_languages(self):
-        # Ενημέρωση τίτλου παραθύρου
         self.title(_("app_title"))
+        self.menu_header.config(text=_("menu_header"))
 
-        # Ενημέρωση επικεφαλίδων sidebar
-        self.categories_header.config(text=_("categories"))
-        self.stacks_header.config(text=_("stacks"))
-        self.backup_btn.text = _("backup")
-        self.backup_btn._draw()
-        self.restore_btn.text = _("restore")
-        self.restore_btn._draw()
+        nav_items = [
+            ("install", _("nav_install")),
+            ("stacks", _("nav_stacks")),
+            ("backup_restore", _("nav_backup_restore"))
+        ]
+        for key, label in nav_items:
+            if key in self.nav_buttons:
+                self.nav_buttons[key].text = label
+                self.nav_buttons[key]._draw()
 
-        # Ενημέρωση Dark Mode label
         self.theme_label.config(text=_("Dark Mode"))
 
-        # Ενημέρωση ετικέτας κατάστασης στο sidebar
         curr_status = self.status_label.cget("text")
         if curr_status.startswith("Status: ") or curr_status.startswith("Κατάσταση: "):
             if "Ready" in curr_status or "Έτοιμο" in curr_status:
@@ -2478,17 +2864,19 @@ class ModernInstaller(tk.Tk):
             elif curr_status == "Completed" or curr_status == "Ολοκληρώθηκε":
                 self.status_label.config(text=_("status_completed"))
 
-        # Ενημέρωση επικεφαλίδας περιεχομένου & Search bar placeholder
         self.tool_mgmt_header.config(text=_("tool_management"))
         self.search_entry.update_placeholder(_("search_placeholder"))
+        
+        self.filter_dropdown.config(
+            values=[_("filter_all"), _("filter_selected"), _("filter_installed"), _("filter_pending")]
+        )
+        self.filter_var.set(_("filter_all"))
 
-        # Ενημέρωση κουμπιού κονσόλας
         if self.console_expanded:
             self.console_toggle.config(text=_("hide_console"))
         else:
             self.console_toggle.config(text=_("show_console"))
 
-        # Ενημέρωση footer buttons
         self.select_all_btn.text = _("select_all")
         self.select_all_btn._draw()
         self.deselect_all_btn.text = _("deselect_all")
@@ -2496,48 +2884,47 @@ class ModernInstaller(tk.Tk):
         self.install_btn.text = _("install_selected")
         self.install_btn._draw_button()
 
-        # Ενημέρωση sidebar κατηγοριών
-        for category, btn in self.category_buttons.items():
-            btn.text = _(category)
-            btn._draw()
+        if self.current_super_category:
+            sub_cats = SUPER_CATEGORIES[self.current_super_category]
+            for idx, btn in enumerate(self.sub_tab_buttons):
+                if idx < len(sub_cats):
+                    btn.text = _(sub_cats[idx])
+                    btn._draw()
 
-        # Ενημέρωση καρτών
         for card in self.cards:
             card.update_language()
+
+        self.stacks_panel.update_language()
+        self.backup_restore_panel.update_language()
 
     def _toggle_theme(self):
         current = ThemeManager.get_current_theme()
         new_theme = "light" if current == "dark" else "dark"
         ThemeManager.set_theme(new_theme)
         
-        # Ανανέωση των χρωμάτων
         global COLORS
         COLORS = ThemeManager.get_colors()
         
         self.update_theme_colors()
 
     def update_theme_colors(self):
-        # Ενημέρωση φόντου ρίζας & στυλ TTK
         self.configure(bg=COLORS["bg"])
         self._setup_styles()
 
-        # Στοιχεία Sidebar
         self.sidebar_area.config(bg=COLORS["sidebar_bg"])
         self.sidebar_area.canvas.config(bg=COLORS["sidebar_bg"])
         self.sidebar_area.scrollable_frame.config(bg=COLORS["sidebar_bg"])
         
         self.sidebar_logo.config(bg=COLORS["sidebar_bg"])
         self.sidebar_divider1.config(bg=COLORS["border"])
-        self.categories_header.config(bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"])
-        self.cat_container.config(bg=COLORS["sidebar_bg"])
+        self.menu_header.config(bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"])
         
-        for btn in self.category_buttons.values():
+        for btn in self.nav_buttons.values():
             btn.canvas.config(bg=COLORS["sidebar_bg"])
             btn.config(bg=COLORS["sidebar_bg"])
             btn._draw()
             
-        self.sidebar_divider2.config(bg=COLORS["border"])
-        
+        self.bottom_frame.config(bg=COLORS["sidebar_bg"])
         self.theme_frame.config(bg=COLORS["sidebar_bg"])
         self.theme_label.config(bg=COLORS["sidebar_bg"], fg=COLORS["text"])
         self.theme_toggle.config(bg=COLORS["sidebar_bg"])
@@ -2549,31 +2936,28 @@ class ModernInstaller(tk.Tk):
         self.lang_switcher.container.config(bg=COLORS["border"])
         self.lang_switcher.update_selection()
         
-        self.backup_btn.config(bg=COLORS["sidebar_bg"])
-        self.backup_btn._draw()
-        self.restore_btn.config(bg=COLORS["sidebar_bg"])
-        self.restore_btn._draw()
-        
-        self.stacks_header.config(bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"])
-        
-        for btn in self.stack_buttons:
-            btn.config(bg=COLORS["sidebar_bg"])
-            btn._draw()
-            
         self.status_label.config(bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"])
         
-        # Στοιχεία Περιεχομένου
-        self.content.config(bg=COLORS["bg"])
-        self.header_frame.config(bg=COLORS["bg"])
+        self.install_panel.config(bg=COLORS["bg"])
+        self.install_header.config(bg=COLORS["bg"])
         self.tool_mgmt_header.config(bg=COLORS["bg"], fg="white" if ThemeManager.get_current_theme() == "dark" else "black")
         
-        # Search Entry
+        self.search_container.config(bg=COLORS["bg"])
         self.search_entry.config(bg=COLORS["card_bg"])
         self.search_entry.canvas.config(bg=COLORS["card_bg"])
         self.search_entry.entry.config(bg=COLORS["card_bg"], fg=COLORS["text"], insertbackground=COLORS["text"])
         self.search_entry._draw()
         
-        # Notebook & Category Frames
+        self.super_tabs_frame.config(bg=COLORS["bg"])
+        for btn in self.super_tab_buttons.values():
+            btn.config(bg=COLORS["bg"])
+            btn._draw()
+            
+        self.sub_tabs_frame.config(bg=COLORS["bg"])
+        for btn in self.sub_tab_buttons:
+            btn.config(bg=COLORS["bg"])
+            btn._draw()
+
         self.category_notebook.config(bg=COLORS["bg"])
         for frame in self.category_frames.values():
             frame.config(bg=COLORS["bg"])
@@ -2583,12 +2967,10 @@ class ModernInstaller(tk.Tk):
                     child.canvas.config(bg=COLORS["bg"])
                     child.scrollable_frame.config(bg=COLORS["bg"])
                     
-        # Update cards
         for card in self.cards:
             card.config(bg=COLORS["card_bg"])
             card._update_style()
             
-        # Console & Log area
         self.console_container.config(bg=COLORS["bg"])
         self.console_toggle.config(bg=COLORS["bg"], activebackground=COLORS["bg"])
         
@@ -2599,7 +2981,6 @@ class ModernInstaller(tk.Tk):
             highlightbackground=COLORS["border"]
         )
         
-        # Footer
         self.footer_frame.config(bg=COLORS["bg"])
         self.select_all_btn.config(bg=COLORS["bg"])
         self.select_all_btn._draw()
@@ -2609,26 +2990,42 @@ class ModernInstaller(tk.Tk):
         self.install_btn.config(bg=COLORS["bg"])
         self.install_btn._draw_button()
 
+        self.stacks_panel.update_theme()
+        self.backup_restore_panel.update_theme()
+
     def _on_card_toggle(self, card: ToolCard):
         pass
 
     def _on_search(self, *args):
-        # Debounce search: wait 300ms after last keystroke
         if self._search_after_id:
             self.after_cancel(self._search_after_id)
         self._search_after_id = self.after(300, self._execute_search)
 
     def _execute_search(self):
         try:
-            query = self.search_var.get().lower()
+            query = self.search_entry.get().lower()
         except:
             query = ""
 
-        for card in self.cards:
-            match = query in card.name.lower() or query in card.details["id"].lower()
-            card.set_visible(match)
+        filter_val = self.filter_var.get()
+        all_text = _("filter_all")
+        sel_text = _("filter_selected")
+        inst_text = _("filter_installed")
+        pend_text = _("filter_pending")
 
-        # Trigger repositioning in all visible frames
+        for card in self.cards:
+            match_search = query in card.name.lower() or query in card.details["id"].lower()
+            
+            match_filter = True
+            if filter_val == sel_text:
+                match_filter = card.is_checked()
+            elif filter_val == inst_text:
+                match_filter = card.get_status() == "INSTALLED"
+            elif filter_val == pend_text:
+                match_filter = card.get_status() == "PENDING"
+                
+            card.set_visible(match_search and match_filter)
+
         self.event_generate("<<SearchUpdate>>")
 
     def _process_queue(self):
@@ -2657,35 +3054,25 @@ class ModernInstaller(tk.Tk):
         self.log_text.see("end")
 
     def select_all(self):
-        """Select all tools."""
         for card in self.cards:
-            card.set_checked(True)
+            if card.master.master.master == self.category_frames[self.current_category]:
+                card.set_checked(True)
 
     def deselect_all(self):
-        """Deselect all tools."""
         for card in self.cards:
-            card.set_checked(False)
+            if card.master.master.master == self.category_frames[self.current_category]:
+                card.set_checked(False)
 
     def apply_stack(self, stack_name: str):
-        """
-        Apply a predefined stack
-        ========================
-        Automatically selects tools belonging to a stack.
-        """
         self.deselect_all()
         active_tools = STACKS.get(stack_name, [])
         for card in self.cards:
             if card.name in active_tools:
                 card.set_checked(True)
         self.status_label.config(text=f"Selected Stack: {stack_name}")
+        self.show_panel("install")
 
     def start_installation(self):
-        """
-        Start Installation - Main method
-        ================================
-        Collects selected tools and starts installation
-        in a separate thread to keep the UI responsive.
-        """
         selected = [(c.name, c.details["id"]) for c in self.cards if c.is_checked()]
 
         if not selected:
@@ -2699,9 +3086,40 @@ class ModernInstaller(tk.Tk):
         self._append_log(
             _("starting_install", count=len(selected)), "info"
         )
+        if not self.console_expanded:
+            self._toggle_console()
 
         thread = threading.Thread(
             target=self._run_installation, args=(selected,), daemon=True
+        )
+        thread.start()
+
+    def retry_tool(self, name: str, winget_id: str):
+        # Ξεκινάει την εγκατάσταση ενός συγκεκριμένου εργαλείου.
+        # Θέτει την κατάσταση εγκατάστασης σε True.
+        self.is_installing = True
+
+        # Απενεργοποιεί τα στοιχεία ελέγχου του UI.
+        self._set_ui_enabled(False)
+
+        # Καθαρίζει το πλαίσιο καταγραφής (console log).
+        self.log_text.delete("1.0", "end")
+
+        # Καταγράφει την έναρξη εγκατάστασης για ένα εργαλείο.
+        self._append_log(
+            _("starting_install", count = 1), "info"
+        )
+
+        # Επεκτείνει την κονσόλα αν είναι κλειστή.
+        if not self.console_expanded:
+            self._toggle_console()
+
+        # Ορίζει τη λίστα εργαλείων με το συγκεκριμένο εργαλείο.
+        selected_tool = [(name, winget_id)]
+
+        # Δημιουργεί και ξεκινάει το νήμα της εγκατάστασης.
+        thread = threading.Thread(
+            target = self._run_installation, args = (selected_tool,), daemon = True
         )
         thread.start()
 
@@ -2799,11 +3217,6 @@ class ModernInstaller(tk.Tk):
         self.install_btn.set_enabled(enabled)
 
     def start_backup(self):
-        """
-        Create Backup
-        =============
-        Opens selection dialog before starting backup.
-        """
         dialog = BackupSelectionDialog(self, BACKUP_PATHS)
         self.wait_window(dialog)
 
@@ -2823,6 +3236,8 @@ class ModernInstaller(tk.Tk):
             )
 
             if target_path:
+                if not self.console_expanded:
+                    self._toggle_console()
                 threading.Thread(
                     target=self._run_backup,
                     args=(selected_items, target_path),
@@ -2830,12 +3245,6 @@ class ModernInstaller(tk.Tk):
                 ).start()
 
     def _run_backup(self, selected_items: List[str], target_zip: str):
-        """
-        Execute Backup - Create ZIP
-        ===========================
-        Creates a backup of selected settings and saves them to the specified ZIP file.
-        """
-
         try:
             self.install_queue.put(
                 {
@@ -2888,9 +3297,9 @@ class ModernInstaller(tk.Tk):
                     if path and os.path.exists(path):
                         self.install_queue.put(
                             {
-                                "type": "log",
-                                "text": _("backup_compressing", name=name),
-                                "tag": "info",
+                                    "type": "log",
+                                    "text": _("backup_compressing", name=name),
+                                    "tag": "info",
                             }
                         )
                         for root, _, files in os.walk(path):
@@ -2924,11 +3333,6 @@ class ModernInstaller(tk.Tk):
             )
 
     def start_restore(self):
-        """
-        Restore from Backup
-        ===================
-        Opens a ZIP file selection dialog.
-        """
         from tkinter import filedialog
 
         path = filedialog.askopenfilename(
@@ -2936,16 +3340,13 @@ class ModernInstaller(tk.Tk):
         )
 
         if path:
+            if not self.console_expanded:
+                self._toggle_console()
             threading.Thread(
                 target=self._run_restore, args=(path,), daemon=True
             ).start()
 
     def _run_restore(self, zip_path: str):
-        """
-        Execute Restore - Extract ZIP
-        ============================
-        Extracts files from ZIP to their original locations.
-        """
         try:
             self.install_queue.put(
                 {
@@ -3143,7 +3544,6 @@ class ModernInstaller(tk.Tk):
             percentage = (current / total) * 100
             self.progress_bar["value"] = percentage
             self.update_idletasks()
-
 
 class BackupSelectionDialog(tk.Toplevel):
     def __init__(self, parent, backup_paths: Dict[str, str]):

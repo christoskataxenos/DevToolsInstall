@@ -195,11 +195,14 @@ def test_search_functionality(app):
 @requires_tk
 def test_select_deselect_all(app):
     """Έλεγχος επιλογής/αποεπιλογής όλων."""
+    # Find cards in the current category
+    curr_cat_cards = [c for c in app.cards if c.master.master.master == app.category_frames[app.current_category]]
+    
     app.deselect_all()
-    assert all(not c.is_checked() for c in app.cards)
+    assert all(not c.is_checked() for c in curr_cat_cards)
 
     app.select_all()
-    assert all(c.is_checked() for c in app.cards)
+    assert all(c.is_checked() for c in curr_cat_cards)
 
 
 @requires_tk
@@ -237,3 +240,21 @@ def test_no_duplicate_winget_ids():
                         f"{seen_ids[tool_id]} and {name}"
                     )
                 seen_ids[tool_id] = name
+
+
+@requires_tk
+def test_retry_tool(app):
+    """Έλεγχος της μεθόδου retry_tool για ένα εργαλείο."""
+    import unittest.mock as mock
+
+    # Χρήση mock για το Thread ώστε να μην εκτελεστεί πραγματικά η εγκατάσταση
+    with mock.patch("threading.Thread") as mock_thread:
+        app.retry_tool("VS Code", "Microsoft.VisualStudioCode")
+
+        # Επιβεβαίωση ότι το Thread κλήθηκε και ξεκίνησε με τα σωστά ορίσματα
+        mock_thread.assert_called_once()
+        kwargs = mock_thread.call_args[1]
+        assert kwargs["target"] == app._run_installation
+        assert kwargs["args"] == ([("VS Code", "Microsoft.VisualStudioCode")],)
+        assert kwargs["daemon"] is True
+        assert app.is_installing is True
