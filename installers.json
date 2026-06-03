@@ -3,589 +3,916 @@
     "Google Chrome": {
       "id": "Google.Chrome",
       "url": "https://www.google.com/chrome/",
-      "note": "Ο πιο δημοφιλής περιηγητής ιστού από την Google."
+      "note": {
+        "el": "Ο πιο δημοφιλής περιηγητής ιστού από την Google.",
+        "en": "The most popular web browser from Google."
+      }
     },
     "Mozilla Firefox": {
       "id": "Mozilla.Firefox",
       "url": "https://www.mozilla.org/firefox/",
-      "note": "Περιηγητής ιστού με έμφαση στην ιδιωτικότητα και τον ανοιχτό κώδικα."
+      "note": {
+        "el": "Περιηγητής ιστού με έμφαση στην ιδιωτικότητα και τον ανοιχτό κώδικα.",
+        "en": "Web browser with an emphasis on privacy and open source."
+      }
     },
     "Brave Browser": {
       "id": "Brave.Brave",
       "url": "https://brave.com/",
-      "note": "Περιηγητής που εστιάζει στην ταχύτητα και τον αποκλεισμό διαφημίσεων."
+      "note": {
+        "el": "Περιηγητής που εστιάζει στην ταχύτητα και τον αποκλεισμό διαφημίσεων.",
+        "en": "Browser that focuses on speed and ad blocking."
+      }
     },
     "Vivaldi Browser": {
       "id": "Vivaldi.Vivaldi",
       "url": "https://vivaldi.com/",
-      "note": "Ευρωπαϊκός περιηγητής με απαράμιλλη δυνατότητα παραμετροποίησης."
+      "note": {
+        "el": "Ευρωπαϊκός περιηγητής με απαράμιλλη δυνατότητα παραμετροποίησης.",
+        "en": "European browser with unparalleled customization capabilities."
+      }
     }
   },
   "Office & Documents": {
     "Microsoft 365": {
       "id": "Microsoft.Office",
       "url": "https://www.office.com/",
-      "note": "Η σουίτα εφαρμογών γραφείου της Microsoft (Word, Excel, κλπ)."
+      "note": {
+        "el": "Η σουίτα εφαρμογών γραφείου της Microsoft (Word, Excel, κλπ).",
+        "en": "Microsoft's office application suite (Word, Excel, etc.)."
+      }
     },
     "Apache OpenOffice": {
       "id": "Apache.OpenOffice",
       "url": "https://www.openoffice.org/",
-      "note": "Κλασική ανοιχτού κώδικα σουίτα εφαρμογών γραφείου."
+      "note": {
+        "el": "Κλασική ανοιχτού κώδικα σουίτα εφαρμογών γραφείου.",
+        "en": "Classic open-source office suite."
+      }
     },
     "LibreOffice": {
       "id": "TheDocumentFoundation.LibreOffice",
       "url": "https://www.libreoffice.org/",
-      "note": "Η πιο ισχυρή δωρεάν και ανοιχτού κώδικα σουίτα γραφείου."
+      "note": {
+        "el": "Η πιο ισχυρή δωρεάν και ανοιχτού κώδικα σουίτα γραφείου.",
+        "en": "The most powerful free and open-source office suite."
+      }
     },
     "ONLYOFFICE": {
       "id": "ONLYOFFICE.DesktopEditors",
       "url": "https://www.onlyoffice.com/",
-      "note": "Ευρωπαϊκή σουίτα γραφείου με υψηλή συμβατότητα με αρχεία MS Office."
+      "note": {
+        "el": "Ευρωπαϊκή σουίτα γραφείου με υψηλή συμβατότητα με αρχεία MS Office.",
+        "en": "European office suite with high compatibility with MS Office files."
+      }
     }
   },
   "Communication": {
     "Discord": {
       "id": "Discord.Discord",
       "url": "https://discord.com/",
-      "note": "Πλατφόρμα επικοινωνίας για κοινότητες και gamers."
+      "note": {
+        "el": "Πλατφόρμα επικοινωνίας για κοινότητες και gamers.",
+        "en": "Communication platform for communities and gamers."
+      }
     },
     "WhatsApp": {
       "id": "WhatsApp.WhatsApp",
       "url": "https://www.whatsapp.com/",
-      "note": "Δημοφιλής εφαρμογή για μηνύματα και κλήσεις."
+      "note": {
+        "el": "Δημοφιλής εφαρμογή για μηνύματα και κλήσεις.",
+        "en": "Popular messaging and calling app."
+      }
     },
     "Telegram": {
       "id": "Telegram.TelegramDesktop",
       "url": "https://telegram.org/",
-      "note": "Γρήγορη και ασφαλής εφαρμογή μηνυμάτων, ευρωπαϊκής προέλευσης."
+      "note": {
+        "el": "Γρήγορη και ασφαλής εφαρμογή μηνυμάτων, ευρωπαϊκής προέλευσης.",
+        "en": "Fast and secure messaging app, of European origin."
+      }
     },
     "Element": {
       "id": "Element.Element",
       "url": "https://element.io/",
-      "note": "Ανοιχτού κώδικα εφαρμογή επικοινωνίας βασισμένη στο πρωτόκολλο Matrix."
+      "note": {
+        "el": "Ανοιχτού κώδικα εφαρμογή επικοινωνίας βασισμένη στο πρωτόκολλο Matrix.",
+        "en": "Open-source communication app based on the Matrix protocol."
+      }
     },
     "Zoom": {
       "id": "Zoom.Zoom",
       "url": "https://zoom.us/",
-      "note": "Πλατφόρμα για βιντεοκλήσεις και τηλεδιασκέψεις."
+      "note": {
+        "el": "Πλατφόρμα για βιντεοκλήσεις και τηλεδιασκέψεις.",
+        "en": "Platform for video calls and video conferencing."
+      }
     },
     "Webex": {
       "id": "Cisco.Webex",
       "url": "https://www.webex.com/",
-      "note": "Επαγγελματικό εργαλείο για συναντήσεις και συνεργασία."
+      "note": {
+        "el": "Επαγγελματικό εργαλείο για συναντήσεις και συνεργασία.",
+        "en": "Professional tool for meetings and collaboration."
+      }
     },
     "Slack": {
       "id": "SlackTechnologies.Slack",
       "url": "https://slack.com/",
-      "note": "Η standard εφαρμογή επικοινωνίας για ομάδες εργασίας."
+      "note": {
+        "el": "Η standard εφαρμογή επικοινωνίας για ομάδες εργασίας.",
+        "en": "The standard communication app for workgroups."
+      }
     },
     "Viber": {
       "id": "Rakuten.Viber",
       "url": "https://www.viber.com/",
-      "note": "Δημοφιλής εφαρμογή για δωρεάν μηνύματα και κλήσεις παγκοσμίως."
+      "note": {
+        "el": "Δημοφιλής εφαρμογή για δωρεάν μηνύματα και κλήσεις παγκοσμίως.",
+        "en": "Popular app for free messaging and calls worldwide."
+      }
     }
   },
   "Media & Entertainment": {
     "VLC media player": {
       "id": "VideoLAN.VLC",
       "url": "https://www.videolan.org/",
-      "note": "Universal player για κάθε είδους αρχείο βίντεο και ήχου."
+      "note": {
+        "el": "Universal player για κάθε είδους αρχείο βίντεο και ήχου.",
+        "en": "Universal player for all types of video and audio files."
+      }
     },
     "Spotify": {
       "id": "Spotify.Spotify",
       "url": "https://www.spotify.com/",
-      "note": "Η κορυφαία υπηρεσία streaming μουσικής."
+      "note": {
+        "el": "Η κορυφαία υπηρεσία streaming μουσικής.",
+        "en": "The leading music streaming service."
+      }
     },
     "K-Lite Codec Pack": {
       "id": "CodecGuide.K-LiteCodecPack.Full",
       "url": "https://codecguide.com/",
-      "note": "Συλλογή από codecs για αναπαραγωγή οποιασδήποτε ταινίας."
+      "note": {
+        "el": "Συλλογή από codecs για αναπαραγωγή οποιασδήποτε ταινίας.",
+        "en": "Collection of codecs for playing any video."
+      }
     },
     "Steam": {
       "id": "Valve.Steam",
       "url": "https://store.steampowered.com/",
-      "note": "Η μεγαλύτερη πλατφόρμα διανομής παιχνιδιών."
+      "note": {
+        "el": "Η μεγαλύτερη πλατφόρμα διανομής παιχνιδιών.",
+        "en": "The largest game distribution platform."
+      }
     }
   },
   "System & Cloud": {
     "7-Zip": {
       "id": "7zip.7zip",
       "url": "https://www.7-zip.org/",
-      "note": "Κορυφαίο εργαλείο για συμπίεση και αποσυμπίεση αρχείων."
+      "note": {
+        "el": "Κορυφαίο εργαλείο για συμπίεση και αποσυμπίεση αρχείων.",
+        "en": "Top tool for file compression and extraction."
+      }
     },
     "pCloud": {
       "id": "pCloudAG.pCloudDrive",
       "url": "https://www.pcloud.com/",
-      "note": "Ασφαλής ευρωπαϊκή υπηρεσία cloud storage (Ελβετία)."
+      "note": {
+        "el": "Ασφαλής ευρωπαϊκή υπηρεσία cloud storage (Ελβετία).",
+        "en": "Secure European cloud storage service (Switzerland)."
+      }
     },
     "Proton Drive": {
       "id": "Proton.ProtonDrive",
       "url": "https://proton.me/drive",
-      "note": "Πλήρως κρυπτογραφημένο cloud storage από την Proton (Ελβετία)."
+      "note": {
+        "el": "Πλήρως κρυπτογραφημένο cloud storage από την Proton (Ελβετία).",
+        "en": "Fully encrypted cloud storage from Proton (Switzerland)."
+      }
     },
     "Nextcloud Desktop": {
       "id": "Nextcloud.NextcloudDesktop",
       "url": "https://nextcloud.com/",
-      "note": "Ανοιχτού κώδικα πλατφόρμα για προσωπικό cloud και συγχρονισμό."
+      "note": {
+        "el": "Ανοιχτού κώδικα πλατφόρμα για προσωπικό cloud και συγχρονισμό.",
+        "en": "Open-source platform for personal cloud and sync."
+      }
     },
     "Google Earth Pro": {
       "id": "Google.EarthPro",
       "url": "https://www.google.com/earth/",
-      "note": "Εξερευνήστε τον κόσμο με τρισδιάστατες δορυφορικές εικόνες."
+      "note": {
+        "el": "Εξερευνήστε τον κόσμο με τρισδιάστατες δορυφορικές εικόνες.",
+        "en": "Explore the world with 3D satellite imagery."
+      }
     },
     "Everything": {
       "id": "voidtools.Everything",
       "url": "https://www.voidtools.com/",
-      "note": "Άμεση αναζήτηση αρχείων στο σύστημα."
+      "note": {
+        "el": "Άμεση αναζήτηση αρχείων στο σύστημα.",
+        "en": "Instant file search on the system."
+      }
     }
   },
   "Privacy & Security": {
     "ProtonVPN": {
       "id": "Proton.ProtonVPN",
       "url": "https://protonvpn.com/",
-      "note": "Ασφαλές και γρήγορο VPN από την Proton."
+      "note": {
+        "el": "Ασφαλές και γρήγορο VPN από την Proton.",
+        "en": "Secure and fast VPN by Proton."
+      }
     },
     "Proton Mail": {
       "id": "Proton.ProtonMail",
       "url": "https://proton.me/mail",
-      "note": "Η κορυφαία υπηρεσία κρυπτογραφημένου email παγκοσμίως."
+      "note": {
+        "el": "Η κορυφαία υπηρεσία κρυπτογραφημένου email παγκοσμίως.",
+        "en": "The leading encrypted email service worldwide."
+      }
     }
   },
   "IDEs & Editors": {
     "VS Code": {
       "id": "Microsoft.VisualStudioCode",
       "url": "https://code.visualstudio.com/",
-      "note": "Ο πιο δημοφιλής open-source editor από την Microsoft."
+      "note": {
+        "el": "Ο πιο δημοφιλής open-source editor από την Microsoft.",
+        "en": "The most popular open-source editor from Microsoft."
+      }
     },
     "VS Code Insiders": {
       "id": "Microsoft.VisualStudioCode.Insiders",
       "url": "https://code.visualstudio.com/insiders/",
-      "note": "Η έκδοση προεπισκόπησης του VS Code με νέες δυνατότητες."
+      "note": {
+        "el": "Η έκδοση προεπισκόπησης του VS Code με νέες δυνατότητες.",
+        "en": "Preview version of VS Code with new features."
+      }
     },
     "PyCharm Community": {
       "id": "JetBrains.PyCharm.Community",
       "url": "https://www.jetbrains.com/pycharm/",
-      "note": "Πανίσχυρο IDE για Python ανάπτυξη."
+      "note": {
+        "el": "Πανίσχυρο IDE για Python ανάπτυξη.",
+        "en": "Powerful IDE for Python development."
+      }
     },
     "Android Studio": {
       "id": "Google.AndroidStudio",
       "url": "https://developer.android.com/studio",
-      "note": "Το επίσημο IDE για ανάπτυξη εφαρμογών Android."
+      "note": {
+        "el": "Το επίσημο IDE για ανάπτυξη εφαρμογών Android.",
+        "en": "The official IDE for Android app development."
+      }
     },
     "Arduino IDE": {
       "id": "Arduino.IDE.2",
       "url": "https://www.arduino.cc/en/software",
-      "note": "Περιβάλλον προγραμματισμού για Arduino και hardware."
+      "note": {
+        "el": "Περιβάλλον προγραμματισμού για Arduino και hardware.",
+        "en": "Programming environment for Arduino and hardware."
+      }
     },
     "Notepad++": {
       "id": "Notepad++.Notepad++",
       "url": "https://notepad-plus-plus.org/",
-      "note": "Ελαφρύς και ταχύτατος text editor."
+      "note": {
+        "el": "Ελαφρύς και ταχύτατος text editor.",
+        "en": "Lightweight and fast text editor."
+      }
     },
     "Dev-C++": {
       "id": "Embarcadero.Dev-CPP",
       "url": "https://sourceforge.net/projects/orwelldevcpp/",
-      "note": "Κλασικό IDE για C/C++ (TDM-GCC)."
+      "note": {
+        "el": "Κλασικό IDE για C/C++ (TDM-GCC).",
+        "en": "Classic IDE for C/C++ (TDM-GCC)."
+      }
     }
   },
   "Version Control": {
     "Git": {
       "id": "Git.Git",
       "url": "https://git-scm.com/",
-      "note": "Το standard σύστημα ελέγχου εκδόσεων."
+      "note": {
+        "el": "Το standard σύστημα ελέγχου εκδόσεων.",
+        "en": "The standard version control system."
+      }
     },
     "GitHub Desktop": {
       "id": "GitHub.GitHubDesktop",
       "url": "https://desktop.github.com/",
-      "note": "Γραφικό περιβάλλον για την διαχείριση Git repos."
+      "note": {
+        "el": "Γραφικό περιβάλλον για την διαχείριση Git repos.",
+        "en": "Graphical user interface for managing Git repositories."
+      }
     },
     "GitHub CLI (gh)": {
       "id": "GitHub.cli",
       "url": "https://cli.github.com/",
-      "note": "Εργαλείο γραμμής εντολών για το GitHub."
+      "note": {
+        "el": "Εργαλείο γραμμής εντολών για το GitHub.",
+        "en": "Command line tool for GitHub."
+      }
     },
     "lazygit": {
       "id": "JesseDuffield.lazygit",
       "url": "https://github.com/jesseduffield/lazygit",
-      "note": "Τερματικό περιβάλλον (TUI) για Git."
+      "note": {
+        "el": "Τερματικό περιβάλλον (TUI) για Git.",
+        "en": "Terminal user interface (TUI) for Git."
+      }
     },
     "Git LFS": {
       "id": "GitHub.GitLFS",
       "url": "https://git-lfs.github.com/",
-      "note": "Διαχείριση μεγάλων αρχείων στο Git."
+      "note": {
+        "el": "Διαχείριση μεγάλων αρχείων στο Git.",
+        "en": "Large file management in Git."
+      }
     }
   },
   "Runtimes & Languages": {
     "Node.js (LTS)": {
       "id": "OpenJS.NodeJS.LTS",
       "url": "https://nodejs.org/",
-      "note": "JavaScript runtime για server-side ανάπτυξη."
+      "note": {
+        "el": "JavaScript runtime για server-side ανάπτυξη.",
+        "en": "JavaScript runtime for server-side development."
+      }
     },
     "Python 3.14": {
       "id": "Python.Python.3.14",
       "url": "https://www.python.org/",
-      "note": "Η τελευταία έκδοση της γλώσσας Python."
+      "note": {
+        "el": "Η τελευταία έκδοση της γλώσσας Python.",
+        "en": "The latest version of the Python language."
+      }
     },
     "Go": {
       "id": "Google.Go",
       "url": "https://go.dev/",
-      "note": "Η γλώσσα προγραμματισμού της Google."
+      "note": {
+        "el": "Η γλώσσα προγραμματισμού της Google.",
+        "en": "Google's programming language."
+      }
     },
     "TDM-GCC": {
       "id": "jmeubank.tdm-gcc",
       "url": "https://jmeubank.github.io/tdm-gcc/",
-      "note": "Compiler suite για C/C++ στα Windows."
+      "note": {
+        "el": "Compiler suite για C/C++ στα Windows.",
+        "en": "Compiler suite for C/C++ on Windows."
+      }
     },
     "MSYS2": {
       "id": "MSYS2.MSYS2",
       "url": "https://www.msys2.org/",
-      "note": "Περιβάλλον Unix-like για Windows ανάπτυξη."
+      "note": {
+        "el": "Περιβάλλον Unix-like για Windows ανάπτυξη.",
+        "en": "Unix-like environment for Windows development."
+      }
     },
     "Rust (rustup)": {
       "id": "Rustlang.Rustup",
       "url": "https://rustup.rs/",
-      "note": "Installer για την γλώσσα Rust."
+      "note": {
+        "el": "Installer για την γλώσσα Rust.",
+        "en": "Installer for the Rust language."
+      }
     },
     "Zig": {
       "id": "zig.zig",
       "url": "https://ziglang.org/",
-      "note": "Σύγχρονη και ασφαλής γλώσσα επιπέδου συστήματος."
+      "note": {
+        "el": "Σύγχρονη και ασφαλής γλώσσα επιπέδου συστήματος.",
+        "en": "Modern and safe systems language."
+      }
     },
     "Bun": {
       "id": "Oven-sh.Bun",
       "url": "https://bun.sh/",
-      "note": "Ταχύτατο JavaScript runtime & package manager."
+      "note": {
+        "el": "Ταχύτατο JavaScript runtime & package manager.",
+        "en": "Extremely fast JavaScript runtime & package manager."
+      }
     },
     "Deno": {
       "id": "DenoLand.Deno",
       "url": "https://deno.land/",
-      "note": "Ασφαλές runtime για JavaScript και TypeScript."
+      "note": {
+        "el": "Ασφαλές runtime για JavaScript και TypeScript.",
+        "en": "Secure runtime for JavaScript and TypeScript."
+      }
     },
     "Java 21 (Temurin)": {
       "id": "EclipseAdoptium.Temurin.21.JDK",
       "url": "https://adoptium.net/",
-      "note": "Open source διανομή της Java (JDK)."
+      "note": {
+        "el": "Open source διανομή της Java (JDK).",
+        "en": "Open source distribution of Java (JDK)."
+      }
     }
   },
   "Package Managers": {
     "Chocolatey": {
       "id": "Chocolatey.Chocolatey",
       "url": "https://chocolatey.org/",
-      "note": "Package manager για Windows παρόμοιο με το apt."
+      "note": {
+        "el": "Package manager για Windows παρόμοιο με το apt.",
+        "en": "Package manager for Windows similar to apt."
+      }
     },
     "uv (Fast Python)": {
       "id": "astral-sh.uv",
       "url": "https://github.com/astral-sh/uv",
-      "note": "Ταχύτατος Python package & project manager."
+      "note": {
+        "el": "Ταχύτατος Python package & project manager.",
+        "en": "Extremely fast Python package & project manager."
+      }
     },
     "pnpm": {
       "id": "pnpm.pnpm",
       "url": "https://pnpm.io/",
-      "note": "Αποδοτικός Node package manager με symlinks."
+      "note": {
+        "el": "Αποδοτικός Node package manager με symlinks.",
+        "en": "Efficient Node package manager using symlinks."
+      }
     }
   },
   "Database Tools": {
     "DB Browser (SQLite)": {
       "id": "DBBrowserForSQLite.DBBrowserForSQLite",
       "url": "https://sqlitebrowser.org/",
-      "note": "Γραφικό περιβάλλον για βάσεις δεδομένων SQLite."
+      "note": {
+        "el": "Γραφικό περιβάλλον για βάσεις δεδομένων SQLite.",
+        "en": "Graphical interface for SQLite databases."
+      }
     },
     "DBeaver Community": {
       "id": "dbeaver.dbeaver",
       "url": "https://dbeaver.io/",
-      "note": "Universal database manager για όλες τις βάσεις."
+      "note": {
+        "el": "Universal database manager για όλες τις βάσεις.",
+        "en": "Universal database manager for all databases."
+      }
     }
   },
   "Virtualization": {
     "Docker Desktop": {
       "id": "Docker.DockerDesktop",
       "url": "https://www.docker.com/",
-      "note": "Διαχείριση containers για ανάπτυξη εφαρμογών."
+      "note": {
+        "el": "Διαχείριση containers για ανάπτυξη εφαρμογών.",
+        "en": "Container management for application development."
+      }
     },
     "VMware Player": {
       "id": "VMware.WorkstationPlayer",
       "url": "https://www.vmware.com/",
-      "note": "Δωρεάν virtualization για εκτέλεση εικονικών μηχανών."
+      "note": {
+        "el": "Δωρεάν virtualization για εκτέλεση εικονικών μηχανών.",
+        "en": "Free virtualization for running virtual machines."
+      }
     },
     "WSL": {
       "id": "Microsoft.WSL",
       "url": "https://learn.microsoft.com/en-us/windows/wsl/",
-      "note": "Υποσύστημα Linux μέσα στα Windows."
+      "note": {
+        "el": "Υποσύστημα Linux μέσα στα Windows.",
+        "en": "Linux subsystem inside Windows."
+      }
     }
   },
   "Hardware & AI": {
     "Raspberry Pi Imager": {
       "id": "RaspberryPi.RaspberryPiImager",
       "url": "https://www.raspberrypi.com/software/",
-      "note": "Εργαλείο εγγραφής OS σε SD κάρτες για Raspberry Pi."
+      "note": {
+        "el": "Εργαλείο εγγραφής OS σε SD κάρτες για Raspberry Pi.",
+        "en": "OS writing tool to SD cards for Raspberry Pi."
+      }
     },
     "Logisim Evolution": {
       "id": "Logisim-Evolution.Logisim-Evolution",
       "url": "https://github.com/logisim-evolution/logisim-evolution",
-      "note": "Προσομοιωτής ψηφιακών κυκλωμάτων."
+      "note": {
+        "el": "Προσομοιωτής ψηφιακών κυκλωμάτων.",
+        "en": "Digital circuit simulator."
+      }
     },
     "LM Studio": {
       "id": "LMStudio.LMStudio",
       "url": "https://lmstudio.ai/",
-      "note": "Τοπική εκτέλεση μεγάλων γλωσσικών μοντέλων (LLMs)."
+      "note": {
+        "el": "Τοπική εκτέλεση μεγάλων γλωσσικών μοντέλων (LLMs).",
+        "en": "Run LLMs locally."
+      }
     }
   },
   "System & Shell": {
     "Windows Terminal": {
       "id": "Microsoft.WindowsTerminal",
       "url": "https://aka.ms/terminal",
-      "note": "Σύγχρονο τερματικό για command line εργαλεία."
+      "note": {
+        "el": "Σύγχρονο τερματικό για command line εργαλεία.",
+        "en": "Modern terminal for command line tools."
+      }
     },
     "Oh My Posh": {
       "id": "JanDeDobbeleer.OhMyPosh",
       "url": "https://ohmyposh.dev/",
-      "note": "Engine για πανέμορφα prompt στα shells."
+      "note": {
+        "el": "Engine για πανέμορφα prompt στα shells.",
+        "en": "Engine for beautiful shell prompts."
+      }
     },
     "zoxide": {
       "id": "ajeetdsouza.zoxide",
       "url": "https://github.com/ajeetdsouza/zoxide",
-      "note": "Έξυπνη εντολή cd που μαθαίνει τις συνήθειές σας."
+      "note": {
+        "el": "Έξυπνη εντολή cd που μαθαίνει τις συνήθειές σας.",
+        "en": "Smart cd command that learns your habits."
+      }
     },
     "PowerShell 7": {
       "id": "Microsoft.PowerShell",
       "url": "https://github.com/PowerShell/PowerShell",
-      "note": "Η τελευταία έκδοση του PowerShell."
+      "note": {
+        "el": "Η τελευταία έκδοση του PowerShell.",
+        "en": "The latest version of PowerShell."
+      }
     },
     "PuTTY": {
       "id": "PuTTY.PuTTY",
       "url": "https://www.putty.org/",
-      "note": "SSH και Telnet client για Windows."
+      "note": {
+        "el": "SSH και Telnet client για Windows.",
+        "en": "SSH and Telnet client for Windows."
+      }
     },
     "fastfetch": {
       "id": "fastfetch-cli.fastfetch",
       "url": "https://github.com/fastfetch-cli/fastfetch",
-      "note": "Εργαλείο πληροφοριών συστήματος."
+      "note": {
+        "el": "Εργαλείο πληροφοριών συστήματος.",
+        "en": "System information tool."
+      }
     },
     "FileZilla": {
       "id": "FileZilla.FileZilla",
       "url": "https://filezilla-project.org/",
-      "note": "Κλασικός FTP/SFTP client."
+      "note": {
+        "el": "Κλασικός FTP/SFTP client.",
+        "en": "Classic FTP/SFTP client."
+      }
     },
     "Warp Terminal": {
       "id": "Warp.Warp",
       "url": "https://www.warp.dev/",
-      "note": "Σύγχρονο AI-powered τερματικό."
+      "note": {
+        "el": "Σύγχρονο AI-powered τερματικό.",
+        "en": "Modern AI-powered terminal."
+      }
     },
     "Starship Prompt": {
       "id": "Starship.Starship",
       "url": "https://starship.rs/",
-      "note": "Customizable και γρήγορο shell prompt."
+      "note": {
+        "el": "Customizable και γρήγορο shell prompt.",
+        "en": "Customizable and fast shell prompt."
+      }
     },
     "bat": {
       "id": "sharkdp.bat",
       "url": "https://github.com/sharkdp/bat",
-      "note": "Βελτιωμένη έκδοση της εντολής cat με syntax highlighting."
+      "note": {
+        "el": "Βελτιωμένη έκδοση της εντολής cat με syntax highlighting.",
+        "en": "Improved version of the cat command with syntax highlighting."
+      }
     },
     "ripgrep": {
       "id": "BurntSushi.ripgrep.MSVC",
       "url": "https://github.com/BurntSushi/ripgrep",
-      "note": "Ταχύτατη αναζήτηση κειμένου σε αρχεία."
+      "note": {
+        "el": "Ταχύτατη αναζήτηση κειμένου σε αρχεία.",
+        "en": "Blazing fast text search within files."
+      }
     },
     "fd": {
       "id": "sharkdp.fd",
       "url": "https://github.com/sharkdp/fd",
-      "note": "Γρήγορη και φιλική εναλλακτική της εντολής find."
+      "note": {
+        "el": "Γρήγορη και φιλική εναλλακτική της εντολής find.",
+        "en": "Fast and user-friendly alternative to the find command."
+      }
     },
     "fzf": {
       "id": "junegunn.fzf",
       "url": "https://github.com/junegunn/fzf",
-      "note": "Fuzzy finder για την γραμμή εντολών."
+      "note": {
+        "el": "Fuzzy finder για την γραμμή εντολών.",
+        "en": "Fuzzy finder for the command line."
+      }
     },
     "tldr": {
       "id": "tldr-pages.tlrc",
       "url": "https://tldr.sh/",
-      "note": "Συνοπτικά help pages για εντολές τερματικού."
+      "note": {
+        "el": "Συνοπτικά help pages για εντολές τερματικού.",
+        "en": "Concise help pages for terminal commands."
+      }
     }
   },
   "AI Coding Assistants": {
     "Claude Code (CLI)": {
       "id": "Anthropic.ClaudeCode",
       "url": "https://claude.com/claude-code",
-      "note": "Agentic τερματικό για AI-assisted προγραμματισμό."
+      "note": {
+        "el": "Agentic τερματικό για AI-assisted προγραμματισμό.",
+        "en": "Agentic terminal for AI-assisted programming."
+      }
     },
     "Cursor IDE": {
       "id": "Anysphere.Cursor",
       "url": "https://cursor.sh/",
-      "note": "AI-first editor, βασισμένος στον VS Code."
+      "note": {
+        "el": "AI-first editor, βασισμένος στον VS Code.",
+        "en": "AI-first editor based on VS Code."
+      }
     },
     "Windsurf IDE": {
       "id": "Codeium.Windsurf",
       "url": "https://codeium.com/windsurf",
-      "note": "Agentic IDE από την ομάδα του Codeium."
+      "note": {
+        "el": "Agentic IDE από την ομάδα του Codeium.",
+        "en": "Agentic IDE by the Codeium team."
+      }
     },
     "OpenCode": {
       "id": "SST.opencode",
       "url": "https://opencode.ai/",
-      "note": "AI coding agent για το τερματικό."
+      "note": {
+        "el": "AI coding agent για το τερματικό.",
+        "en": "AI coding agent for the terminal."
+      }
     },
     "Gemini CLI": {
       "id": "npm install -g @google/gemini-cli",
       "url": "https://github.com/google/gemini-cli",
-      "note": "CLI για το μοντέλο Gemini της Google."
+      "note": {
+        "el": "CLI για το μοντέλο Gemini της Google.",
+        "en": "CLI for Google's Gemini model."
+      }
     },
     "GitHub Copilot": {
       "id": "gh extension install github/gh-copilot",
       "url": "https://github.com/github/copilot-cli",
-      "note": "Extension για το GitHub CLI."
+      "note": {
+        "el": "Extension για το GitHub CLI.",
+        "en": "Extension for GitHub CLI."
+      }
     },
     "Antigravity": {
       "id": "Google.Antigravity",
       "url": "https://antigravity.google/download",
-      "note": "Η agent-first πλατφόρμα ανάπτυξης της Google για AI coding."
+      "note": {
+        "el": "Η agent-first πλατφόρμα ανάπτυξης της Google για AI coding.",
+        "en": "Google's agent-first development platform for AI coding."
+      }
     }
   },
   "Productivity": {
     "PowerToys": {
       "id": "Microsoft.PowerToys",
       "url": "https://aka.ms/powertoys",
-      "note": "Σχρήσιμα utilities για Windows power users."
+      "note": {
+        "el": "Χρήσιμα utilities για Windows power users.",
+        "en": "Useful utilities for Windows power users."
+      }
     },
     "Fira Code Font": {
       "id": "SoftwareDesign.FiraCode",
       "url": "https://github.com/tonsky/FiraCode",
-      "note": "Γραμματοσειρά με προγραμματιστικά ligatures."
+      "note": {
+        "el": "Γραμματοσειρά με προγραμματιστικά ligatures.",
+        "en": "Font with programming ligatures."
+      }
     },
     "Notion": {
       "id": "Notion.Notion",
       "url": "https://www.notion.so/",
-      "note": "Πλατφόρμα οργάνωσης σημειώσεων και tasks."
+      "note": {
+        "el": "Πλατφόρμα οργάνωσης σημειώσεων και tasks.",
+        "en": "Platform for organizing notes and tasks."
+      }
     },
     "Obsidian": {
       "id": "Obsidian.Obsidian",
       "url": "https://obsidian.md/",
-      "note": "Εργαλείο διαχείρισης γνώσης με Markdown."
+      "note": {
+        "el": "Εργαλείο διαχείρισης γνώσης με Markdown.",
+        "en": "Knowledge management tool using Markdown."
+      }
     },
     "Flameshot": {
       "id": "Flameshot.Flameshot",
       "url": "https://flameshot.org/",
-      "note": "Ευέλικτο εργαλείο για screenshots."
+      "note": {
+        "el": "Ευέλικτο εργαλείο για screenshots.",
+        "en": "Flexible tool for screenshots."
+      }
     },
     "Greenshot": {
       "id": "Greenshot.Greenshot",
       "url": "https://getgreenshot.org/",
-      "note": "Ελαφρύ και ισχυρό εργαλείο για λήψη και επεξεργασία screenshots."
+      "note": {
+        "el": "Ελαφρύ και ισχυρό εργαλείο για λήψη και επεξεργασία screenshots.",
+        "en": "Lightweight and powerful tool for capturing and editing screenshots."
+      }
     }
   },
   "Remote": {
     "AnyDesk": {
       "id": "AnyDeskSoftwareGmbH.AnyDesk",
       "url": "https://anydesk.com/",
-      "note": "Εφαρμογή απομακρυσμένης επιφάνειας εργασίας."
+      "note": {
+        "el": "Εφαρμογή απομακρυσμένης επιφάνειας εργασίας.",
+        "en": "Remote desktop application."
+      }
     },
     "RealVNC Viewer": {
       "id": "RealVNC.VNCViewer",
       "url": "https://www.realvnc.com/",
-      "note": "Viewer για συνδέσεις VNC."
+      "note": {
+        "el": "Viewer για συνδέσεις VNC.",
+        "en": "Viewer for VNC connections."
+      }
     },
     "RustDesk": {
       "id": "RustDesk.RustDesk",
       "url": "https://rustdesk.com/",
-      "note": "Open source εναλλακτική του AnyDesk/TeamViewer."
+      "note": {
+        "el": "Open source εναλλακτική του AnyDesk/TeamViewer.",
+        "en": "Open source alternative to AnyDesk/TeamViewer."
+      }
     },
     "TeamViewer": {
       "id": "TeamViewer.TeamViewer",
       "url": "https://www.teamviewer.com/",
-      "note": "Επαγγελματική απομακρυσμένη πρόσβαση και υποστήριξη."
+      "note": {
+        "el": "Επαγγελματική απομακρυσμένη πρόσβαση και υποστήριξη.",
+        "en": "Professional remote access and support."
+      }
     }
   },
   "Design & Media": {
     "Figma": {
       "id": "Figma.Figma",
       "url": "https://www.figma.com/",
-      "note": "Εργαλείο design για UI/UX επαγγελματίες."
+      "note": {
+        "el": "Εργαλείο design για UI/UX επαγγελματίες.",
+        "en": "Design tool for UI/UX professionals."
+      }
     },
     "DaVinci Resolve": {
       "id": "BlackmagicDesign.DaVinciResolve",
       "url": "https://www.blackmagicdesign.com/",
-      "note": "Κορυφαίο πρόγραμμα video editing & color grading."
+      "note": {
+        "el": "Κορυφαίο πρόγραμμα video editing & color grading.",
+        "en": "Industry-leading video editing & color grading program."
+      }
     },
     "OBS Studio": {
       "id": "OBSProject.OBSStudio",
       "url": "https://obsproject.com/",
-      "note": "Λογισμικό για live streaming και εγγραφή οθόνης."
+      "note": {
+        "el": "Λογισμικό για live streaming και εγγραφή οθόνης.",
+        "en": "Software for live streaming and screen recording."
+      }
     },
     "Adobe Cloud": {
       "id": "Adobe.CreativeCloud",
       "url": "https://www.adobe.com/",
-      "note": "Πρόσβαση στις εφαρμογές της Adobe (Photoshop, κλπ)."
+      "note": {
+        "el": "Πρόσβαση στις εφαρμογές της Adobe (Photoshop, κλπ).",
+        "en": "Access to Adobe applications (Photoshop, etc.)."
+      }
     }
   },
   "C & Systems Dev": {
     "CMake": {
       "id": "Kitware.CMake",
       "url": "https://cmake.org/",
-      "note": "Standard εργαλείο build automation για C/C++."
+      "note": {
+        "el": "Standard εργαλείο build automation για C/C++.",
+        "en": "Standard build automation tool for C/C++."
+      }
     },
     "Ninja": {
       "id": "ninja-build.ninja",
       "url": "https://ninja-build.org/",
-      "note": "Ταχύτατο build system με έμφαση στην ταχύτητα."
+      "note": {
+        "el": "Ταχύτατο build system με έμφαση στην ταχύτητα.",
+        "en": "Blazing fast build system focusing on speed."
+      }
     },
     "LLVM / Clang": {
       "id": "LLVM.LLVM",
       "url": "https://llvm.org/",
-      "note": "Σύγχρονο compiler infrastructure."
+      "note": {
+        "el": "Σύγχρονο compiler infrastructure.",
+        "en": "Modern compiler infrastructure."
+      }
     },
     "Make (GnuWin32)": {
       "id": "GnuWin32.Make",
       "url": "http://gnuwin32.sourceforge.net/",
-      "note": "Το κλασικό εργαλείο Make για Windows."
+      "note": {
+        "el": "Το κλασικό εργαλείο Make για Windows.",
+        "en": "The classic Make tool for Windows."
+      }
     }
   },
   "API & Testing": {
     "Postman": {
       "id": "Postman.Postman",
       "url": "https://www.postman.com/",
-      "note": "Η κορυφαία πλατφόρμα για ανάπτυξη και δοκιμή APIs."
+      "note": {
+        "el": "Η κορυφαία πλατφόρμα για ανάπτυξη και δοκιμή APIs.",
+        "en": "The leading platform for API development and testing."
+      }
     },
     "Bruno": {
       "id": "Bruno.Bruno",
       "url": "https://www.usebruno.com/",
-      "note": "Open-source, local-first API client (ελαφρύς)."
+      "note": {
+        "el": "Open-source, local-first API client (ελαφρύς).",
+        "en": "Open-source, local-first API client (lightweight)."
+      }
     },
     "Insomnia": {
       "id": "Insomnia.Insomnia",
       "url": "https://insomnia.rest/",
-      "note": "Σχεδιασμός και δοκιμή REST, GraphQL, gRPC APIs."
+      "note": {
+        "el": "Σχεδιασμός και δοκιμή REST, GraphQL, gRPC APIs.",
+        "en": "Design and test REST, GraphQL, gRPC APIs."
+      }
     }
   },
   "Security & Networking": {
     "Wireshark": {
       "id": "WiresharkFoundation.Wireshark",
       "url": "https://www.wireshark.org/",
-      "note": "Αναλυτής πακέτων δικτύου (packet sniffer)."
+      "note": {
+        "el": "Αναλυτής πακέτων δικτύου (packet sniffer).",
+        "en": "Network packet analyzer (packet sniffer)."
+      }
     },
     "Nmap": {
       "id": "Insecure.Nmap",
       "url": "https://nmap.org/",
-      "note": "Εργαλείο ανακάλυψης δικτύου και ελέγχου ασφαλείας."
+      "note": {
+        "el": "Εργαλείο ανακάλυψης δικτύου και ελέγχου ασφαλείας.",
+        "en": "Network discovery and security auditing tool."
+      }
     },
     "Burp Suite Community": {
       "id": "manual",
       "url": "https://portswigger.net/burp/communitydownload",
-      "note": "Manual λήψη: Εργαλείο ελέγχου ασφαλείας web εφαρμογών."
+      "note": {
+        "el": "Manual λήψη: Εργαλείο ελέγχου ασφαλείας web εφαρμογών.",
+        "en": "Manual download: Web application security testing tool."
+      }
     }
   },
   "Cloud & DevOps": {
     "Kubectl": {
       "id": "Kubernetes.kubectl",
       "url": "https://kubernetes.io/docs/tasks/tools/",
-      "note": "CLI για την διαχείριση clusters Kubernetes."
+      "note": {
+        "el": "CLI για την διαχείριση clusters Kubernetes.",
+        "en": "CLI for managing Kubernetes clusters."
+      }
     },
     "Terraform": {
       "id": "Hashicorp.Terraform",
       "url": "https://www.terraform.io/",
-      "note": "Infrastructure as Code (IaC) από την HashiCorp."
+      "note": {
+        "el": "Infrastructure as Code (IaC) από την HashiCorp.",
+        "en": "Infrastructure as Code (IaC) by HashiCorp."
+      }
     },
     "Azure CLI": {
       "id": "Microsoft.AzureCLI",
       "url": "https://docs.microsoft.com/en-us/cli/azure/install-azure-cli",
-      "note": "Εργαλείο γραμμής εντολών για το Microsoft Azure."
+      "note": {
+        "el": "Εργαλείο γραμμής εντολών για το Microsoft Azure.",
+        "en": "Command line tool for Microsoft Azure."
+      }
     }
   }
 }

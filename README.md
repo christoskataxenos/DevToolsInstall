@@ -56,12 +56,13 @@ irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
 
 ## Roadmap
 
+- [x] Add English/Greek multi-language support (i18n)
+- [x] Add full dark/light theme customization
 - [ ] Add customizable user-defined stacks
 - [ ] Add plugin system for community extensions
 - [ ] Add automatic detection of installed tools
 - [ ] Add cloud sync for backups
 - [ ] Add portable version (no Python required)
-- [ ] Add full dark/light theme customization
 
 ## License
 

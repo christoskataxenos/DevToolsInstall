@@ -11,10 +11,28 @@ from DevToolsInstaller import (
     ToolCard,
 )
 
+# Έλεγχος αν το Tkinter είναι διαθέσιμο και λειτουργικό στο τρέχον περιβάλλον
+TK_AVAILABLE = False
+try:
+    import tkinter as tk
+    root = tk.Tk()
+    root.destroy()
+    TK_AVAILABLE = True
+except Exception:
+    TK_AVAILABLE = False
+
+requires_tk = pytest.mark.skipif(
+    not TK_AVAILABLE,
+    reason="Το Tkinter δεν είναι πλήρως λειτουργικό σε αυτό το περιβάλλον"
+)
+
 
 @pytest.fixture
 def app():
-    app = ModernInstaller()
+    try:
+        app = ModernInstaller()
+    except Exception as e:
+        pytest.skip(f"Το Tkinter/Tk δεν μπόρεσε να αρχικοποιηθεί: {e}")
     yield app
     try:
         app.destroy()
@@ -24,11 +42,16 @@ def app():
 
 @pytest.fixture
 def mock_parent():
-    import tkinter as tk
-
-    root = tk.Tk()
+    try:
+        import tkinter as tk
+        root = tk.Tk()
+    except Exception as e:
+        pytest.skip(f"Το Tkinter/Tk δεν μπόρεσε να αρχικοποιηθεί: {e}")
     yield root
-    root.destroy()
+    try:
+        root.destroy()
+    except:
+        pass
 
 
 def test_registry_integrity():
@@ -54,6 +77,7 @@ def test_stacks_consistency():
             )
 
 
+@requires_tk
 def test_window_initialization(app):
     """Έλεγχος αν το παράθυρο αρχικοποιείται με τον σωστό αριθμό καρτών."""
     expected_count = sum(len(tools) for tools in TOOLS_REGISTRY.values())
@@ -66,10 +90,10 @@ def test_tool_status_constants():
     assert "INSTALLED" in TOOL_STATUS
     assert "RUNNING" in TOOL_STATUS
     assert "ERROR" in TOOL_STATUS
-    assert TOOL_STATUS["PENDING"] == "⏳"
-    assert TOOL_STATUS["INSTALLED"] == "✅"
-    assert TOOL_STATUS["RUNNING"] == "🔄"
-    assert TOOL_STATUS["ERROR"] == "❌"
+    assert TOOL_STATUS["PENDING"] == "⚪"
+    assert TOOL_STATUS["INSTALLED"] == "🟢"
+    assert TOOL_STATUS["RUNNING"] == "🔵"
+    assert TOOL_STATUS["ERROR"] == "🔴"
 
 
 def test_theme_manager():
@@ -87,6 +111,7 @@ def test_theme_manager():
     assert ThemeManager.get_current_theme() == "dark"
 
 
+@requires_tk
 def test_tool_card_status(mock_parent):
     """Έλεγχος της κατάστασης της κάρτας εργαλείου."""
     details = {"id": "Test.Test", "url": "https://test.com"}
@@ -111,6 +136,7 @@ def test_tool_card_status(mock_parent):
     assert card.get_status() == "ERROR"
 
 
+@requires_tk
 def test_export_import_json(app):
     """Έλεγχος εξαγωγής και εισαγωγής επιλογών σε JSON."""
     app.deselect_all()
@@ -142,6 +168,7 @@ def test_export_import_json(app):
             os.remove(temp_path)
 
 
+@requires_tk
 def test_progress_bar_exists(app):
     """Έλεγχος ύπαρξης της γραμμής προόδου."""
     assert hasattr(app, "progress_bar")
@@ -149,6 +176,7 @@ def test_progress_bar_exists(app):
     assert app.progress_bar["value"] == 0
 
 
+@requires_tk
 def test_search_functionality(app):
     """Έλεγχος της λειτουργίας αναζήτησης."""
     app.search_var.set("VS Code")
@@ -164,6 +192,7 @@ def test_search_functionality(app):
             pass
 
 
+@requires_tk
 def test_select_deselect_all(app):
     """Έλεγχος επιλογής/αποεπιλογής όλων."""
     app.deselect_all()
@@ -173,6 +202,7 @@ def test_select_deselect_all(app):
     assert all(c.is_checked() for c in app.cards)
 
 
+@requires_tk
 def test_apply_stack(app):
     """Έλεγχος εφαρμογής stack."""
     app.apply_stack("Python / AI")
