@@ -1109,6 +1109,14 @@ class TranslationManager:
 
     _strings = {
         "el": {
+            "menu_header": "ΜΕΝΟΥ ΠΛΟΗΓΗΣΗΣ",
+            "nav_install": "Εγκατάσταση Εργαλείων",
+            "nav_stacks": "Πακέτα Stacks",
+            "nav_backup_restore": "Backup & Επαναφορά",
+            "filter_all": "Όλα",
+            "filter_selected": "Επιλεγμένα",
+            "filter_installed": "Εγκατεστημένα",
+            "filter_pending": "Εκκρεμή",
             "app_title": "DevTools Installer v2.1",
             "Dark Mode": "Σκοτεινή Λειτουργία",
             "categories": "ΚΑΤΗΓΟΡΙΕΣ",
@@ -1185,6 +1193,14 @@ class TranslationManager:
             "Cloud & DevOps": "Cloud & DevOps"
         },
         "en": {
+            "menu_header": "NAVIGATION MENU",
+            "nav_install": "Install Tools",
+            "nav_stacks": "System Stacks",
+            "nav_backup_restore": "Backup & Restore",
+            "filter_all": "All",
+            "filter_selected": "Selected",
+            "filter_installed": "Installed",
+            "filter_pending": "Pending",
             "app_title": "DevTools Installer v2.1",
             "Dark Mode": "Dark Mode",
             "categories": "CATEGORIES",
@@ -1286,59 +1302,62 @@ def _(key: str, **kwargs) -> str:
 # Κλάση LanguageSwitcher για εναλλαγή γλώσσας (EN / ΕΛ) στο sidebar
 class LanguageSwitcher(tk.Frame):
     def __init__(self, parent, on_change, **kwargs):
-        # Αρχικοποίηση του frame με το χρώμα φόντου του sidebar
-        super().__init__(parent, bg=COLORS["sidebar_bg"], **kwargs)
+        # Αρχικοποίηση του frame με το χρώμα φόντου του sidebar.
+        bg_color = kwargs.pop("bg", COLORS["sidebar_bg"])
+        super().__init__(parent, bg = bg_color, **kwargs)
         self.on_change = on_change
 
-        # Container με λεπτό περίγραμμα (border) για τα δύο κουμπιά
-        self.container = tk.Frame(self, bg=COLORS["border"], padx=1, pady=1)
-        self.container.pack(pady=5)
+        # Container με λεπτό περίγραμμα (border) για τα δύο κουμπιά.
+        self.container = tk.Frame(self, bg = COLORS["border"], padx = 1, pady = 1)
+        self.container.pack(pady = 5, fill = "x", expand = True)
 
-        # Κουμπί για Αγγλικά (EN)
+        # Ρύθμιση ισομερούς κατανομής στηλών.
+        self.container.columnconfigure(0, weight = 1)
+        self.container.columnconfigure(1, weight = 1)
+
+        # Κουμπί για Αγγλικά (EN).
         self.en_btn = tk.Label(
             self.container,
-            text="EN",
-            font=("Segoe UI", 9, "bold"),
-            padx=12,
-            pady=4,
-            cursor="hand2"
+            text = "EN",
+            font = ("Segoe UI", 9, "bold"),
+            pady = 6,
+            cursor = "hand2"
         )
-        self.en_btn.pack(side="left")
+        self.en_btn.grid(row = 0, column = 0, sticky = "ew")
 
-        # Κουμπί για Ελληνικά (ΕΛ)
+        # Κουμπί για Ελληνικά (ΕΛ).
         self.el_btn = tk.Label(
             self.container,
-            text="ΕΛ",
-            font=("Segoe UI", 9, "bold"),
-            padx=12,
-            pady=4,
-            cursor="hand2"
+            text = "ΕΛ",
+            font = ("Segoe UI", 9, "bold"),
+            pady = 6,
+            cursor = "hand2"
         )
-        self.el_btn.pack(side="left")
+        self.el_btn.grid(row = 0, column = 1, sticky = "ew")
 
-        # Σύνδεση click events
+        # Σύνδεση click events για την επιλογή γλώσσας.
         self.en_btn.bind("<Button-1>", lambda e: self.select("en"))
         self.el_btn.bind("<Button-1>", lambda e: self.select("el"))
 
-        # Ενημέρωση της τρέχουσας επιλογής
+        # Ενημέρωση της τρέχουσας επιλογής.
         self.update_selection()
 
     def select(self, lang):
-        # Αλλαγή γλώσσας αν επιλεγεί διαφορετική από την τρέχουσα
+        # Αλλαγή γλώσσας αν επιλεγεί διαφορετική από την τρέχουσα.
         if lang != TranslationManager.get_language():
             TranslationManager.set_language(lang)
             self.update_selection()
             self.on_change()  # Κλήση callback για ανανέωση του UI
 
     def update_selection(self):
-        # Ενημέρωση των χρωμάτων ανάλογα με την επιλεγμένη γλώσσα
+        # Ενημέρωση των χρωμάτων ανάλογα με την επιλεγμένη γλώσσα.
         lang = TranslationManager.get_language()
         if lang == "en":
-            self.en_btn.config(bg=COLORS["accent"], fg="white")
-            self.el_btn.config(bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"])
+            self.en_btn.config(bg = COLORS["accent"], fg = "white")
+            self.el_btn.config(bg = COLORS["card_bg"], fg = COLORS["text"])
         else:
-            self.el_btn.config(bg=COLORS["accent"], fg="white")
-            self.en_btn.config(bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"])
+            self.el_btn.config(bg = COLORS["accent"], fg = "white")
+            self.en_btn.config(bg = COLORS["card_bg"], fg = COLORS["text"])
 
 
 class ThemeManager:
@@ -1541,12 +1560,13 @@ class GradientButton(tk.Canvas):
 
 class ToggleSwitch(tk.Frame):
     def __init__(self, parent, command=None, **kwargs):
-        super().__init__(parent, bg=COLORS["card_bg"], **kwargs)
+        bg_color = kwargs.pop("bg", COLORS["card_bg"])
+        super().__init__(parent, bg = bg_color, **kwargs)
         self.command = command
         self.var = tk.BooleanVar(value=False)
 
         self.canvas = tk.Canvas(
-            self, width=44, height=24, highlightthickness=0, bg=COLORS["card_bg"]
+            self, width = 44, height = 24, highlightthickness = 0, bg = bg_color
         )
         self.canvas.pack(pady=2)
 
@@ -1606,19 +1626,19 @@ class CategoryButton(tk.Frame):
     """Modern sidebar button with active state indicator."""
 
     def __init__(self, parent, text, command, **kwargs):
-        super().__init__(parent, bg=COLORS["sidebar_bg"], **kwargs)
+        super().__init__(parent, bg = COLORS["sidebar_bg"], **kwargs)
         self.command = command
         self.text = text
         self.active = False
+        self._hovered = False
 
+        # Canvas για σχεδίαση του κουμπιού με στρογγυλεμένη αίσθηση και δείκτη.
         self.canvas = tk.Canvas(
-            self, height=40, highlightthickness=0, bg=COLORS["sidebar_bg"]
+            self, height = 44, highlightthickness = 0, bg = COLORS["sidebar_bg"], cursor = "hand2"
         )
-        self.canvas.pack(fill="x")
+        self.canvas.pack(fill = "x")
 
-        self.indicator = None
-        self.text_id = None
-
+        # Σύνδεση των συμβάντων (hover, click, configure).
         self.canvas.bind("<Enter>", self._on_enter)
         self.canvas.bind("<Leave>", self._on_leave)
         self.canvas.bind("<Button-1>", self._on_click)
@@ -1629,27 +1649,32 @@ class CategoryButton(tk.Frame):
         w = self.canvas.winfo_width()
         h = self.canvas.winfo_height()
 
-        bg = COLORS["card_hover"] if self.active else self.canvas.cget("bg")
-        indicator_color = COLORS["accent"] if self.active else COLORS["sidebar_bg"]
-        text_color = "white" if self.active else COLORS["text"]
+        # Καθορισμός χρωμάτων βάσει της κατάστασης (active / hover).
+        bg = COLORS["card_hover"] if (self.active or self._hovered) else COLORS["sidebar_bg"]
+        self.canvas.config(bg = bg)
+        self.config(bg = bg)
 
-        # We handle hover bg via config(bg=...) in events, but redraw ensures state is correct
-        self.indicator = self.canvas.create_rectangle(
-            0, 4, 4, h - 4, fill=indicator_color, outline=""
+        indicator_color = COLORS["accent"] if self.active else bg
+        text_color = "white" if (self.active or self._hovered) else COLORS["text_dim"]
+        text_font = ("Segoe UI Semibold", 10) if self.active else ("Segoe UI", 10)
+
+        # Σχεδίαση δείκτη (indicator) στα αριστερά.
+        self.canvas.create_rectangle(
+            0, 4, 4, h - 4, fill = indicator_color, outline = ""
         )
-        self.text_id = self.canvas.create_text(
-            20, h // 2, text=self.text, fill=text_color, anchor="w", font=FONTS["body"]
+
+        # Σχεδίαση κειμένου.
+        self.canvas.create_text(
+            30, h // 2, text = self.text, fill = text_color, anchor = "w", font = text_font
         )
 
     def _on_enter(self, e):
-        if not self.active:
-            self.canvas.config(bg=COLORS["card_hover"])
-            self._draw()
+        self._hovered = True
+        self._draw()
 
     def _on_leave(self, e):
-        if not self.active:
-            self.canvas.config(bg=COLORS["sidebar_bg"])
-            self._draw()
+        self._hovered = False
+        self._draw()
 
     def _on_click(self, e):
         self.command()
@@ -2585,29 +2610,56 @@ class ModernInstaller(tk.Tk):
             self.backup_restore_panel.grid(row=0, column=0, sticky="nsew")
 
     def _build_sidebar(self, sidebar: tk.Frame):
-        sidebar.columnconfigure(0, weight=1)
-        sidebar.rowconfigure(10, weight=1)
+        sidebar.columnconfigure(0, weight = 1)
+        sidebar.rowconfigure(10, weight = 1)
 
-        self.sidebar_logo = tk.Label(
-            sidebar,
-            text="DevTools",
-            bg=COLORS["sidebar_bg"],
-            fg="white",
-            font=FONTS["title"],
+        # Frame υποδοχής λογοτύπου (logo).
+        self.logo_frame = tk.Frame(sidebar, bg = COLORS["sidebar_bg"])
+        self.logo_frame.grid(row = 0, column = 0, sticky = "ew", padx = 25, pady = (40, 5))
+
+        # Σχεδίαση "Dev" σε λευκό χρώμα.
+        self.logo_dev = tk.Label(
+            self.logo_frame,
+            text = "Dev",
+            bg = COLORS["sidebar_bg"],
+            fg = "white",
+            font = ("Segoe UI Semibold", 20),
         )
-        self.sidebar_logo.grid(row=0, column=0, sticky="w", padx=25, pady=(40, 10))
+        self.logo_dev.pack(side = "left")
 
-        self.sidebar_divider1 = tk.Frame(sidebar, bg=COLORS["border"], height=1)
-        self.sidebar_divider1.grid(row=1, column=0, sticky="ew", padx=25, pady=20)
+        # Σχεδίαση "Tools" σε χρώμα έμφασης (accent).
+        self.logo_tools = tk.Label(
+            self.logo_frame,
+            text = "Tools",
+            bg = COLORS["sidebar_bg"],
+            fg = COLORS["accent"],
+            font = ("Segoe UI Semibold", 20),
+        )
+        self.logo_tools.pack(side = "left")
 
+        # Υπότιτλος λογοτύπου.
+        self.sidebar_subtitle = tk.Label(
+            sidebar,
+            text = "INSTALLER & SUITE",
+            bg = COLORS["sidebar_bg"],
+            fg = COLORS["text_dim"],
+            font = ("Segoe UI", 7, "bold"),
+        )
+        self.sidebar_subtitle.grid(row = 1, column = 0, sticky = "w", padx = 25, pady = (0, 15))
+
+        # Διαχωριστική γραμμή.
+        self.sidebar_divider1 = tk.Frame(sidebar, bg = COLORS["border"], height = 1)
+        self.sidebar_divider1.grid(row = 2, column = 0, sticky = "ew", padx = 25, pady = (0, 20))
+
+        # Επικεφαλίδα μενού.
         self.menu_header = tk.Label(
             sidebar,
-            text=_("menu_header"),
-            bg=COLORS["sidebar_bg"],
-            fg=COLORS["text_dim"],
-            font=("Segoe UI", 9, "bold"),
+            text = _("menu_header"),
+            bg = COLORS["sidebar_bg"],
+            fg = COLORS["text_dim"],
+            font = ("Segoe UI", 8, "bold"),
         )
-        self.menu_header.grid(row=2, column=0, sticky="w", padx=25, pady=(0, 10))
+        self.menu_header.grid(row = 3, column = 0, sticky = "w", padx = 25, pady = (0, 10))
 
         self.nav_buttons = {}
         nav_items = [
@@ -2619,44 +2671,49 @@ class ModernInstaller(tk.Tk):
         for i, (key, label) in enumerate(nav_items):
             btn = CategoryButton(
                 sidebar,
-                text=label,
-                command=lambda k=key: self.show_panel(k)
+                text = label,
+                command = lambda k = key: self.show_panel(k)
             )
-            btn.grid(row=3 + i, column=0, sticky="ew")
+            # Προσθήκη padding γύρω από τα κουμπιά για πιο καθαρό UI.
+            btn.grid(row = 4 + i, column = 0, sticky = "ew", padx = 15, pady = 4)
             self.nav_buttons[key] = btn
 
-        self.bottom_frame = tk.Frame(sidebar, bg=COLORS["sidebar_bg"])
-        self.bottom_frame.grid(row=11, column=0, sticky="ew", padx=20, pady=(20, 5))
-        self.bottom_frame.columnconfigure(0, weight=1)
+        # Spacer για να σπρώξει τα στοιχεία στο κάτω μέρος.
+        self.sidebar_spacer = tk.Frame(sidebar, bg = COLORS["sidebar_bg"])
+        self.sidebar_spacer.grid(row = 10, column = 0, sticky = "nsew")
 
-        self.theme_frame = tk.Frame(self.bottom_frame, bg=COLORS["sidebar_bg"])
-        self.theme_frame.pack(fill="x", pady=5)
+        self.bottom_frame = tk.Frame(sidebar, bg = COLORS["sidebar_bg"])
+        self.bottom_frame.grid(row = 11, column = 0, sticky = "ew", padx = 20, pady = (20, 5))
+        self.bottom_frame.columnconfigure(0, weight = 1)
+
+        self.theme_frame = tk.Frame(self.bottom_frame, bg = COLORS["sidebar_bg"])
+        self.theme_frame.pack(fill = "x", pady = 5)
         
         self.theme_label = tk.Label(
             self.theme_frame,
-            text=_("Dark Mode"),
-            bg=COLORS["sidebar_bg"],
-            fg=COLORS["text"],
-            font=FONTS["body"]
+            text = _("Dark Mode"),
+            bg = COLORS["sidebar_bg"],
+            fg = COLORS["text"],
+            font = FONTS["body"]
         )
-        self.theme_label.pack(side="left")
+        self.theme_label.pack(side = "left")
         
-        self.theme_toggle = ToggleSwitch(self.theme_frame, command=self._toggle_theme)
+        self.theme_toggle = ToggleSwitch(self.theme_frame, command = self._toggle_theme, bg = COLORS["sidebar_bg"])
         self.theme_toggle.set(ThemeManager.get_current_theme() == "dark")
-        self.theme_toggle.pack(side="right")
+        self.theme_toggle.pack(side = "right")
 
-        self.lang_switcher = LanguageSwitcher(self.bottom_frame, on_change=self.update_ui_languages)
-        self.lang_switcher.pack(fill="x", pady=5)
+        self.lang_switcher = LanguageSwitcher(self.bottom_frame, on_change = self.update_ui_languages)
+        self.lang_switcher.pack(fill = "x", pady = 5)
 
         self.status_label = tk.Label(
             sidebar,
-            text=_("status_ready"),
-            bg=COLORS["sidebar_bg"],
-            fg=COLORS["text_dim"],
-            font=FONTS["small"],
-            wraplength=200,
+            text = _("status_ready"),
+            bg = COLORS["sidebar_bg"],
+            fg = COLORS["text_dim"],
+            font = FONTS["small"],
+            wraplength = 200,
         )
-        self.status_label.grid(row=12, column=0, sticky="sw", padx=15, pady=15)
+        self.status_label.grid(row = 12, column = 0, sticky = "sw", padx = 25, pady = 15)
 
     def _build_install_panel(self, panel: tk.Frame):
         panel.columnconfigure(0, weight=1)
@@ -2915,9 +2972,13 @@ class ModernInstaller(tk.Tk):
         self.sidebar_area.canvas.config(bg=COLORS["sidebar_bg"])
         self.sidebar_area.scrollable_frame.config(bg=COLORS["sidebar_bg"])
         
-        self.sidebar_logo.config(bg=COLORS["sidebar_bg"])
+        self.logo_frame.config(bg=COLORS["sidebar_bg"])
+        self.logo_dev.config(bg=COLORS["sidebar_bg"])
+        self.logo_tools.config(bg=COLORS["sidebar_bg"], fg=COLORS["accent"])
+        self.sidebar_subtitle.config(bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"])
         self.sidebar_divider1.config(bg=COLORS["border"])
         self.menu_header.config(bg=COLORS["sidebar_bg"], fg=COLORS["text_dim"])
+        self.sidebar_spacer.config(bg=COLORS["sidebar_bg"])
         
         for btn in self.nav_buttons.values():
             btn.canvas.config(bg=COLORS["sidebar_bg"])
