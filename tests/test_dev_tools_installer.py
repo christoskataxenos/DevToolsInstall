@@ -90,10 +90,10 @@ def test_tool_status_constants():
     assert "INSTALLED" in TOOL_STATUS
     assert "RUNNING" in TOOL_STATUS
     assert "ERROR" in TOOL_STATUS
-    assert TOOL_STATUS["PENDING"] == "⚪"
-    assert TOOL_STATUS["INSTALLED"] == "🟢"
-    assert TOOL_STATUS["RUNNING"] == "🔵"
-    assert TOOL_STATUS["ERROR"] == "🔴"
+    assert TOOL_STATUS["PENDING"] == "[ ]"
+    assert TOOL_STATUS["INSTALLED"] == "[OK]"
+    assert TOOL_STATUS["RUNNING"] == "[...]"
+    assert TOOL_STATUS["ERROR"] == "[ERR]"
 
 
 def test_theme_manager():
