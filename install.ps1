@@ -3,9 +3,6 @@
 # Ορισμός του φακέλου εγκατάστασης στα έγγραφα του χρήστη
 $install_dir = "$env:USERPROFILE\Documents\DevToolsInstall"
 
-# Έλεγχος αν ο χρήστης τρέχει το PowerShell ως διαχειριστής
-$is_admin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "   DevTools Installer - Λήψη & Εγκατάσταση" -ForegroundColor Cyan
 Write-Host "=========================================" -ForegroundColor Cyan
