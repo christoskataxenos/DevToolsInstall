@@ -32,6 +32,13 @@ The interface includes Greek labels and descriptions to provide a localized, int
 
 ## Installation
 
+### Quick Install (PowerShell One-Liner)
+Run the following command in a PowerShell window to automatically download, install dependencies, and launch the application:
+```powershell
+irm https://raw.githubusercontent.com/christoskataxenos/DevToolsInstall/main/install.ps1 | iex
+```
+
+### Manual Installation
 1. Ensure you have **Python 3.10+** installed.
 2. Clone the repository:
    ```bash
@@ -84,6 +91,13 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## Εγκατάσταση
 
+### Γρήγορη Εγκατάσταση (PowerShell One-Liner)
+Εκτελέστε την παρακάτω εντολή σε ένα παράθυρο PowerShell για αυτόματη λήψη, εγκατάσταση εξαρτήσεων και εκκίνηση της εφαρμογής:
+```powershell
+irm https://raw.githubusercontent.com/christoskataxenos/DevToolsInstall/main/install.ps1 | iex
+```
+
+### Χειροκίνητη Εγκατάσταση
 1. Βεβαιωθείτε ότι έχετε **Python 3.10+**.
 2. Κάντε clone το repository:
    ```bash
