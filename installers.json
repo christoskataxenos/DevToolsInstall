@@ -217,9 +217,11 @@
       }
     },
     "Sysinternals Suite": {
-      "id": "Microsoft.SysinternalsSuite",
+      "id": "Microsoft.Sysinternals.Suite",
       "url": "https://learn.microsoft.com/en-us/sysinternals/",
       "type": "winget",
+      "choco_id": "sysinternals",
+      "scoop_id": "sysinternals",
       "note": {
         "el": "Η συλλογή εργαλείων της Microsoft για διαχείριση και debugging.",
         "en": "Microsoft utility collection for management and debugging."
@@ -321,8 +323,11 @@
       }
     },
     "Dev-C++": {
-      "id": "Embarcadero.Dev-CPP",
+      "id": "Embarcadero.Dev-C++",
       "url": "https://sourceforge.net/projects/orwelldevcpp/",
+      "download_url": "https://sourceforge.net/projects/orwelldevcpp/files/latest/download",
+      "choco_id": "dev-cpp",
+      "scoop_id": "dev-cpp",
       "note": {
         "el": "Κλασικό IDE για C/C++ (TDM-GCC).",
         "en": "Classic IDE for C/C++ (TDM-GCC)."
@@ -399,6 +404,9 @@
     "TDM-GCC": {
       "id": "jmeubank.tdm-gcc",
       "url": "https://jmeubank.github.io/tdm-gcc/",
+      "download_url": "https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe",
+      "choco_id": "tdm-gcc",
+      "scoop_id": "tdm-gcc",
       "note": {
         "el": "Compiler suite για C/C++ στα Windows.",
         "en": "Compiler suite for C/C++ on Windows."
