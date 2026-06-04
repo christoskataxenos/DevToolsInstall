@@ -186,3 +186,47 @@ def test_navigation_remains_enabled_during_install(app):
     assert app.panels["skills"].download_btn.cget("state") == "disabled"
 
 
+@requires_gui
+def test_show_selected_filter(mock_parent):
+    """Validates the 'Show Selected' filtering functionality in the tools list view."""
+    # Έλεγχος ότι η λειτουργία Show Selected φιλτράρει σωστά τα επιλεγμένα εργαλεία
+    from ui.panels.tools_panel import ToolsPanel
+    
+    # Αρχικοποίηση του ToolsPanel με mock callbacks
+    panel = ToolsPanel(
+        mock_parent,
+        on_selection_changed=lambda: None,
+        on_retry_install=lambda n, wid: None,
+        start_installation=lambda: None
+    )
+    
+    # 1. Επαλήθευση ύπαρξης του διακόπτη
+    assert hasattr(panel, "show_selected_switch")
+    assert panel.show_selected_var.get() is False
+    
+    # 2. Επιλογή ενός συγκεκριμένου εργαλείου
+    test_tool_name = list(panel.registry[list(panel.registry.keys())[0]].keys())[0]
+    panel._on_row_check_changed_name(test_tool_name, True)
+    assert test_tool_name in panel.selected_tools
+    
+    # 3. Ενεργοποίηση του φίλτρου Show Selected
+    panel.show_selected_var.set(True)
+    panel._on_show_selected_toggle()
+    
+    # 4. Έλεγχος ότι εμφανίζεται μόνο το επιλεγμένο εργαλείο
+    assert len(panel.tool_rows) == 1
+    assert panel.tool_rows[0].tool_name == test_tool_name
+    
+    # 5. Αποεπιλογή του εργαλείου (θα πρέπει να εξαφανιστεί αυτόματα από τη λίστα)
+    panel._on_row_check_changed_name(test_tool_name, False)
+    assert len(panel.tool_rows) == 0
+    
+    # 6. Απενεργοποίηση του φίλτρου Show Selected (θα πρέπει να εμφανιστούν ξανά όλα)
+    panel.show_selected_var.set(False)
+    panel._on_show_selected_toggle()
+    registry = Config.load_registry()
+    expected_count = sum(len(tools) for tools in registry.values())
+    assert len(panel.tool_rows) == expected_count
+
+
+

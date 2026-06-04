@@ -69,6 +69,21 @@ class ToolsPanel(ctk.CTkFrame):
         self.category_option.pack(side="right")
         self.category_option.set(_("All"))
 
+        # Διακόπτης (Switch) για την προβολή μόνο των επιλεγμένων εργαλείων (shopping cart review)
+        # Χρησιμοποιεί την προϋπάρχουσα μετάφραση "filter_selected" από το core.config
+        self.show_selected_var = ctk.BooleanVar(value=False)
+        self.show_selected_switch = ctk.CTkSwitch(
+            top_bar,
+            text=_("filter_selected"),
+            font=FONTS["body"],
+            fg_color=COLORS["sidebar"],
+            progress_color=COLORS["accent"],
+            text_color=COLORS["text"],
+            variable=self.show_selected_var,
+            command=self._on_show_selected_toggle
+        )
+        self.show_selected_switch.pack(side="right", padx=(0, 15))
+
         # Scrollable Container for Tool Rows
         self.scroll_frame = ctk.CTkScrollableFrame(
             self,
@@ -128,11 +143,22 @@ class ToolsPanel(ctk.CTkFrame):
         self._filter_rows()
 
     def _on_row_check_changed_name(self, name: str, is_checked: bool) -> None:
+        # Ενημέρωση του συνόλου επιλεγμένων εργαλείων με βάση την αλλαγή κατάστασης του checkbox
         if is_checked:
             self.selected_tools.add(name)
         else:
             self.selected_tools.discard(name)
+        
         self.on_selection_changed()
+        
+        # Αν είναι ενεργοποιημένη η προβολή μόνο των επιλεγμένων εργαλείων,
+        # ανανεώνουμε τη λίστα για να αφαιρεθεί άμεσα το εργαλείο που αποεπιλέχθηκε
+        if self.show_selected_var.get():
+            self._filter_rows()
+
+    def _on_show_selected_toggle(self) -> None:
+        # Καλείται όταν ο χρήστης αλλάζει την κατάσταση του διακόπτη "Show Selected"
+        self._filter_rows()
 
     def _get_raw_category(self, localized_name: str) -> str:
         if localized_name == _("All") or localized_name == "All":
@@ -152,6 +178,8 @@ class ToolsPanel(ctk.CTkFrame):
         localized_categories = [_(c) for c in raw_categories]
         self.category_option.configure(values=localized_categories)
         self.category_option.set(_(self.active_category))
+        # Ενημέρωση της μετάφρασης του διακόπτη "Show Selected" κατά την αλλαγή γλώσσας
+        self.show_selected_switch.configure(text=_("filter_selected"))
 
     def _on_search_key(self, event) -> None:
         self._filter_rows()
@@ -159,19 +187,23 @@ class ToolsPanel(ctk.CTkFrame):
     def _filter_rows(self) -> None:
         """Destroys and dynamically creates only matching rows to keep widget counts minimal."""
         query = self.search_entry.get().strip().lower()
+        show_selected_only = self.show_selected_var.get()
         
-        # Clean current active rows
+        # Καθαρισμός των τρεχόντων ενεργών γραμμών εργαλείων από το frame
         for row in self.tool_rows:
             row.destroy()
         self.tool_rows.clear()
 
-        # Instantiate only matching rows
+        # Δημιουργία και εμφάνιση μόνο των εργαλείων που ταιριάζουν με τα ενεργά φίλτρα
         for cat_name, cat_tools in self.registry.items():
             for name, details in cat_tools.items():
-                # Category Filter check
+                # Φιλτράρισμα με βάση το αν ο χρήστης θέλει να βλέπει μόνο τα επιλεγμένα
+                if show_selected_only and name not in self.selected_tools:
+                    continue
+                # Φιλτράρισμα με βάση την ενεργή κατηγορία
                 if self.active_category != "All" and cat_name != self.active_category:
                     continue
-                # Search Filter check
+                # Φιλτράρισμα με βάση το πεδίο αναζήτησης
                 if query and not (query in name.lower() or query in details.get("id", "").lower()):
                     continue
                 
@@ -183,11 +215,11 @@ class ToolsPanel(ctk.CTkFrame):
                     on_retry=self.on_retry_install
                 )
                 
-                # Apply cached status
+                # Εφαρμογή της αποθηκευμένης κατάστασης εγκατάστασης
                 cached_status = self.tool_statuses.get(name, "PENDING")
                 row.set_status(cached_status)
                 
-                # Apply cached selection
+                # Εφαρμογή της αποθηκευμένης κατάστασης επιλογής (checkbox)
                 if name in self.selected_tools:
                     row.check_var.set(True)
                     row.checkbox.select()
@@ -222,6 +254,8 @@ class ToolsPanel(ctk.CTkFrame):
         self.deselect_all_btn.configure(state="normal" if enabled else "disabled")
         self.search_entry.configure(state="normal" if enabled else "disabled")
         self.category_option.configure(state="normal" if enabled else "disabled")
+        # Απενεργοποίηση ή ενεργοποίηση του διακόπτη προβολής επιλεγμένων κατά τη διάρκεια της εγκατάστασης
+        self.show_selected_switch.configure(state="normal" if enabled else "disabled")
         for row in self.tool_rows:
             row.checkbox.configure(state="normal" if enabled else "disabled")
             if not enabled:
