@@ -145,11 +145,11 @@ def test_get_installed_tool_ids_mock():
     )
     
     service = InstallerService(None)
-    with patch("subprocess.run") as mock_run:
+    with patch("subprocess.Popen") as mock_popen:
         mock_proc = MagicMock()
         mock_proc.returncode = 0
-        mock_proc.stdout = mock_stdout
-        mock_run.return_value = mock_proc
+        mock_proc.communicate.return_value = (mock_stdout, "")
+        mock_popen.return_value = mock_proc
         
         installed = service.get_installed_tool_ids()
         assert "7zip.7zip" in installed

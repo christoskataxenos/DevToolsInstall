@@ -38,7 +38,24 @@ def main() -> None:
 def on_close(app: AppWindow) -> None:
     """Cleans resources and terminates app threads on exit."""
     logging.info("Closing application. Cleaning resources...")
-    app.destroy()
+    try:
+        # Instantly hide window to provide instant visual feedback to user
+        app.withdraw()
+    except Exception:
+        pass
+    
+    try:
+        # Clean up any active installer subprocesses
+        app.installer_service.cleanup()
+    except Exception:
+        pass
+
+    try:
+        app.quit()
+        app.destroy()
+    except Exception:
+        pass
+        
     sys.exit(0)
 
 if __name__ == "__main__":

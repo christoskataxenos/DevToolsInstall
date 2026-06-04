@@ -17,19 +17,36 @@ class InstallerService:
     def __init__(self, log_queue: queue.Queue):
         self.log_queue = log_queue
         self.is_running = False
+        self.active_processes: List[subprocess.Popen] = []
+
+    def cleanup(self) -> None:
+        """Terminates any active subprocesses running in the service."""
+        for process in list(self.active_processes):
+            try:
+                if process.poll() is None:  # Still running
+                    process.terminate()
+                    process.wait(timeout=1)
+            except Exception:
+                pass
+        self.active_processes.clear()
 
     def is_tool_installed(self, tool_id: str) -> bool:
         """
         Queries winget to check if the specific tool is already installed.
         """
         try:
-            result = subprocess.run(
+            process = subprocess.Popen(
                 ["winget", "list", "--id", tool_id, "--exact"],
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
-                timeout=20,
+                creationflags=subprocess.CREATE_NO_WINDOW
             )
-            return tool_id in result.stdout
+            self.active_processes.append(process)
+            stdout, stderr = process.communicate(timeout=20)
+            if process in self.active_processes:
+                self.active_processes.remove(process)
+            return tool_id in stdout
         except Exception:
             return False
 
@@ -39,16 +56,22 @@ class InstallerService:
         """
         installed_ids = set()
         try:
-            result = subprocess.run(
+            process = subprocess.Popen(
                 ["winget", "list", "--accept-source-agreements"],
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
-                timeout=45,
                 encoding="utf-8",
-                errors="ignore"
+                errors="ignore",
+                creationflags=subprocess.CREATE_NO_WINDOW
             )
-            if result.returncode == 0 or result.stdout:
-                lines = result.stdout.splitlines()
+            self.active_processes.append(process)
+            stdout, stderr = process.communicate()
+            if process in self.active_processes:
+                self.active_processes.remove(process)
+            
+            if process.returncode == 0 or stdout:
+                lines = stdout.splitlines()
                 header_idx = -1
                 for idx, line in enumerate(lines):
                     if "Name" in line and "Id" in line:
@@ -146,6 +169,7 @@ class InstallerService:
                     text=True,
                     creationflags=subprocess.CREATE_NO_WINDOW,
                 )
+                self.active_processes.append(process)
 
                 if process.stdout:
                     for line in process.stdout:
@@ -158,6 +182,8 @@ class InstallerService:
                             error_lines.append(line.strip())
 
                 process.wait()
+                if process in self.active_processes:
+                    self.active_processes.remove(process)
 
                 if process.returncode == 0:
                     self.log_queue.put({
@@ -219,11 +245,16 @@ class InstallerService:
                 ext_file = os.path.join(temp_dir, "vscode_extensions.txt")
                 
                 # Retrieve VS Code extensions list in backup
-                subprocess.run(
+                proc = subprocess.Popen(
                     ["powershell.exe", "-Command", f"code --list-extensions > '{ext_file}'"],
-                    capture_output=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                     creationflags=subprocess.CREATE_NO_WINDOW
                 )
+                self.active_processes.append(proc)
+                proc.communicate()
+                if proc in self.active_processes:
+                    self.active_processes.remove(proc)
 
                 if os.path.exists(ext_file):
                     zipf.write(ext_file, "vscode_extensions.txt")
@@ -338,11 +369,16 @@ class InstallerService:
                                 "text": _("restore_extension_installing", ext=ext),
                                 "tag": "info"
                             })
-                            subprocess.run(
+                            proc = subprocess.Popen(
                                 ["powershell.exe", "-Command", f"code --install-extension {ext} --force"],
-                                capture_output=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
                                 creationflags=subprocess.CREATE_NO_WINDOW
                             )
+                            self.active_processes.append(proc)
+                            proc.communicate()
+                            if proc in self.active_processes:
+                                self.active_processes.remove(proc)
 
                 # Restore Antigravity extension files
                 if any(x.startswith("Antigravity_Extensions/") for x in zipf.namelist()):

@@ -342,11 +342,14 @@ class AppWindow(ctk.CTk):
                     text=True,
                     creationflags=subprocess.CREATE_NO_WINDOW
                 )
+                self.installer_service.active_processes.append(process)
                 if process.stdout:
                     for line in process.stdout:
                         if line.strip():
                             self.log_queue.put({"type": "log", "text": f"  > {line.strip()}", "tag": "info"})
                 process.wait()
+                if process in self.installer_service.active_processes:
+                    self.installer_service.active_processes.remove(process)
                 if process.returncode == 0:
                     self.log_queue.put({"type": "log", "text": "Fix command executed successfully!", "tag": "success"})
                 else:
