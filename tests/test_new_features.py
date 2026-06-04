@@ -78,3 +78,30 @@ def test_ai_diagnostic_agent_ollama_offline():
         success, explanation, cmd = AIDiagnosticAgent.diagnose_with_ollama("Ollama", "Error occurred", [])
         assert success is False
         assert "not running" in explanation
+
+
+def test_clean_log_line():
+    # Έλεγχος ότι η συνάρτηση clean_log_line φιλτράρει σωστά τις γραμμές θορύβου
+    from core.installer_service import clean_log_line
+
+    # Γραμμές που πρέπει να παραμείνουν
+    assert clean_log_line("Starting package install...") == "Starting package install..."
+    assert clean_log_line("Successfully verified installer hash") == "Successfully verified installer hash"
+
+    # Γραμμές με spinners που πρέπει να φιλτραριστούν (επιστρέφουν None)
+    assert clean_log_line("-") is None
+    assert clean_log_line("\\") is None
+    assert clean_log_line("|") is None
+    assert clean_log_line("/") is None
+    assert clean_log_line("...") is None
+
+    # Γραμμές με μπάρες προόδου (block characters)
+    assert clean_log_line("â–’â–’â–’â–’â–’â–’â–’â–’â–’â–’") is None
+    assert clean_log_line("░░░░░░░░░░") is None
+    assert clean_log_line("██████████") is None
+
+    # Γραμμές με μεγέθη λήψης και ποσοστά
+    assert clean_log_line("1024 KB / 767 MB") is None
+    assert clean_log_line("13.0 MB / 767 MB") is None
+    assert clean_log_line("50% 10 MB/s") is None
+

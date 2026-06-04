@@ -1,0 +1,42 @@
+2026-06-04 09:32:36,525 [INFO] Starting DevTools Installer refactored application...
+2026-06-04 09:32:36,857 [CRITICAL] Unhandled critical exception starting app: CTkSegmentedButton.__init__() got an unexpected keyword argument 'selected_text_color'. Did you mean 'selected_color'?
+Traceback (most recent call last):
+  File "C:\Users\chris\Documents\GitHub\DevToolsInstall\main.py", line 30, in main
+    app = AppWindow()
+  File "C:\Users\chris\Documents\GitHub\DevToolsInstall\ui\app_window.py", line 41, in __init__
+    self._build_layout()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chris\Documents\GitHub\DevToolsInstall\ui\app_window.py", line 63, in _build_layout
+    self._build_workspace()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chris\Documents\GitHub\DevToolsInstall\ui\app_window.py", line 172, in _build_workspace
+    self.panels["install"] = ToolsPanel(
+                             ~~~~~~~~~~^
+        self.workspace_frame,
+        ^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        start_installation=self.start_installation
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\chris\Documents\GitHub\DevToolsInstall\ui\panels\tools_panel.py", line 23, in __init__
+    self._build_ui()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\chris\Documents\GitHub\DevToolsInstall\ui\panels\tools_panel.py", line 49, in _build_ui
+    self.category_seg = ctk.CTkSegmentedButton(
+                        ~~~~~~~~~~~~~~~~~~~~~~^
+        category_frame,
+        ^^^^^^^^^^^^^^^
+    ...<7 lines>...
+        command=self._on_category_select
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+TypeError: CTkSegmentedButton.__init__() got an unexpected keyword argument 'selected_text_color'. Did you mean 'selected_color'?
+2026-06-04 09:34:41,948 [INFO] Starting DevTools Installer refactored application...
+2026-06-04 09:37:54,240 [INFO] Closing application. Cleaning resources...
+2026-06-04 09:38:57,283 [INFO] Starting DevTools Installer refactored application...
+2026-06-04 09:42:13,146 [INFO] Closing application. Cleaning resources...
+2026-06-04 09:53:17,076 [INFO] Starting DevTools Installer refactored application...
+2026-06-04 09:53:41,890 [INFO] Closing application. Cleaning resources...
+2026-06-04 10:00:47,184 [INFO] Starting DevTools Installer refactored application...

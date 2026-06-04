@@ -14,7 +14,7 @@ from ui.panels.skills_panel import SkillsPanel
 
 from core.config import _, BACKUP_PATHS, TranslationManager, Config
 from core.system_checker import SystemSpecChecker
-from core.installer_service import InstallerService
+from core.installer_service import InstallerService, clean_log_line
 
 class AppWindow(ctk.CTk):
     """
@@ -340,13 +340,16 @@ class AppWindow(ctk.CTk):
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
+                    encoding="utf-8",
+                    errors="ignore",
                     creationflags=subprocess.CREATE_NO_WINDOW
                 )
                 self.installer_service.active_processes.append(process)
                 if process.stdout:
                     for line in process.stdout:
-                        if line.strip():
-                            self.log_queue.put({"type": "log", "text": f"  > {line.strip()}", "tag": "info"})
+                        cleaned = clean_log_line(line)
+                        if cleaned:
+                            self.log_queue.put({"type": "log", "text": f"  > {cleaned}", "tag": "info"})
                 process.wait()
                 if process in self.installer_service.active_processes:
                     self.installer_service.active_processes.remove(process)

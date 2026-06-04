@@ -9,6 +9,38 @@ from typing import List, Tuple, Dict, Any, Callable, Optional, Set
 
 from core.config import _, BACKUP_PATHS, BACKUP_EXCLUDE_DIRS, ANTIGRAVITY_EXTENSIONS_PATH, Config
 
+def clean_log_line(line: str) -> Optional[str]:
+    """
+    Καθαρίζει μια γραμμή καταγραφής από θόρυβο (spinners, μπάρες προόδου).
+    Επιστρέφει τη γραμμή καθαρισμένη ή None αν πρέπει να αγνοηθεί.
+    """
+    # Αφαίρεση κενών στην αρχή και στο τέλος της γραμμής
+    cleaned = line.strip()
+    if not cleaned:
+        return None
+
+    # Φιλτράρισμα χαρακτήρων spinner
+    # Αν η γραμμή είναι μόνο ένας χαρακτήρας spinner ή τελείες, την αγνοούμε
+    if cleaned in ["-", "\\", "|", "/", ".", "..", "..."]:
+        return None
+
+    # Φιλτράρισμα γραμμών που περιέχουν χαρακτήρες προόδου (blocks)
+    # Ελέγχουμε για Unicode blocks ή CP1252 garbled αναπαραστάσεις
+    block_chars = ["\u2588", "\u2591", "\u2592", "\u2593", "â–ˆ", "â–’"]
+    if any(char in cleaned for char in block_chars):
+        return None
+
+    # Φιλτράρισμα γραμμών με πληροφορίες μεγέθους λήψης (π.χ. "1024 KB / 767 MB")
+    if " / " in cleaned and any(unit in cleaned for unit in [" B", " KB", " MB", " GB"]):
+        return None
+
+    # Φιλτράρισμα γραμμών με ποσοστά και ρυθμό λήψης
+    if "%" in cleaned and any(x in cleaned for x in ["MB/s", "KB/s", "B/s"]):
+        return None
+
+    return cleaned
+
+
 class InstallerService:
     """
     Handles installation execution of development tools via winget, npm, powershell,
@@ -167,19 +199,22 @@ class InstallerService:
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
+                    encoding="utf-8",
+                    errors="ignore",
                     creationflags=subprocess.CREATE_NO_WINDOW,
                 )
                 self.active_processes.append(process)
 
                 if process.stdout:
                     for line in process.stdout:
-                        if line.strip():
+                        cleaned = clean_log_line(line)
+                        if cleaned:
                             self.log_queue.put({
                                 "type": "log",
-                                "text": f"  > {line.strip()}",
+                                "text": f"  > {cleaned}",
                                 "tag": "info"
                             })
-                            error_lines.append(line.strip())
+                            error_lines.append(cleaned)
 
                 process.wait()
                 if process in self.active_processes:
