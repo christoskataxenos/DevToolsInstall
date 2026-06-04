@@ -335,8 +335,9 @@ class AppWindow(ctk.CTk):
         
         def run():
             try:
+                # Εκτέλεση της εντολής διόρθωσης με -ExecutionPolicy Bypass για να παρακάμψουμε τυχόν περιορισμούς εκτέλεσης σεναρίων
                 process = subprocess.Popen(
-                    ["powershell.exe", "-Command", command],
+                    ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", command],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,

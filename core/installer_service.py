@@ -156,8 +156,10 @@ class InstallerService:
         # Εντολή PowerShell για την εγκατάσταση του Chocolatey
         cmd = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
         try:
+            # Εκτέλεση της εντολής PowerShell με παράκαμψη της πολιτικής εκτέλεσης (ExecutionPolicy Bypass)
+            # για να επιτραπεί η εγκατάσταση του Chocolatey χωρίς σφάλματα δικαιωμάτων
             process = subprocess.Popen(
-                ["powershell.exe", "-Command", cmd],
+                ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -200,8 +202,10 @@ class InstallerService:
         # Εντολή PowerShell για την εγκατάσταση του Scoop
         cmd = "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process; iwr -useb get.scoop.sh | iex"
         try:
+            # Εκτέλεση της εντολής PowerShell με παράκαμψη της πολιτικής εκτέλεσης (ExecutionPolicy Bypass)
+            # για την απρόσκοπτη λήψη και εγκατάσταση του Scoop
             process = subprocess.Popen(
-                ["powershell.exe", "-Command", cmd],
+                ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -238,8 +242,10 @@ class InstallerService:
         # Εκτέλεση μιας εντολής εγκατάστασης και συλλογή/καταγραφή των αποτελεσμάτων της
         log_lines = []
         try:
+            # Εκτέλεση της διεργασίας εγκατάστασης με παράκαμψη της πολιτικής εκτέλεσης (ExecutionPolicy Bypass)
+            # για να επιτρέπεται η εκτέλεση PowerShell scripts (όπως τα scoop shims/ps1)
             process = subprocess.Popen(
-                ["powershell.exe", "-Command", cmd],
+                ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -307,8 +313,9 @@ class InstallerService:
             
             # Εκτέλεση της εγκατάστασης με ορατό παράθυρο (creationflags=0)
             # ώστε αν το πρόγραμμα απαιτεί αλληλεπίδραση ο χρήστης να μπορεί να το δει
+            # Προσθήκη παραμέτρου -ExecutionPolicy Bypass για αποφυγή σφαλμάτων εκτέλεσης σε PowerShell
             process = subprocess.Popen(
-                ["powershell.exe", "-Command", cmd],
+                ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -569,9 +576,10 @@ class InstallerService:
                 temp_dir = os.path.dirname(target_zip) or os.path.expanduser("~")
                 ext_file = os.path.join(temp_dir, "vscode_extensions.txt")
                 
-                # Retrieve VS Code extensions list in backup
+                # Ανάκτηση της λίστας επεκτάσεων VS Code για το αντίγραφο ασφαλείας
+                # Χρήση -ExecutionPolicy Bypass για την ασφαλή εκτέλεση του PowerShell script
                 proc = subprocess.Popen(
-                    ["powershell.exe", "-Command", f"code --list-extensions > '{ext_file}'"],
+                    ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", f"code --list-extensions > '{ext_file}'"],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     creationflags=subprocess.CREATE_NO_WINDOW
@@ -694,8 +702,10 @@ class InstallerService:
                                 "text": _("restore_extension_installing", ext=ext),
                                 "tag": "info"
                             })
+                            # Επανεγκατάσταση της επέκτασης VS Code
+                            # Χρήση -ExecutionPolicy Bypass για την ασφαλή εκτέλεση της εντολής στο PowerShell
                             proc = subprocess.Popen(
-                                ["powershell.exe", "-Command", f"code --install-extension {ext} --force"],
+                                ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", f"code --install-extension {ext} --force"],
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 creationflags=subprocess.CREATE_NO_WINDOW

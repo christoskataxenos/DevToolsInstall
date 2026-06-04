@@ -26,10 +26,10 @@ class SystemSpecChecker:
         except Exception:
             specs["free_disk_gb"] = 0.0
 
-        # 2. Fetch total system RAM via PowerShell cmdlet
+        # 2. Ανάκτηση της συνολικής μνήμης RAM του συστήματος μέσω PowerShell cmdlet
         try:
-            # Use CimInstance for reliable modern Windows querying
-            command = "powershell -NoProfile -Command \"(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory\""
+            # Χρήση CimInstance για αξιόπιστη άντληση στοιχείων σε σύγχρονα Windows με παράκαμψη της πολιτικής εκτέλεσης
+            command = "powershell -NoProfile -ExecutionPolicy Bypass -Command \"(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory\""
             output = subprocess.check_output(command, shell=True, text=True, stderr=subprocess.DEVNULL)
             bytes_val = int(output.strip())
             specs["ram_gb"] = round(bytes_val / (1024 ** 3), 2)
@@ -44,9 +44,10 @@ class SystemSpecChecker:
             except Exception:
                 specs["ram_gb"] = 0.0
 
-        # 3. Fetch graphics card adapter name (GPU)
+        # 3. Ανάκτηση του ονόματος της κάρτας γραφικών (GPU)
         try:
-            command = "powershell -NoProfile -Command \"Get-CimInstance Win32_VideoController | Select-Object -ExpandProperty Name\""
+            # Εκτέλεση με παράκαμψη της πολιτικής εκτέλεσης (ExecutionPolicy Bypass) για αποφυγή περιορισμών
+            command = "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-CimInstance Win32_VideoController | Select-Object -ExpandProperty Name\""
             output = subprocess.check_output(command, shell=True, text=True, stderr=subprocess.DEVNULL)
             gpu_names = [line.strip() for line in output.strip().split("\n") if line.strip()]
             
