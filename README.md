@@ -53,7 +53,7 @@ irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
    ```
 4. Launch the application:
    ```bash
-   python DevToolsInstaller.py
+   python main.py
    ```
 
 ## Roadmap
@@ -126,7 +126,7 @@ irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
    ```
 4. Εκκινήστε την εφαρμογή:
    ```bash
-   python DevToolsInstaller.py
+   python main.py
    ```
 
 ## Credits & Kudos

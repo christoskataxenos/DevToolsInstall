@@ -75,9 +75,9 @@ if %errorlevel% neq 0 (
 echo [OK] Step 4 completed.
 echo.
 
-:: [5] Shortcut
+:: [5] Συντόμευση Επιφάνειας Εργασίας
 echo [Step 5] Creating Desktop Shortcut...
-powershell -Command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%USERPROFILE%\Desktop\DevTools Installer.lnk');$s.TargetPath='python.exe';$s.Arguments='\"%SCRIPT_DIR%DevToolsInstaller.py\"';$s.WorkingDirectory='%SCRIPT_DIR%';$s.IconLocation='%SCRIPT_DIR%devtools_icon.png';$s.Save()"
+powershell -Command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%USERPROFILE%\Desktop\DevTools Installer.lnk');$s.TargetPath='python.exe';$s.Arguments='\"%SCRIPT_DIR%main.py\"';$s.WorkingDirectory='%SCRIPT_DIR%';$s.IconLocation='%SCRIPT_DIR%devtools_icon.png';$s.Save()"
 echo.
 
 echo ========================================
@@ -85,7 +85,8 @@ echo   Setup Complete!
 echo ========================================
 echo.
 echo [INFO] Launching app...
-python "%SCRIPT_DIR%DevToolsInstaller.py"
+:: Εκκίνηση της κύριας εφαρμογής main.py
+python "%SCRIPT_DIR%main.py"
 
 echo.
 echo If the app closed, check the terminal above for errors.
