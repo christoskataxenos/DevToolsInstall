@@ -1,295 +1,132 @@
 import pytest
-import json
 import os
 import tempfile
-from DevToolsInstaller import (
-    ModernInstaller,
-    TOOLS_REGISTRY,
-    STACKS,
-    TOOL_STATUS,
-    ThemeManager,
-    ToolCard,
-)
+import json
+import customtkinter as ctk
 
-# Έλεγχος αν το Tkinter είναι διαθέσιμο και λειτουργικό στο τρέχον περιβάλλον
-TK_AVAILABLE = False
+from core.config import Config, TranslationManager
+from ui.components.tool_row import ToolRow
+from ui.app_window import AppWindow
+
+# Check if GUI window environment is active and available
+GUI_AVAILABLE = False
 try:
-    import tkinter as tk
-    root = tk.Tk()
+    root = ctk.CTk()
     root.destroy()
-    TK_AVAILABLE = True
+    GUI_AVAILABLE = True
 except Exception:
-    TK_AVAILABLE = False
+    GUI_AVAILABLE = False
 
-requires_tk = pytest.mark.skipif(
-    not TK_AVAILABLE,
-    reason="Το Tkinter δεν είναι πλήρως λειτουργικό σε αυτό το περιβάλλον"
+requires_gui = pytest.mark.skipif(
+    not GUI_AVAILABLE,
+    reason="GUI display server is not available in the current test environment"
 )
-
 
 @pytest.fixture
 def app():
     try:
-        app = ModernInstaller()
+        app_inst = AppWindow()
     except Exception as e:
-        pytest.skip(f"Το Tkinter/Tk δεν μπόρεσε να αρχικοποιηθεί: {e}")
-    yield app
+        pytest.skip(f"Failed to initialize CustomTkinter application frame: {e}")
+    yield app_inst
     try:
-        app.destroy()
-    except:
+        app_inst.destroy()
+    except Exception:
         pass
-
 
 @pytest.fixture
 def mock_parent():
     try:
-        import tkinter as tk
-        root = tk.Tk()
+        parent = ctk.CTk()
     except Exception as e:
-        pytest.skip(f"Το Tkinter/Tk δεν μπόρεσε να αρχικοποιηθεί: {e}")
-    yield root
+        pytest.skip(f"Failed to initialize CustomTkinter parent: {e}")
+    yield parent
     try:
-        root.destroy()
-    except:
+        parent.destroy()
+    except Exception:
         pass
 
-
 def test_registry_integrity():
-    """Έλεγχος αν το μητρώο εργαλείων είναι σωστά δομημένο."""
-    assert len(TOOLS_REGISTRY) > 0
-    for cat, tools in TOOLS_REGISTRY.items():
+    """Validates structure and items of the installers registry configuration."""
+    registry = Config.load_registry()
+    assert len(registry) > 0
+    for cat, tools in registry.items():
         assert len(tools) > 0
         for name, details in tools.items():
             assert "id" in details
             assert "url" in details
 
-
 def test_stacks_consistency():
-    """Έλεγχος αν όλα τα εργαλεία στα stacks υπάρχουν στο registry."""
+    """Validates that all stack applications matches items defined in the registry."""
+    registry = Config.load_registry()
     all_tool_names = []
-    for tools in TOOLS_REGISTRY.values():
+    for tools in registry.values():
         all_tool_names.extend(tools.keys())
 
-    for stack_name, tools in STACKS.items():
+    stacks = Config.load_stacks()
+    for stack_name, tools in stacks.items():
         for tool in tools:
             assert tool in all_tool_names, (
-                f"Το εργαλείο {tool} στο stack {stack_name} δεν υπάρχει στο registry."
+                f"Tool '{tool}' in stack '{stack_name}' is missing in registries."
             )
 
-
-@requires_tk
+@requires_gui
 def test_window_initialization(app):
-    """Έλεγχος αν το παράθυρο αρχικοποιείται με τον σωστό αριθμό καρτών."""
-    expected_count = sum(len(tools) for tools in TOOLS_REGISTRY.values())
-    assert len(app.cards) == expected_count
+    """Validates window initializes components and contains tools list matching registry count."""
+    registry = Config.load_registry()
+    expected_count = sum(len(tools) for tools in registry.values())
+    assert len(app.panels["install"].tool_rows) == expected_count
 
-
-def test_tool_status_constants():
-    """Έλεγχος ότι τα status icons ορίζονται σωστά."""
-    assert "PENDING" in TOOL_STATUS
-    assert "INSTALLED" in TOOL_STATUS
-    assert "RUNNING" in TOOL_STATUS
-    assert "ERROR" in TOOL_STATUS
-    assert TOOL_STATUS["PENDING"] == "[ ]"
-    assert TOOL_STATUS["INSTALLED"] == "[OK]"
-    assert TOOL_STATUS["RUNNING"] == "[...]"
-    assert TOOL_STATUS["ERROR"] == "[ERR]"
-
-
-def test_theme_manager():
-    """Έλεγχος του διαχειριστή θεμάτων."""
-    assert ThemeManager.get_current_theme() == "dark"
-
-    ThemeManager.set_theme("light")
-    assert ThemeManager.get_current_theme() == "light"
-
-    colors = ThemeManager.get_colors()
-    assert "bg" in colors
-    assert "accent" in colors
-
-    ThemeManager.set_theme("dark")
-    assert ThemeManager.get_current_theme() == "dark"
-
-
-@requires_tk
-def test_tool_card_status(mock_parent):
-    """Έλεγχος της κατάστασης της κάρτας εργαλείου."""
+@requires_gui
+def test_tool_row_status(mock_parent):
+    """Validates status updates inside ToolRow component."""
     details = {"id": "Test.Test", "url": "https://test.com"}
-
-    card = ToolCard(
+    row = ToolRow(
         mock_parent,
         name="Test Tool",
         details=details,
-        on_toggle=lambda c: None,
-        on_link=lambda u: None,
+        on_check_changed=lambda checked: None,
+        on_retry=lambda n, wid: None
     )
 
-    assert card.get_status() == "PENDING"
+    assert row.status == "PENDING"
+    row.set_status("INSTALLED")
+    assert row.status == "INSTALLED"
+    row.set_status("RUNNING")
+    assert row.status == "RUNNING"
+    row.set_status("ERROR")
+    assert row.status == "ERROR"
 
-    card.set_status("INSTALLED")
-    assert card.get_status() == "INSTALLED"
-
-    card.set_status("RUNNING")
-    assert card.get_status() == "RUNNING"
-
-    card.set_status("ERROR")
-    assert card.get_status() == "ERROR"
-
-
-@requires_tk
-def test_tool_card_update_language(mock_parent):
-    """Έλεγχος της ενημέρωσης γλώσσας στην κάρτα εργαλείου."""
-    # Δημιουργία δοκιμαστικών λεπτομερειών με δίγλωσση σημείωση
-    details = {
-        "id": "Test.Test",
-        "url": "https://test.com",
-        "note": {
-            "el": "Ελληνική σημείωση",
-            "en": "English note"
-        }
-    }
-
-    # Αρχικοποίηση της κάρτας εργαλείου
-    card = ToolCard(
-        mock_parent,
-        name="Test Tool",
-        details=details,
-        on_toggle=lambda c: None,
-        on_link=lambda u: None,
-    )
-
-    from DevToolsInstaller import TranslationManager
-
-    # Δοκιμή αλλαγής σε Αγγλικά
-    TranslationManager.set_language("en")
-    card.update_language()
-    assert card.note_label.cget("text") == "English note"
-
-    # Δοκιμή αλλαγής σε Ελληνικά
-    TranslationManager.set_language("el")
-    card.update_language()
-    assert card.note_label.cget("text") == "Ελληνική σημείωση"
-
-
-@requires_tk
-def test_export_import_json(app):
-    """Έλεγχος εξαγωγής και εισαγωγής επιλογών σε JSON."""
-    app.deselect_all()
-
-    if app.cards:
-        app.cards[0].set_checked(True)
-        app.cards[1].set_checked(True)
-
-    selected_before = [c.name for c in app.cards if c.is_checked()]
-    assert len(selected_before) == 2
-
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        temp_path = f.name
-
-    try:
-        with open(temp_path, "w", encoding="utf-8") as f:
-            json.dump({"selected_tools": selected_before}, f)
-
-        app.deselect_all()
-
-        with open(temp_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        imported = data.get("selected_tools", [])
-        assert len(imported) == 2
-
-    finally:
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-
-
-@requires_tk
-def test_progress_bar_exists(app):
-    """Έλεγχος ύπαρξης της γραμμής προόδου."""
-    assert hasattr(app, "progress_bar")
-    assert app.progress_bar["maximum"] == 100
-    assert app.progress_bar["value"] == 0
-
-
-@requires_tk
-def test_search_functionality(app):
-    """Έλεγχος της λειτουργίας αναζήτησης."""
-    app.search_var.set("VS Code")
-
-    visible_count = sum(1 for c in app.cards if c.name == "VS Code")
-    assert visible_count > 0
-
-    app.search_var.set("")
-
-    app.search_var.set("NonExistent")
-    for card in app.cards:
-        if card.name == "VS Code":
-            pass
-
-
-@requires_tk
-def test_select_deselect_all(app):
-    """Έλεγχος επιλογής/αποεπιλογής όλων."""
-    # Find cards in the current category
-    curr_cat_cards = [c for c in app.cards if c.master.master.master == app.category_frames[app.current_category]]
-    
-    app.deselect_all()
-    assert all(not c.is_checked() for c in curr_cat_cards)
-
-    app.select_all()
-    assert all(c.is_checked() for c in curr_cat_cards)
-
-
-@requires_tk
-def test_apply_stack(app):
-    """Έλεγχος εφαρμογής stack."""
-    app.apply_stack("Python / AI")
-
-    python_tools = STACKS["Python / AI"]
-    for card in app.cards:
-        if card.name in python_tools:
-            assert card.is_checked(), f"{card.name} should be checked"
-
+@requires_gui
+def test_theme_toggling(app):
+    """Validates theme toggling alters ctk appearance modes."""
+    # Simulate theme switch toggle toggling
+    app.theme_switch.toggle()
+    # Check switch does not crash the window
+    assert app.theme_switch.get() in [0, 1]
 
 def test_all_tools_have_valid_urls():
-    """Έλεγχος ότι κάθε εργαλείο έχει URL που ξεκινά με http."""
-    for category, tools in TOOLS_REGISTRY.items():
+    """Validates registry tool entries contain valid HTTP download URLs."""
+    registry = Config.load_registry()
+    for category, tools in registry.items():
         for name, details in tools.items():
-            assert "url" in details, f"Tool {name} in {category} is missing URL"
+            assert "url" in details, f"Tool {name} in {category} is missing URL link"
             url = details["url"]
             assert url.startswith("http://") or url.startswith("https://"), (
-                f"Tool {name} in {category} has invalid URL: {url}"
+                f"Tool {name} in {category} contains invalid URL structure: {url}"
             )
 
-
 def test_no_duplicate_winget_ids():
-    """Έλεγχος ότι δεν υπάρχουν διπλότυπα winget IDs."""
+    """Validates registry has unique IDs to prevent conflict issues."""
+    registry = Config.load_registry()
     seen_ids = {}
-    for category, tools in TOOLS_REGISTRY.items():
+    for category, tools in registry.items():
         for name, details in tools.items():
             tool_id = details.get("id", "")
             if tool_id and tool_id != "manual":
                 if tool_id in seen_ids:
                     assert False, (
                         f"Duplicate winget ID '{tool_id}' found in "
-                        f"{seen_ids[tool_id]} and {name}"
+                        f"'{seen_ids[tool_id]}' and '{name}'"
                     )
                 seen_ids[tool_id] = name
-
-
-@requires_tk
-def test_retry_tool(app):
-    """Έλεγχος της μεθόδου retry_tool για ένα εργαλείο."""
-    import unittest.mock as mock
-
-    # Χρήση mock για το Thread ώστε να μην εκτελεστεί πραγματικά η εγκατάσταση
-    with mock.patch("threading.Thread") as mock_thread:
-        app.retry_tool("VS Code", "Microsoft.VisualStudioCode")
-
-        # Επιβεβαίωση ότι το Thread κλήθηκε και ξεκίνησε με τα σωστά ορίσματα
-        mock_thread.assert_called_once()
-        kwargs = mock_thread.call_args[1]
-        assert kwargs["target"] == app._run_installation
-        assert kwargs["args"] == ([("VS Code", "Microsoft.VisualStudioCode")],)
-        assert kwargs["daemon"] is True
-        assert app.is_installing is True

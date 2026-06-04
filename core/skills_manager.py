@@ -7,25 +7,25 @@ from typing import Dict, Any, List, Optional, Tuple
 
 class SkillsManager:
     """
-    Κλάση για τη διαχείριση (λήψη, ενημέρωση, εξαγωγή) των AI Agent Skills από το GitHub.
+    Handles fetching, updating, listing, and exporting AI Agent Skills (.cursorrules, prompts, templates) from GitHub.
     """
 
     DEFAULT_REPOS = [
         {
             "name": "Cursor Rules (Curated)",
             "url": "https://github.com/PatrickJS/awesome-cursorrules",
-            "desc": "Συλλογή από βελτιστοποιημένα αρχεία κανόνων για τον Cursor editor."
+            "desc": "Curated collection of system instructions and rule files for Cursor editor."
         },
         {
             "name": "Fabric Patterns",
             "url": "https://github.com/danielmiessler/fabric",
-            "desc": "Έτοιμα AI prompt patterns για CLI και αυτοματοποιήσεις."
+            "desc": "Sleek and modular prompt patterns for terminal-based AI orchestration."
         }
     ]
 
     @classmethod
     def get_global_dir(cls) -> str:
-        # Επιστρέφει τη διαδρομή του global φακέλου αποθήκευσης των skills
+        """Returns the global target storage path for downloaded skills repositories."""
         user_profile = os.environ.get("USERPROFILE", os.path.expanduser("~"))
         global_dir = os.path.join(user_profile, ".ai_skills")
         if not os.path.exists(global_dir):
@@ -34,7 +34,7 @@ class SkillsManager:
 
     @classmethod
     def is_git_installed(cls) -> bool:
-        # Ελέγχει αν το Git είναι διαθέσιμο στη γραμμή εντολών
+        """Verifies if Git CLI command is globally accessible in PATH."""
         try:
             subprocess.run(["git", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
             return True
@@ -44,87 +44,75 @@ class SkillsManager:
     @classmethod
     def download_repo(cls, repo_url: str, repo_name: str) -> Tuple[bool, str]:
         """
-        Κατεβάζει ή ενημερώνει ένα repository στο global φάκελο.
-        Επιστρέφει (success, status_message).
+        Clones a Git repository or pulls updates to the global skills directory.
+        Falls back to a direct ZIP archive download if Git command is not available.
         """
-        # Καθαρισμός του ονόματος του repo για χρήση ως όνομα φακέλου
         clean_name = repo_name.replace(" ", "_").replace("/", "_").replace("\\", "_")
         target_dir = os.path.join(cls.get_global_dir(), clean_name)
 
-        # Αν υπάρχει ήδη και έχουμε Git, κάνουμε git pull
+        # 1. Update using git pull if directory exists and is a git repository
         if os.path.exists(target_dir) and os.path.exists(os.path.join(target_dir, ".git")) and cls.is_git_installed():
             try:
-                # Εκτέλεση git pull για ενημέρωση
                 subprocess.run(["git", "-C", target_dir, "pull"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                return True, f"Ενημερώθηκε επιτυχώς μέσω git pull: {repo_name}"
+                return True, f"Successfully updated repo via git pull: {repo_name}"
             except Exception as e:
-                return False, f"Αποτυχία ενημέρωσης μέσω git pull: {str(e)}"
+                return False, f"Failed updating repo via git pull: {str(e)}"
 
-        # Διαγραφή παλαιού φακέλου αν υπάρχει αλλά δεν είναι σωστό git repo
+        # Clean old directory if it exists but is not a valid git repository
         if os.path.exists(target_dir):
             try:
                 shutil.rmtree(target_dir)
             except Exception as e:
-                return False, f"Αποτυχία καθαρισμού παλαιού φακέλου: {str(e)}"
+                return False, f"Failed cleaning obsolete directory: {str(e)}"
 
-        # Προσπάθεια clone αν υπάρχει Git
+        # 2. Clone via git clone if Git CLI is available
         if cls.is_git_installed():
             try:
                 subprocess.run(["git", "clone", repo_url, target_dir], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                return True, f"Λήψη επιτυχής μέσω git clone: {repo_name}"
-            except Exception as e:
-                # Αν αποτύχει το clone, θα δοκιμάσουμε το fallback με zip
-                pass
+                return True, f"Successfully cloned repo via git clone: {repo_name}"
+            except Exception:
+                pass  # Fallback to ZIP download on failure
 
-        # Fallback λήψη μέσω zip αρχείου από το GitHub
+        # 3. Fallback: Download repository as a ZIP archive from GitHub
         try:
-            # Κατασκευή του zip url (π.χ. https://github.com/user/repo/archive/refs/heads/main.zip)
-            # Αφαίρεση του .git από το url αν υπάρχει
             base_url = repo_url.strip()
             if base_url.endswith(".git"):
                 base_url = base_url[:-4]
             
-            # Προσθήκη zip κατάληξης
+            # Construct GitHub ZIP zipball URL
             zip_url = f"{base_url}/archive/refs/heads/main.zip"
-            
-            # Προσωρινή τοποθεσία zip αρχείου
             temp_zip = os.path.join(cls.get_global_dir(), f"{clean_name}_temp.zip")
             
-            # Λήψη του αρχείου
             headers = {"User-Agent": "Mozilla/5.0"}
             req = urllib.request.Request(zip_url, headers=headers)
             with urllib.request.urlopen(req) as response, open(temp_zip, "wb") as out_file:
                 shutil.copyfileobj(response, out_file)
                 
-            # Αποσυμπίεση του zip
+            # Extract downloaded ZIP content
             with zipfile.ZipFile(temp_zip, "r") as zip_ref:
-                # Δημιουργία προσωρινού φακέλου εξαγωγής
                 temp_extract_dir = os.path.join(cls.get_global_dir(), f"{clean_name}_extract_temp")
                 os.makedirs(temp_extract_dir, exist_ok=True)
                 zip_ref.extractall(temp_extract_dir)
                 
-                # Ο φάκελος zip του GitHub συνήθως περιέχει έναν υποφάκελο repo-main.
-                # Μετακινούμε τα περιεχόμενά του στον τελικό φάκελο.
+                # Relocate inner root directory contents to the clean target location
                 extracted_subdirs = os.listdir(temp_extract_dir)
                 if extracted_subdirs:
                     source_sub = os.path.join(temp_extract_dir, extracted_subdirs[0])
                     shutil.move(source_sub, target_dir)
                 
-                # Καθαρισμός προσωρινών αρχείων
+                # Cleanup temp folders
                 shutil.rmtree(temp_extract_dir)
             
             if os.path.exists(temp_zip):
                 os.remove(temp_zip)
                 
-            return True, f"Λήψη επιτυχής μέσω ZIP αρχείου (Fallback): {repo_name}"
+            return True, f"Successfully downloaded ZIP package (Fallback): {repo_name}"
         except Exception as e:
-            return False, f"Αποτυχία λήψης ZIP αρχείου: {str(e)}"
+            return False, f"Failed downloading repository ZIP file: {str(e)}"
 
     @classmethod
     def list_local_skills(cls) -> List[Dict[str, str]]:
-        """
-        Επιστρέφει λίστα με τα τοπικά αποθηκευμένα repositories.
-        """
+        """Returns a list of local repositories synced in the global directory."""
         local_repos = []
         global_dir = cls.get_global_dir()
         if not os.path.exists(global_dir):
@@ -141,18 +129,16 @@ class SkillsManager:
 
     @classmethod
     def export_skill_to_project(cls, skill_source_path: str, project_dir: str, file_name: str) -> Tuple[bool, str]:
-        """
-        Αντιγράφει ένα συγκεκριμένο skill αρχείο (π.χ. .cursorrules) στο project.
-        """
+        """Copies a target skill config file (e.g. .cursorrules) into the target project folder."""
         if not os.path.exists(skill_source_path):
-            return False, "Το αρχείο πηγής δεν υπάρχει."
+            return False, "Source skill file does not exist."
             
         if not os.path.exists(project_dir):
-            return False, "Ο φάκελος προορισμού του project δεν υπάρχει."
+            return False, "Target project directory does not exist."
             
         try:
             target_path = os.path.join(project_dir, file_name)
             shutil.copy2(skill_source_path, target_path)
-            return True, f"Το αρχείο {file_name} αντιγράφηκε επιτυχώς στο {project_dir}"
+            return True, f"Successfully exported {file_name} to {project_dir}"
         except Exception as e:
-            return False, f"Αποτυχία αντιγραφής αρχείου: {str(e)}"
+            return False, f"Failed exporting file to destination: {str(e)}"

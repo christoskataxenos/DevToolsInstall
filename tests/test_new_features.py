@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 import pytest
 import os
 import shutil
 import tempfile
-from SystemChecker import SystemSpecChecker
-from SkillsManager import SkillsManager
-from AIDiagnosticAgent import AIDiagnosticAgent
+from core.system_checker import SystemSpecChecker
+from core.skills_manager import SkillsManager
+from core.diagnostic_agent import AIDiagnosticAgent
 
 def test_system_spec_checker_keys():
-    # Έλεγχος ότι η μέθοδος get_system_specs επιστρέφει λεξικό με τα σωστά κλειδιά
+    # Verifies get_system_specs returns expected dictionary keys
     specs = SystemSpecChecker.get_system_specs()
     assert isinstance(specs, dict)
     assert "ram_gb" in specs
@@ -21,7 +20,7 @@ def test_system_spec_checker_keys():
     assert isinstance(specs["gpu_name"], str)
 
 def test_system_spec_checker_requirements_pass():
-    # Δοκιμή επιτυχούς ελέγχου απαιτήσεων συστήματος
+    # Verifies requirements verification meets system resources specs successfully
     specs = {
         "ram_gb": 16.0,
         "free_disk_gb": 50.0,
@@ -38,7 +37,7 @@ def test_system_spec_checker_requirements_pass():
     assert len(reasons) == 0
 
 def test_system_spec_checker_requirements_fail():
-    # Δοκιμή αποτυχίας ελέγχου απαιτήσεων συστήματος (π.χ. ανεπαρκής RAM και έλλειψη GPU)
+    # Verifies requirements fail when specs are low (e.g. low RAM and no GPU)
     specs = {
         "ram_gb": 4.0,
         "free_disk_gb": 100.0,
@@ -54,28 +53,28 @@ def test_system_spec_checker_requirements_fail():
     assert is_ok is False
     assert len(reasons) == 2
     assert any("RAM" in r for r in reasons)
-    assert any("κάρτα γραφικών" in r for r in reasons)
+    assert any("GPU" in r for r in reasons)
 
 def test_skills_manager_paths():
-    # Έλεγχος ότι ο global φάκελος των skills είναι έγκυρος
+    # Verifies global skills repository workspace folder exists
     global_dir = SkillsManager.get_global_dir()
     assert os.path.exists(global_dir)
     assert os.path.isdir(global_dir)
 
 def test_skills_manager_git_check():
-    # Έλεγχος ότι η μέθοδος is_git_installed επιστρέφει boolean
+    # Verifies git CLI presence checker returns a boolean
     is_installed = SkillsManager.is_git_installed()
     assert isinstance(is_installed, bool)
 
 def test_ai_diagnostic_agent_web_search():
-    # Έλεγχος ότι η αναζήτηση επιστρέφει λίστα και χειρίζεται τυχόν σφάλματα / rate limit
+    # Verifies search_web handles query calls safely
     results = AIDiagnosticAgent.search_web("winget error 1603")
     assert isinstance(results, list)
 
 def test_ai_diagnostic_agent_ollama_offline():
-    # Έλεγχος ότι αν το Ollama είναι offline, η μέθοδος διαγνωστικών επιστρέφει False με κατάλληλο μήνυμα
+    # Verifies offline Ollama agent reports is not running error safely
     import unittest.mock as mock
     with mock.patch.object(AIDiagnosticAgent, "is_ollama_running", return_value=False):
         success, explanation, cmd = AIDiagnosticAgent.diagnose_with_ollama("Ollama", "Error occurred", [])
         assert success is False
-        assert "δεν εκτελείται" in explanation
+        assert "not running" in explanation
