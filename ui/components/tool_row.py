@@ -61,43 +61,9 @@ class ToolRow(ctk.CTkFrame):
         )
         self.name_label.pack(side="left", padx=10, fill="x", expand=True)
 
-        # Action Buttons frame
-        actions_frame = ctk.CTkFrame(self, fg_color="transparent")
-        actions_frame.pack(side="right", padx=10)
-
-        # Info/Note hover tooltip button
-        self.info_btn = ctk.CTkButton(
-            actions_frame,
-            text="ℹ",
-            font=("Segoe UI", 12),
-            width=24,
-            height=24,
-            fg_color="transparent",
-            text_color=COLORS["text_dim"],
-            hover_color=COLORS["sidebar"],
-            command=self.show_note_popup
-        )
-        self.info_btn.pack(side="left", padx=2)
-
-        # External URL link button
-        url = self.details.get("url", "")
-        self.link_btn = ctk.CTkButton(
-            actions_frame,
-            text="🌐",
-            font=("Segoe UI", 10),
-            width=24,
-            height=24,
-            fg_color="transparent",
-            text_color=COLORS["accent"],
-            hover_color=COLORS["sidebar"],
-            state="normal" if url else "disabled",
-            command=lambda: webbrowser.open(url) if url else None
-        )
-        self.link_btn.pack(side="left", padx=2)
-
-        # Single Retry action button
+        # Single Retry action button (packed on the right)
         self.retry_btn = ctk.CTkButton(
-            actions_frame,
+            self,
             text="Install",
             font=FONTS["small"],
             width=60,
@@ -106,7 +72,35 @@ class ToolRow(ctk.CTkFrame):
             hover_color=COLORS["accent_hover"],
             command=self._on_retry_click
         )
-        self.retry_btn.pack(side="left", padx=(5, 0))
+        self.retry_btn.pack(side="right", padx=(5, 10))
+
+        # External URL link label (acting as a button)
+        url = self.details.get("url", "")
+        self.link_lbl = ctk.CTkLabel(
+            self,
+            text="🌐" if url else "",
+            font=("Segoe UI", 10),
+            width=24,
+            height=24,
+            text_color=COLORS["accent"],
+            cursor="hand2" if url else ""
+        )
+        if url:
+            self.link_lbl.bind("<Button-1>", lambda e: webbrowser.open(url))
+        self.link_lbl.pack(side="right", padx=2)
+
+        # Info/Note hover tooltip label (acting as a button)
+        self.info_lbl = ctk.CTkLabel(
+            self,
+            text="ℹ",
+            font=("Segoe UI", 12),
+            width=24,
+            height=24,
+            text_color=COLORS["text_dim"],
+            cursor="hand2"
+        )
+        self.info_lbl.bind("<Button-1>", lambda e: self.show_note_popup())
+        self.info_lbl.pack(side="right", padx=2)
 
     def _on_checkbox_click(self) -> None:
         self.on_check_changed(self.check_var.get())

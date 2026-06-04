@@ -7,7 +7,7 @@ class TranslationManager:
     Manages localization across the application.
     Supports English ('en') and Greek ('el').
     """
-    _current_lang = "el"  # Defaulting to Greek as per the original application behavior
+    _current_lang = "en"  # Defaulting to English as requested
 
     _strings = {
         "el": {

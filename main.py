@@ -23,8 +23,8 @@ def main() -> None:
     init_logging()
     logging.info("Starting DevTools Installer refactored application...")
     
-    # Set default language preference to Greek (as per the original application config)
-    TranslationManager.set_language("el")
+    # Set default language preference to English as requested
+    TranslationManager.set_language("en")
 
     try:
         app = AppWindow()

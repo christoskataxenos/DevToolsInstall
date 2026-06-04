@@ -40,6 +40,7 @@ class AppWindow(ctk.CTk):
 
         self._build_layout()
         self._load_specs()
+        self._check_installed_tools()
         
         # Launch queue reader scheduler
         self.after(100, self._process_log_queue)
@@ -237,6 +238,39 @@ class AppWindow(ctk.CTk):
             gpu = gpu[:20] + "..."
         self.gpu_lbl.configure(text=f"GPU: {gpu if gpu else 'None Detected'}")
 
+    def _check_installed_tools(self) -> None:
+        """Asynchronously checks which winget tools are already installed on the host in a single batch query."""
+        self.terminal.append_log(_("checking_installed"), "info")
+        
+        def run_check():
+            # Retrieve all installed tool IDs in a single command run
+            installed_ids = self.installer_service.get_installed_tool_ids()
+            installed_ids_lower = {x.lower() for x in installed_ids}
+            
+            registry = Config.load_registry()
+            for cat_name, cat_tools in registry.items():
+                for name, details in cat_tools.items():
+                    tool_id = details["id"]
+                    
+                    # Case-insensitive checks against the gathered installed IDs
+                    is_installed = tool_id.lower() in installed_ids_lower
+                    status = "INSTALLED" if is_installed else "PENDING"
+                    
+                    try:
+                        if self.winfo_exists():
+                            self.after(0, lambda n=name, s=status: self._set_row_status(n, s))
+                    except Exception:
+                        pass
+            
+            try:
+                if self.winfo_exists():
+                    self.after(0, lambda: self.terminal.append_log(_("check_complete"), "success"))
+            except Exception:
+                pass
+
+        import threading
+        threading.Thread(target=run_check, daemon=True).start()
+
     def _on_selection_changed(self) -> None:
         selected = self.panels["install"].get_selected_tools()
         count = len(selected)
@@ -278,7 +312,7 @@ class AppWindow(ctk.CTk):
 
     def _set_row_status(self, name: str, status: str) -> None:
         """Callback to update individual ToolRow statuses safely from installer service worker."""
-        # Find row items inside the ToolsPanel grid list
+        self.panels["install"].tool_statuses[name] = status
         for row in self.panels["install"].tool_rows:
             if row.tool_name == name:
                 row.set_status(status)

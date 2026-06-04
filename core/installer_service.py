@@ -5,7 +5,7 @@ import subprocess
 import threading
 import zipfile
 from datetime import datetime
-from typing import List, Tuple, Dict, Any, Callable, Optional
+from typing import List, Tuple, Dict, Any, Callable, Optional, Set
 
 from core.config import _, BACKUP_PATHS, BACKUP_EXCLUDE_DIRS, ANTIGRAVITY_EXTENSIONS_PATH, Config
 
@@ -32,6 +32,44 @@ class InstallerService:
             return tool_id in result.stdout
         except Exception:
             return False
+
+    def get_installed_tool_ids(self) -> Set[str]:
+        """
+        Queries winget once to retrieve all installed tool IDs.
+        """
+        installed_ids = set()
+        try:
+            result = subprocess.run(
+                ["winget", "list", "--accept-source-agreements"],
+                capture_output=True,
+                text=True,
+                timeout=45,
+                encoding="utf-8",
+                errors="ignore"
+            )
+            if result.returncode == 0 or result.stdout:
+                lines = result.stdout.splitlines()
+                header_idx = -1
+                for idx, line in enumerate(lines):
+                    if "Name" in line and "Id" in line:
+                        header_idx = idx
+                        break
+                
+                if header_idx != -1 and header_idx + 1 < len(lines):
+                    header = lines[header_idx]
+                    id_pos = header.find("Id")
+                    version_pos = header.find("Version")
+                    if id_pos != -1 and version_pos != -1:
+                        for line in lines[header_idx + 2:]:
+                            if len(line) > id_pos:
+                                tool_id = line[id_pos:version_pos].strip()
+                                if tool_id:
+                                    clean_id = tool_id.split()[0] if tool_id.split() else tool_id
+                                    installed_ids.add(clean_id)
+        except Exception:
+            pass
+        return installed_ids
+
 
     def start_install_task(
         self, 

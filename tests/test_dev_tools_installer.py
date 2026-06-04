@@ -130,3 +130,30 @@ def test_no_duplicate_winget_ids():
                         f"'{seen_ids[tool_id]}' and '{name}'"
                     )
                 seen_ids[tool_id] = name
+
+def test_get_installed_tool_ids_mock():
+    """Validates that get_installed_tool_ids correctly parses mock winget list output."""
+    from unittest.mock import patch, MagicMock
+    from core.installer_service import InstallerService
+    
+    mock_stdout = (
+        "Name                                   Id                                      Version          Available        Source\n"
+        "-----------------------------------------------------------------------------------------------------------------------\n"
+        "7-Zip 26.00 (x64)                      7zip.7zip                               26.00            26.01            winget\n"
+        "Git                                    Git.Git                                 2.53.0.2         2.54.0           winget\n"
+        "Some App                               SomeApp.ID                              1.0.0                             \n"
+    )
+    
+    service = InstallerService(None)
+    with patch("subprocess.run") as mock_run:
+        mock_proc = MagicMock()
+        mock_proc.returncode = 0
+        mock_proc.stdout = mock_stdout
+        mock_run.return_value = mock_proc
+        
+        installed = service.get_installed_tool_ids()
+        assert "7zip.7zip" in installed
+        assert "Git.Git" in installed
+        assert "SomeApp.ID" in installed
+        assert len(installed) == 3
+
