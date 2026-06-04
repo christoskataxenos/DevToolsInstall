@@ -219,7 +219,11 @@ class AppWindow(ctk.CTk):
             self.system_specs = specs
             
             # Post back results safely to main thread
-            self.after(0, lambda: self._on_specs_loaded(specs))
+            try:
+                if self.winfo_exists():
+                    self.after(0, lambda: self._on_specs_loaded(specs))
+            except Exception:
+                pass
             
         import threading
         threading.Thread(target=check, daemon=True).start()

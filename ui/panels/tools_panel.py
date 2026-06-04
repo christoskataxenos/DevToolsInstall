@@ -52,9 +52,8 @@ class ToolsPanel(ctk.CTkFrame):
             font=FONTS["small"],
             fg_color=COLORS["sidebar"],
             selected_color=COLORS["accent"],
-            selected_text_color="#ffffff",
             unselected_color=COLORS["bg"],
-            unselected_text_color=COLORS["text"],
+            text_color=COLORS["text"],
             command=self._on_category_select
         )
         self.category_seg.pack(fill="x", expand=True)
