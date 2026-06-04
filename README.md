@@ -64,6 +64,15 @@ irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
 - [ ] Add cloud sync for backups
 - [ ] Add portable version (no Python required)
 
+## Credits & Kudos
+
+Special thanks to the developers of the open-source projects and curated AI rules libraries used within this project:
+- **sickn33** for [antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills) (Installable library of 1,500+ agentic skills)
+- **PatrickJS** for [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) (Curated rules for Cursor)
+- **danielmiessler** for [fabric](https://github.com/danielmiessler/fabric) (Sleek prompt patterns)
+- **continuedev** for [awesome-rules](https://github.com/continuedev/awesome-rules) (Rules for Continue & Cursor)
+- **detailobsessed** for [awesome-windsurf](https://github.com/detailobsessed/awesome-windsurf) (Best practices and prompts for Windsurf)
+
 ## License
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
@@ -113,3 +122,12 @@ irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
    ```bash
    python DevToolsInstaller.py
    ```
+
+## Credits & Kudos
+
+Ένα μεγάλο ευχαριστώ στους δημιουργούς των open-source έργων και βιβλιοθηκών κανόνων AI που ενσωματώνονται στο εργαλείο:
+- **sickn33** για το [antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills) (Εγκαταστάσιμη βιβλιοθήκη με 1.500+ agentic skills)
+- **PatrickJS** για το [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) (Curated κανόνες για Cursor)
+- **danielmiessler** για το [fabric](https://github.com/danielmiessler/fabric) (Έξυπνα prompt patterns)
+- **continuedev** για το [awesome-rules](https://github.com/continuedev/awesome-rules) (Κανόνες για Continue & Cursor)
+- **detailobsessed** για το [awesome-windsurf](https://github.com/detailobsessed/awesome-windsurf) (Βέλτιστες πρακτικές και prompts για Windsurf)
