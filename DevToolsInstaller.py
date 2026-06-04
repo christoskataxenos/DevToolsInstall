@@ -8,6 +8,10 @@ import zipfile
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 
+from SystemChecker import SystemSpecChecker
+from SkillsManager import SkillsManager
+from AIDiagnosticAgent import AIDiagnosticAgent
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -32,924 +36,1341 @@ TOOL_STATUS = {
     "ERROR": "[ERR]",
 }
 
-TOOLS_REGISTRY: Dict[str, Dict[str, Dict[str, Dict[str, str]]]] = {
-    "Browsers": {
-        "Google Chrome": {
-            "id": "Google.Chrome",
-            "url": "https://www.google.com/chrome/",
-            "note": {
-                "el": "Ο πιο δημοφιλής περιηγητής ιστού από την Google.",
-                "en": "The most popular web browser from Google."
-            }
-        },
-        "Mozilla Firefox": {
-            "id": "Mozilla.Firefox",
-            "url": "https://www.mozilla.org/firefox/",
-            "note": {
-                "el": "Περιηγητής ιστού με έμφαση στην ιδιωτικότητα και τον ανοιχτό κώδικα.",
-                "en": "Web browser with an emphasis on privacy and open source."
-            }
-        },
-        "Brave Browser": {
-            "id": "Brave.Brave",
-            "url": "https://brave.com/",
-            "note": {
-                "el": "Περιηγητής που εστιάζει στην ταχύτητα και τον αποκλεισμό διαφημίσεων.",
-                "en": "Browser that focuses on speed and ad blocking."
-            }
-        },
-        "Vivaldi Browser": {
-            "id": "Vivaldi.Vivaldi",
-            "url": "https://vivaldi.com/",
-            "note": {
-                "el": "Ευρωπαϊκός περιηγητής με απαράμιλλη δυνατότητα παραμετροποίησης.",
-                "en": "European browser with unparalleled customization capabilities."
-            }
-        }
-    },
-    "Office & Documents": {
-        "Microsoft 365": {
-            "id": "Microsoft.Office",
-            "url": "https://www.office.com/",
-            "note": {
-                "el": "Η σουίτα εφαρμογών γραφείου της Microsoft (Word, Excel, κλπ).",
-                "en": "Microsoft's office application suite (Word, Excel, etc.)."
-            }
-        },
-        "Apache OpenOffice": {
-            "id": "Apache.OpenOffice",
-            "url": "https://www.openoffice.org/",
-            "note": {
-                "el": "Κλασική ανοιχτού κώδικα σουίτα εφαρμογών γραφείου.",
-                "en": "Classic open-source office suite."
-            }
-        },
-        "LibreOffice": {
-            "id": "TheDocumentFoundation.LibreOffice",
-            "url": "https://www.libreoffice.org/",
-            "note": {
-                "el": "Η πιο ισχυρή δωρεάν και ανοιχτού κώδικα σουίτα γραφείου.",
-                "en": "The most powerful free and open-source office suite."
-            }
-        },
-        "ONLYOFFICE": {
-            "id": "ONLYOFFICE.DesktopEditors",
-            "url": "https://www.onlyoffice.com/",
-            "note": {
-                "el": "Ευρωπαϊκή σουίτα γραφείου με υψηλή συμβατότητα με αρχεία MS Office.",
-                "en": "European office suite with high compatibility with MS Office files."
-            }
-        }
-    },
-    "Communication": {
-        "Discord": {
-            "id": "Discord.Discord",
-            "url": "https://discord.com/",
-            "note": {
-                "el": "Πλατφόρμα επικοινωνίας για κοινότητες και gamers.",
-                "en": "Communication platform for communities and gamers."
-            }
-        },
-        "WhatsApp": {
-            "id": "WhatsApp.WhatsApp",
-            "url": "https://www.whatsapp.com/",
-            "note": {
-                "el": "Δημοφιλής εφαρμογή για μηνύματα και κλήσεις.",
-                "en": "Popular messaging and calling app."
-            }
-        },
-        "Telegram": {
-            "id": "Telegram.TelegramDesktop",
-            "url": "https://telegram.org/",
-            "note": {
-                "el": "Γρήγορη και ασφαλής εφαρμογή μηνυμάτων, ευρωπαϊκής προέλευσης.",
-                "en": "Fast and secure messaging app, of European origin."
-            }
-        },
-        "Element": {
-            "id": "Element.Element",
-            "url": "https://element.io/",
-            "note": {
-                "el": "Ανοιχτού κώδικα εφαρμογή επικοινωνίας βασισμένη στο πρωτόκολλο Matrix.",
-                "en": "Open-source communication app based on the Matrix protocol."
-            }
-        },
-        "Zoom": {
-            "id": "Zoom.Zoom",
-            "url": "https://zoom.us/",
-            "note": {
-                "el": "Πλατφόρμα για βιντεοκλήσεις και τηλεδιασκέψεις.",
-                "en": "Platform for video calls and video conferencing."
-            }
-        },
-        "Webex": {
-            "id": "Cisco.Webex",
-            "url": "https://www.webex.com/",
-            "note": {
-                "el": "Επαγγελματικό εργαλείο για συναντήσεις και συνεργασία.",
-                "en": "Professional tool for meetings and collaboration."
-            }
-        },
-        "Slack": {
-            "id": "SlackTechnologies.Slack",
-            "url": "https://slack.com/",
-            "note": {
-                "el": "Η standard εφαρμογή επικοινωνίας για ομάδες εργασίας.",
-                "en": "The standard communication app for workgroups."
-            }
-        },
-        "Viber": {
-            "id": "Rakuten.Viber",
-            "url": "https://www.viber.com/",
-            "note": {
-                "el": "Δημοφιλής εφαρμογή για δωρεάν μηνύματα και κλήσεις παγκοσμίως.",
-                "en": "Popular app for free messaging and calls worldwide."
-            }
-        }
-    },
-    "Media & Entertainment": {
-        "VLC media player": {
-            "id": "VideoLAN.VLC",
-            "url": "https://www.videolan.org/",
-            "note": {
-                "el": "Universal player για κάθε είδους αρχείο βίντεο και ήχου.",
-                "en": "Universal player for all types of video and audio files."
-            }
-        },
-        "Spotify": {
-            "id": "Spotify.Spotify",
-            "url": "https://www.spotify.com/",
-            "note": {
-                "el": "Η κορυφαία υπηρεσία streaming μουσικής.",
-                "en": "The leading music streaming service."
-            }
-        },
-        "K-Lite Codec Pack": {
-            "id": "CodecGuide.K-LiteCodecPack.Full",
-            "url": "https://codecguide.com/",
-            "note": {
-                "el": "Συλλογή από codecs για αναπαραγωγή οποιασδήποτε ταινίας.",
-                "en": "Collection of codecs for playing any video."
-            }
-        },
-        "Steam": {
-            "id": "Valve.Steam",
-            "url": "https://store.steampowered.com/",
-            "note": {
-                "el": "Η μεγαλύτερη πλατφόρμα διανομής παιχνιδιών.",
-                "en": "The largest game distribution platform."
-            }
-        }
-    },
-    "System & Cloud": {
-        "7-Zip": {
-            "id": "7zip.7zip",
-            "url": "https://www.7-zip.org/",
-            "note": {
-                "el": "Κορυφαίο εργαλείο για συμπίεση και αποσυμπίεση αρχείων.",
-                "en": "Top tool for file compression and extraction."
-            }
-        },
-        "pCloud": {
-            "id": "pCloudAG.pCloudDrive",
-            "url": "https://www.pcloud.com/",
-            "note": {
-                "el": "Ασφαλής ευρωπαϊκή υπηρεσία cloud storage (Ελβετία).",
-                "en": "Secure European cloud storage service (Switzerland)."
-            }
-        },
-        "Proton Drive": {
-            "id": "Proton.ProtonDrive",
-            "url": "https://proton.me/drive",
-            "note": {
-                "el": "Πλήρως κρυπτογραφημένο cloud storage από την Proton (Ελβετία).",
-                "en": "Fully encrypted cloud storage from Proton (Switzerland)."
-            }
-        },
-        "Nextcloud Desktop": {
-            "id": "Nextcloud.NextcloudDesktop",
-            "url": "https://nextcloud.com/",
-            "note": {
-                "el": "Ανοιχτού κώδικα πλατφόρμα για προσωπικό cloud και συγχρονισμό.",
-                "en": "Open-source platform for personal cloud and sync."
-            }
-        },
-        "Google Earth Pro": {
-            "id": "Google.EarthPro",
-            "url": "https://www.google.com/earth/",
-            "note": {
-                "el": "Εξερευνήστε τον κόσμο με τρισδιάστατες δορυφορικές εικόνες.",
-                "en": "Explore the world with 3D satellite imagery."
-            }
-        },
-        "Everything": {
-            "id": "voidtools.Everything",
-            "url": "https://www.voidtools.com/",
-            "note": {
-                "el": "Άμεση αναζήτηση αρχείων στο σύστημα.",
-                "en": "Instant file search on the system."
-            }
-        }
-    },
-    "Privacy & Security": {
-        "ProtonVPN": {
-            "id": "Proton.ProtonVPN",
-            "url": "https://protonvpn.com/",
-            "note": {
-                "el": "Ασφαλές και γρήγορο VPN από την Proton.",
-                "en": "Secure and fast VPN by Proton."
-            }
-        },
-        "Proton Mail": {
-            "id": "Proton.ProtonMail",
-            "url": "https://proton.me/mail",
-            "note": {
-                "el": "Η κορυφαία υπηρεσία κρυπτογραφημένου email παγκοσμίως.",
-                "en": "The leading encrypted email service worldwide."
-            }
-        }
-    },
-    "IDEs & Editors": {
-        "VS Code": {
-            "id": "Microsoft.VisualStudioCode",
-            "url": "https://code.visualstudio.com/",
-            "note": {
-                "el": "Ο πιο δημοφιλής open-source editor από την Microsoft.",
-                "en": "The most popular open-source editor from Microsoft."
-            }
-        },
-        "VS Code Insiders": {
-            "id": "Microsoft.VisualStudioCode.Insiders",
-            "url": "https://code.visualstudio.com/insiders/",
-            "note": {
-                "el": "Η έκδοση προεπισκόπησης του VS Code με νέες δυνατότητες.",
-                "en": "Preview version of VS Code with new features."
-            }
-        },
-        "PyCharm Community": {
-            "id": "JetBrains.PyCharm.Community",
-            "url": "https://www.jetbrains.com/pycharm/",
-            "note": {
-                "el": "Πανίσχυρο IDE για Python ανάπτυξη.",
-                "en": "Powerful IDE for Python development."
-            }
-        },
-        "Android Studio": {
-            "id": "Google.AndroidStudio",
-            "url": "https://developer.android.com/studio",
-            "note": {
-                "el": "Το επίσημο IDE για ανάπτυξη εφαρμογών Android.",
-                "en": "The official IDE for Android app development."
-            }
-        },
-        "Arduino IDE": {
-            "id": "Arduino.IDE.2",
-            "url": "https://www.arduino.cc/en/software",
-            "note": {
-                "el": "Περιβάλλον προγραμματισμού για Arduino και hardware.",
-                "en": "Programming environment for Arduino and hardware."
-            }
-        },
-        "Notepad++": {
-            "id": "Notepad++.Notepad++",
-            "url": "https://notepad-plus-plus.org/",
-            "note": {
-                "el": "Ελαφρύς και ταχύτατος text editor.",
-                "en": "Lightweight and fast text editor."
-            }
-        },
-        "Dev-C++": {
-            "id": "Embarcadero.Dev-CPP",
-            "url": "https://sourceforge.net/projects/orwelldevcpp/",
-            "note": {
-                "el": "Κλασικό IDE για C/C++ (TDM-GCC).",
-                "en": "Classic IDE for C/C++ (TDM-GCC)."
-            }
-        }
-    },
-    "Version Control": {
-        "Git": {
-            "id": "Git.Git",
-            "url": "https://git-scm.com/",
-            "note": {
-                "el": "Το standard σύστημα ελέγχου εκδόσεων.",
-                "en": "The standard version control system."
-            }
-        },
-        "GitHub Desktop": {
-            "id": "GitHub.GitHubDesktop",
-            "url": "https://desktop.github.com/",
-            "note": {
-                "el": "Γραφικό περιβάλλον για την διαχείριση Git repos.",
-                "en": "Graphical user interface for managing Git repositories."
-            }
-        },
-        "GitHub CLI (gh)": {
-            "id": "GitHub.cli",
-            "url": "https://cli.github.com/",
-            "note": {
-                "el": "Εργαλείο γραμμής εντολών για το GitHub.",
-                "en": "Command line tool for GitHub."
-            }
-        },
-        "lazygit": {
-            "id": "JesseDuffield.lazygit",
-            "url": "https://github.com/jesseduffield/lazygit",
-            "note": {
-                "el": "Τερματικό περιβάλλον (TUI) για Git.",
-                "en": "Terminal user interface (TUI) for Git."
-            }
-        },
-        "Git LFS": {
-            "id": "GitHub.GitLFS",
-            "url": "https://git-lfs.github.com/",
-            "note": {
-                "el": "Διαχείριση μεγάλων αρχείων στο Git.",
-                "en": "Large file management in Git."
-            }
-        }
-    },
-    "Runtimes & Languages": {
-        "Node.js (LTS)": {
-            "id": "OpenJS.NodeJS.LTS",
-            "url": "https://nodejs.org/",
-            "note": {
-                "el": "JavaScript runtime για server-side ανάπτυξη.",
-                "en": "JavaScript runtime for server-side development."
-            }
-        },
-        "Python 3.14": {
-            "id": "Python.Python.3.14",
-            "url": "https://www.python.org/",
-            "note": {
-                "el": "Η τελευταία έκδοση της γλώσσας Python.",
-                "en": "The latest version of the Python language."
-            }
-        },
-        "Go": {
-            "id": "Google.Go",
-            "url": "https://go.dev/",
-            "note": {
-                "el": "Η γλώσσα προγραμματισμού της Google.",
-                "en": "Google's programming language."
-            }
-        },
-        "TDM-GCC": {
-            "id": "jmeubank.tdm-gcc",
-            "url": "https://jmeubank.github.io/tdm-gcc/",
-            "note": {
-                "el": "Compiler suite για C/C++ στα Windows.",
-                "en": "Compiler suite for C/C++ on Windows."
-            }
-        },
-        "MSYS2": {
-            "id": "MSYS2.MSYS2",
-            "url": "https://www.msys2.org/",
-            "note": {
-                "el": "Περιβάλλον Unix-like για Windows ανάπτυξη.",
-                "en": "Unix-like environment for Windows development."
-            }
-        },
-        "Rust (rustup)": {
-            "id": "Rustlang.Rustup",
-            "url": "https://rustup.rs/",
-            "note": {
-                "el": "Installer για την γλώσσα Rust.",
-                "en": "Installer for the Rust language."
-            }
-        },
-        "Zig": {
-            "id": "zig.zig",
-            "url": "https://ziglang.org/",
-            "note": {
-                "el": "Σύγχρονη και ασφαλής γλώσσα επιπέδου συστήματος.",
-                "en": "Modern and safe systems language."
-            }
-        },
-        "Bun": {
-            "id": "Oven-sh.Bun",
-            "url": "https://bun.sh/",
-            "note": {
-                "el": "Ταχύτατο JavaScript runtime & package manager.",
-                "en": "Extremely fast JavaScript runtime & package manager."
-            }
-        },
-        "Deno": {
-            "id": "DenoLand.Deno",
-            "url": "https://deno.land/",
-            "note": {
-                "el": "Ασφαλές runtime για JavaScript και TypeScript.",
-                "en": "Secure runtime for JavaScript and TypeScript."
-            }
-        },
-        "Java 21 (Temurin)": {
-            "id": "EclipseAdoptium.Temurin.21.JDK",
-            "url": "https://adoptium.net/",
-            "note": {
-                "el": "Open source διανομή της Java (JDK).",
-                "en": "Open source distribution of Java (JDK)."
-            }
-        }
-    },
-    "Package Managers": {
-        "Chocolatey": {
-            "id": "Chocolatey.Chocolatey",
-            "url": "https://chocolatey.org/",
-            "note": {
-                "el": "Package manager για Windows παρόμοιο με το apt.",
-                "en": "Package manager for Windows similar to apt."
-            }
-        },
-        "uv (Fast Python)": {
-            "id": "astral-sh.uv",
-            "url": "https://github.com/astral-sh/uv",
-            "note": {
-                "el": "Ταχύτατος Python package & project manager.",
-                "en": "Extremely fast Python package & project manager."
-            }
-        },
-        "pnpm": {
-            "id": "pnpm.pnpm",
-            "url": "https://pnpm.io/",
-            "note": {
-                "el": "Αποδοτικός Node package manager με symlinks.",
-                "en": "Efficient Node package manager using symlinks."
-            }
-        }
-    },
-    "Database Tools": {
-        "DB Browser (SQLite)": {
-            "id": "DBBrowserForSQLite.DBBrowserForSQLite",
-            "url": "https://sqlitebrowser.org/",
-            "note": {
-                "el": "Γραφικό περιβάλλον για βάσεις δεδομένων SQLite.",
-                "en": "Graphical interface for SQLite databases."
-            }
-        },
-        "DBeaver Community": {
-            "id": "dbeaver.dbeaver",
-            "url": "https://dbeaver.io/",
-            "note": {
-                "el": "Universal database manager για όλες τις βάσεις.",
-                "en": "Universal database manager for all databases."
-            }
-        }
-    },
-    "Virtualization": {
-        "Docker Desktop": {
-            "id": "Docker.DockerDesktop",
-            "url": "https://www.docker.com/",
-            "note": {
-                "el": "Διαχείριση containers για ανάπτυξη εφαρμογών.",
-                "en": "Container management for application development."
-            }
-        },
-        "VMware Player": {
-            "id": "VMware.WorkstationPlayer",
-            "url": "https://www.vmware.com/",
-            "note": {
-                "el": "Δωρεάν virtualization για εκτέλεση εικονικών μηχανών.",
-                "en": "Free virtualization for running virtual machines."
-            }
-        },
-        "WSL": {
-            "id": "Microsoft.WSL",
-            "url": "https://learn.microsoft.com/en-us/windows/wsl/",
-            "note": {
-                "el": "Υποσύστημα Linux μέσα στα Windows.",
-                "en": "Linux subsystem inside Windows."
-            }
-        }
-    },
-    "Hardware & AI": {
-        "Raspberry Pi Imager": {
-            "id": "RaspberryPi.RaspberryPiImager",
-            "url": "https://www.raspberrypi.com/software/",
-            "note": {
-                "el": "Εργαλείο εγγραφής OS σε SD κάρτες για Raspberry Pi.",
-                "en": "OS writing tool to SD cards for Raspberry Pi."
-            }
-        },
-        "Logisim Evolution": {
-            "id": "Logisim-Evolution.Logisim-Evolution",
-            "url": "https://github.com/logisim-evolution/logisim-evolution",
-            "note": {
-                "el": "Προσομοιωτής ψηφιακών κυκλωμάτων.",
-                "en": "Digital circuit simulator."
-            }
-        },
-        "LM Studio": {
-            "id": "LMStudio.LMStudio",
-            "url": "https://lmstudio.ai/",
-            "note": {
-                "el": "Τοπική εκτέλεση μεγάλων γλωσσικών μοντέλων (LLMs).",
-                "en": "Run LLMs locally."
-            }
-        }
-    },
-    "System & Shell": {
-        "Windows Terminal": {
-            "id": "Microsoft.WindowsTerminal",
-            "url": "https://aka.ms/terminal",
-            "note": {
-                "el": "Σύγχρονο τερματικό για command line εργαλεία.",
-                "en": "Modern terminal for command line tools."
-            }
-        },
-        "Oh My Posh": {
-            "id": "JanDeDobbeleer.OhMyPosh",
-            "url": "https://ohmyposh.dev/",
-            "note": {
-                "el": "Engine για πανέμορφα prompt στα shells.",
-                "en": "Engine for beautiful shell prompts."
-            }
-        },
-        "zoxide": {
-            "id": "ajeetdsouza.zoxide",
-            "url": "https://github.com/ajeetdsouza/zoxide",
-            "note": {
-                "el": "Έξυπνη εντολή cd που μαθαίνει τις συνήθειές σας.",
-                "en": "Smart cd command that learns your habits."
-            }
-        },
-        "PowerShell 7": {
-            "id": "Microsoft.PowerShell",
-            "url": "https://github.com/PowerShell/PowerShell",
-            "note": {
-                "el": "Η τελευταία έκδοση του PowerShell.",
-                "en": "The latest version of PowerShell."
-            }
-        },
-        "PuTTY": {
-            "id": "PuTTY.PuTTY",
-            "url": "https://www.putty.org/",
-            "note": {
-                "el": "SSH και Telnet client για Windows.",
-                "en": "SSH and Telnet client for Windows."
-            }
-        },
-        "fastfetch": {
-            "id": "fastfetch-cli.fastfetch",
-            "url": "https://github.com/fastfetch-cli/fastfetch",
-            "note": {
-                "el": "Εργαλείο πληροφοριών συστήματος.",
-                "en": "System information tool."
-            }
-        },
-        "FileZilla": {
-            "id": "FileZilla.FileZilla",
-            "url": "https://filezilla-project.org/",
-            "note": {
-                "el": "Κλασικός FTP/SFTP client.",
-                "en": "Classic FTP/SFTP client."
-            }
-        },
-        "Warp Terminal": {
-            "id": "Warp.Warp",
-            "url": "https://www.warp.dev/",
-            "note": {
-                "el": "Σύγχρονο AI-powered τερματικό.",
-                "en": "Modern AI-powered terminal."
-            }
-        },
-        "Starship Prompt": {
-            "id": "Starship.Starship",
-            "url": "https://starship.rs/",
-            "note": {
-                "el": "Customizable και γρήγορο shell prompt.",
-                "en": "Customizable and fast shell prompt."
-            }
-        },
-        "bat": {
-            "id": "sharkdp.bat",
-            "url": "https://github.com/sharkdp/bat",
-            "note": {
-                "el": "Βελτιωμένη έκδοση της εντολής cat με syntax highlighting.",
-                "en": "Improved version of the cat command with syntax highlighting."
-            }
-        },
-        "ripgrep": {
-            "id": "BurntSushi.ripgrep.MSVC",
-            "url": "https://github.com/BurntSushi/ripgrep",
-            "note": {
-                "el": "Ταχύτατη αναζήτηση κειμένου σε αρχεία.",
-                "en": "Blazing fast text search within files."
-            }
-        },
-        "fd": {
-            "id": "sharkdp.fd",
-            "url": "https://github.com/sharkdp/fd",
-            "note": {
-                "el": "Γρήγορη και φιλική εναλλακτική της εντολής find.",
-                "en": "Fast and user-friendly alternative to the find command."
-            }
-        },
-        "fzf": {
-            "id": "junegunn.fzf",
-            "url": "https://github.com/junegunn/fzf",
-            "note": {
-                "el": "Fuzzy finder για την γραμμή εντολών.",
-                "en": "Fuzzy finder for the command line."
-            }
-        },
-        "tldr": {
-            "id": "tldr-pages.tlrc",
-            "url": "https://tldr.sh/",
-            "note": {
-                "el": "Συνοπτικά help pages για εντολές τερματικού.",
-                "en": "Concise help pages for terminal commands."
-            }
-        }
-    },
-    "AI Coding Assistants": {
-        "Claude Code (CLI)": {
-            "id": "Anthropic.ClaudeCode",
-            "url": "https://claude.com/claude-code",
-            "note": {
-                "el": "Agentic τερματικό για AI-assisted προγραμματισμό.",
-                "en": "Agentic terminal for AI-assisted programming."
-            }
-        },
-        "Cursor IDE": {
-            "id": "Anysphere.Cursor",
-            "url": "https://cursor.sh/",
-            "note": {
-                "el": "AI-first editor, βασισμένος στον VS Code.",
-                "en": "AI-first editor based on VS Code."
-            }
-        },
-        "Windsurf IDE": {
-            "id": "Codeium.Windsurf",
-            "url": "https://codeium.com/windsurf",
-            "note": {
-                "el": "Agentic IDE από την ομάδα του Codeium.",
-                "en": "Agentic IDE by the Codeium team."
-            }
-        },
-        "OpenCode": {
-            "id": "SST.opencode",
-            "url": "https://opencode.ai/",
-            "note": {
-                "el": "AI coding agent για το τερματικό.",
-                "en": "AI coding agent for the terminal."
-            }
-        },
-        "Gemini CLI": {
-            "id": "npm install -g @google/gemini-cli",
-            "url": "https://github.com/google/gemini-cli",
-            "note": {
-                "el": "CLI για το μοντέλο Gemini της Google.",
-                "en": "CLI for Google's Gemini model."
-            }
-        },
-        "GitHub Copilot": {
-            "id": "gh extension install github/gh-copilot",
-            "url": "https://github.com/github/copilot-cli",
-            "note": {
-                "el": "Extension για το GitHub CLI.",
-                "en": "Extension for GitHub CLI."
-            }
-        },
-        "Antigravity": {
-            "id": "Google.Antigravity",
-            "url": "https://antigravity.google/download",
-            "note": {
-                "el": "Η agent-first πλατφόρμα ανάπτυξης της Google για AI coding.",
-                "en": "Google's agent-first development platform for AI coding."
-            }
-        }
-    },
-    "Productivity": {
-        "PowerToys": {
-            "id": "Microsoft.PowerToys",
-            "url": "https://aka.ms/powertoys",
-            "note": {
-                "el": "Χρήσιμα utilities για Windows power users.",
-                "en": "Useful utilities for Windows power users."
-            }
-        },
-        "Fira Code Font": {
-            "id": "SoftwareDesign.FiraCode",
-            "url": "https://github.com/tonsky/FiraCode",
-            "note": {
-                "el": "Γραμματοσειρά με προγραμματιστικά ligatures.",
-                "en": "Font with programming ligatures."
-            }
-        },
-        "Notion": {
-            "id": "Notion.Notion",
-            "url": "https://www.notion.so/",
-            "note": {
-                "el": "Πλατφόρμα οργάνωσης σημειώσεων και tasks.",
-                "en": "Platform for organizing notes and tasks."
-            }
-        },
-        "Obsidian": {
-            "id": "Obsidian.Obsidian",
-            "url": "https://obsidian.md/",
-            "note": {
-                "el": "Εργαλείο διαχείρισης γνώσης με Markdown.",
-                "en": "Knowledge management tool using Markdown."
-            }
-        },
-        "Flameshot": {
-            "id": "Flameshot.Flameshot",
-            "url": "https://flameshot.org/",
-            "note": {
-                "el": "Ευέλικτο εργαλείο για screenshots.",
-                "en": "Flexible tool for screenshots."
-            }
-        },
-        "Greenshot": {
-            "id": "Greenshot.Greenshot",
-            "url": "https://getgreenshot.org/",
-            "note": {
-                "el": "Ελαφρύ και ισχυρό εργαλείο για λήψη και επεξεργασία screenshots.",
-                "en": "Lightweight and powerful tool for capturing and editing screenshots."
-            }
-        }
-    },
-    "Remote": {
-        "AnyDesk": {
-            "id": "AnyDeskSoftwareGmbH.AnyDesk",
-            "url": "https://anydesk.com/",
-            "note": {
-                "el": "Εφαρμογή απομακρυσμένης επιφάνειας εργασίας.",
-                "en": "Remote desktop application."
-            }
-        },
-        "RealVNC Viewer": {
-            "id": "RealVNC.VNCViewer",
-            "url": "https://www.realvnc.com/",
-            "note": {
-                "el": "Viewer για συνδέσεις VNC.",
-                "en": "Viewer for VNC connections."
-            }
-        },
-        "RustDesk": {
-            "id": "RustDesk.RustDesk",
-            "url": "https://rustdesk.com/",
-            "note": {
-                "el": "Open source εναλλακτική του AnyDesk/TeamViewer.",
-                "en": "Open source alternative to AnyDesk/TeamViewer."
-            }
-        },
-        "TeamViewer": {
-            "id": "TeamViewer.TeamViewer",
-            "url": "https://www.teamviewer.com/",
-            "note": {
-                "el": "Επαγγελματική απομακρυσμένη πρόσβαση και υποστήριξη.",
-                "en": "Professional remote access and support."
-            }
-        }
-    },
-    "Design & Media": {
-        "Figma": {
-            "id": "Figma.Figma",
-            "url": "https://www.figma.com/",
-            "note": {
-                "el": "Εργαλείο design για UI/UX επαγγελματίες.",
-                "en": "Design tool for UI/UX professionals."
-            }
-        },
-        "DaVinci Resolve": {
-            "id": "BlackmagicDesign.DaVinciResolve",
-            "url": "https://www.blackmagicdesign.com/",
-            "note": {
-                "el": "Κορυφαίο πρόγραμμα video editing & color grading.",
-                "en": "Industry-leading video editing & color grading program."
-            }
-        },
-        "OBS Studio": {
-            "id": "OBSProject.OBSStudio",
-            "url": "https://obsproject.com/",
-            "note": {
-                "el": "Λογισμικό για live streaming και εγγραφή οθόνης.",
-                "en": "Software for live streaming and screen recording."
-            }
-        },
-        "Adobe Cloud": {
-            "id": "Adobe.CreativeCloud",
-            "url": "https://www.adobe.com/",
-            "note": {
-                "el": "Πρόσβαση στις εφαρμογές της Adobe (Photoshop, κλπ).",
-                "en": "Access to Adobe applications (Photoshop, etc.)."
-            }
-        }
-    },
-    "C & Systems Dev": {
-        "CMake": {
-            "id": "Kitware.CMake",
-            "url": "https://cmake.org/",
-            "note": {
-                "el": "Standard εργαλείο build automation για C/C++.",
-                "en": "Standard build automation tool for C/C++."
-            }
-        },
-        "Ninja": {
-            "id": "ninja-build.ninja",
-            "url": "https://ninja-build.org/",
-            "note": {
-                "el": "Ταχύτατο build system με έμφαση στην ταχύτητα.",
-                "en": "Blazing fast build system focusing on speed."
-            }
-        },
-        "LLVM / Clang": {
-            "id": "LLVM.LLVM",
-            "url": "https://llvm.org/",
-            "note": {
-                "el": "Σύγχρονο compiler infrastructure.",
-                "en": "Modern compiler infrastructure."
-            }
-        },
-        "Make (GnuWin32)": {
-            "id": "GnuWin32.Make",
-            "url": "http://gnuwin32.sourceforge.net/",
-            "note": {
-                "el": "Το κλασικό εργαλείο Make για Windows.",
-                "en": "The classic Make tool for Windows."
-            }
-        }
-    },
-    "API & Testing": {
-        "Postman": {
-            "id": "Postman.Postman",
-            "url": "https://www.postman.com/",
-            "note": {
-                "el": "Η κορυφαία πλατφόρμα για ανάπτυξη και δοκιμή APIs.",
-                "en": "The leading platform for API development and testing."
-            }
-        },
-        "Bruno": {
-            "id": "Bruno.Bruno",
-            "url": "https://www.usebruno.com/",
-            "note": {
-                "el": "Open-source, local-first API client (ελαφρύς).",
-                "en": "Open-source, local-first API client (lightweight)."
-            }
-        },
-        "Insomnia": {
-            "id": "Insomnia.Insomnia",
-            "url": "https://insomnia.rest/",
-            "note": {
-                "el": "Σχεδιασμός και δοκιμή REST, GraphQL, gRPC APIs.",
-                "en": "Design and test REST, GraphQL, gRPC APIs."
-            }
-        }
-    },
-    "Security & Networking": {
-        "Wireshark": {
-            "id": "WiresharkFoundation.Wireshark",
-            "url": "https://www.wireshark.org/",
-            "note": {
-                "el": "Αναλυτής πακέτων δικτύου (packet sniffer).",
-                "en": "Network packet analyzer (packet sniffer)."
-            }
-        },
-        "Nmap": {
-            "id": "Insecure.Nmap",
-            "url": "https://nmap.org/",
-            "note": {
-                "el": "Εργαλείο ανακάλυψης δικτύου και ελέγχου ασφαλείας.",
-                "en": "Network discovery and security auditing tool."
-            }
-        },
-        "Burp Suite Community": {
-            "id": "manual",
-            "url": "https://portswigger.net/burp/communitydownload",
-            "note": {
-                "el": "Manual λήψη: Εργαλείο ελέγχου ασφαλείας web εφαρμογών.",
-                "en": "Manual download: Web application security testing tool."
-            }
-        }
-    },
-    "Cloud & DevOps": {
-        "Kubectl": {
-            "id": "Kubernetes.kubectl",
-            "url": "https://kubernetes.io/docs/tasks/tools/",
-            "note": {
-                "el": "CLI για την διαχείριση clusters Kubernetes.",
-                "en": "CLI for managing Kubernetes clusters."
-            }
-        },
-        "Terraform": {
-            "id": "Hashicorp.Terraform",
-            "url": "https://www.terraform.io/",
-            "note": {
-                "el": "Infrastructure as Code (IaC) από την HashiCorp.",
-                "en": "Infrastructure as Code (IaC) by HashiCorp."
-            }
-        },
-        "Azure CLI": {
-            "id": "Microsoft.AzureCLI",
-            "url": "https://docs.microsoft.com/en-us/cli/azure/install-azure-cli",
-            "note": {
-                "el": "Εργαλείο γραμμής εντολών για το Microsoft Azure.",
-                "en": "Command line tool for Microsoft Azure."
-            }
-        }
-    }
-}
+TOOLS_REGISTRY: Dict[str, Dict[str, Dict[str, Dict[str, str]]]] = {   'Browsers': {   'Google Chrome': {   'id': 'Google.Chrome',
+                                         'url': 'https://www.google.com/chrome/',
+                                         'note': {   'el': 'Ο πιο δημοφιλής '
+                                                           'περιηγητής ιστού '
+                                                           'από την Google.',
+                                                     'en': 'The most popular '
+                                                           'web browser from '
+                                                           'Google.'}},
+                    'Mozilla Firefox': {   'id': 'Mozilla.Firefox',
+                                           'url': 'https://www.mozilla.org/firefox/',
+                                           'note': {   'el': 'Περιηγητής ιστού '
+                                                             'με έμφαση στην '
+                                                             'ιδιωτικότητα και '
+                                                             'τον ανοιχτό '
+                                                             'κώδικα.',
+                                                       'en': 'Web browser with '
+                                                             'an emphasis on '
+                                                             'privacy and open '
+                                                             'source.'}},
+                    'Brave Browser': {   'id': 'Brave.Brave',
+                                         'url': 'https://brave.com/',
+                                         'note': {   'el': 'Περιηγητής που '
+                                                           'εστιάζει στην '
+                                                           'ταχύτητα και τον '
+                                                           'αποκλεισμό '
+                                                           'διαφημίσεων.',
+                                                     'en': 'Browser that '
+                                                           'focuses on speed '
+                                                           'and ad blocking.'}},
+                    'Vivaldi Browser': {   'id': 'Vivaldi.Vivaldi',
+                                           'url': 'https://vivaldi.com/',
+                                           'note': {   'el': 'Ευρωπαϊκός '
+                                                             'περιηγητής με '
+                                                             'απαράμιλλη '
+                                                             'δυνατότητα '
+                                                             'παραμετροποίησης.',
+                                                       'en': 'European browser '
+                                                             'with '
+                                                             'unparalleled '
+                                                             'customization '
+                                                             'capabilities.'}}},
+    'Office & Documents': {   'Microsoft 365': {   'id': 'Microsoft.Office',
+                                                   'url': 'https://www.office.com/',
+                                                   'note': {   'el': 'Η σουίτα '
+                                                                     'εφαρμογών '
+                                                                     'γραφείου '
+                                                                     'της '
+                                                                     'Microsoft '
+                                                                     '(Word, '
+                                                                     'Excel, '
+                                                                     'κλπ).',
+                                                               'en': "Microsoft's "
+                                                                     'office '
+                                                                     'application '
+                                                                     'suite '
+                                                                     '(Word, '
+                                                                     'Excel, '
+                                                                     'etc.).'}},
+                              'Apache OpenOffice': {   'id': 'Apache.OpenOffice',
+                                                       'url': 'https://www.openoffice.org/',
+                                                       'note': {   'el': 'Κλασική '
+                                                                         'ανοιχτού '
+                                                                         'κώδικα '
+                                                                         'σουίτα '
+                                                                         'εφαρμογών '
+                                                                         'γραφείου.',
+                                                                   'en': 'Classic '
+                                                                         'open-source '
+                                                                         'office '
+                                                                         'suite.'}},
+                              'LibreOffice': {   'id': 'TheDocumentFoundation.LibreOffice',
+                                                 'url': 'https://www.libreoffice.org/',
+                                                 'note': {   'el': 'Η πιο '
+                                                                   'ισχυρή '
+                                                                   'δωρεάν και '
+                                                                   'ανοιχτού '
+                                                                   'κώδικα '
+                                                                   'σουίτα '
+                                                                   'γραφείου.',
+                                                             'en': 'The most '
+                                                                   'powerful '
+                                                                   'free and '
+                                                                   'open-source '
+                                                                   'office '
+                                                                   'suite.'}},
+                              'ONLYOFFICE': {   'id': 'ONLYOFFICE.DesktopEditors',
+                                                'url': 'https://www.onlyoffice.com/',
+                                                'note': {   'el': 'Ευρωπαϊκή '
+                                                                  'σουίτα '
+                                                                  'γραφείου με '
+                                                                  'υψηλή '
+                                                                  'συμβατότητα '
+                                                                  'με αρχεία '
+                                                                  'MS Office.',
+                                                            'en': 'European '
+                                                                  'office '
+                                                                  'suite with '
+                                                                  'high '
+                                                                  'compatibility '
+                                                                  'with MS '
+                                                                  'Office '
+                                                                  'files.'}}},
+    'Communication': {   'Discord': {   'id': 'Discord.Discord',
+                                        'url': 'https://discord.com/',
+                                        'note': {   'el': 'Πλατφόρμα '
+                                                          'επικοινωνίας για '
+                                                          'κοινότητες και '
+                                                          'gamers.',
+                                                    'en': 'Communication '
+                                                          'platform for '
+                                                          'communities and '
+                                                          'gamers.'}},
+                         'WhatsApp': {   'id': 'WhatsApp.WhatsApp',
+                                         'url': 'https://www.whatsapp.com/',
+                                         'note': {   'el': 'Δημοφιλής εφαρμογή '
+                                                           'για μηνύματα και '
+                                                           'κλήσεις.',
+                                                     'en': 'Popular messaging '
+                                                           'and calling app.'}},
+                         'Telegram': {   'id': 'Telegram.TelegramDesktop',
+                                         'url': 'https://telegram.org/',
+                                         'note': {   'el': 'Γρήγορη και '
+                                                           'ασφαλής εφαρμογή '
+                                                           'μηνυμάτων, '
+                                                           'ευρωπαϊκής '
+                                                           'προέλευσης.',
+                                                     'en': 'Fast and secure '
+                                                           'messaging app, of '
+                                                           'European origin.'}},
+                         'Element': {   'id': 'Element.Element',
+                                        'url': 'https://element.io/',
+                                        'note': {   'el': 'Ανοιχτού κώδικα '
+                                                          'εφαρμογή '
+                                                          'επικοινωνίας '
+                                                          'βασισμένη στο '
+                                                          'πρωτόκολλο Matrix.',
+                                                    'en': 'Open-source '
+                                                          'communication app '
+                                                          'based on the Matrix '
+                                                          'protocol.'}},
+                         'Zoom': {   'id': 'Zoom.Zoom',
+                                     'url': 'https://zoom.us/',
+                                     'note': {   'el': 'Πλατφόρμα για '
+                                                       'βιντεοκλήσεις και '
+                                                       'τηλεδιασκέψεις.',
+                                                 'en': 'Platform for video '
+                                                       'calls and video '
+                                                       'conferencing.'}},
+                         'Webex': {   'id': 'Cisco.Webex',
+                                      'url': 'https://www.webex.com/',
+                                      'note': {   'el': 'Επαγγελματικό '
+                                                        'εργαλείο για '
+                                                        'συναντήσεις και '
+                                                        'συνεργασία.',
+                                                  'en': 'Professional tool for '
+                                                        'meetings and '
+                                                        'collaboration.'}},
+                         'Slack': {   'id': 'SlackTechnologies.Slack',
+                                      'url': 'https://slack.com/',
+                                      'note': {   'el': 'Η standard εφαρμογή '
+                                                        'επικοινωνίας για '
+                                                        'ομάδες εργασίας.',
+                                                  'en': 'The standard '
+                                                        'communication app for '
+                                                        'workgroups.'}},
+                         'Viber': {   'id': 'Rakuten.Viber',
+                                      'url': 'https://www.viber.com/',
+                                      'note': {   'el': 'Δημοφιλής εφαρμογή '
+                                                        'για δωρεάν μηνύματα '
+                                                        'και κλήσεις '
+                                                        'παγκοσμίως.',
+                                                  'en': 'Popular app for free '
+                                                        'messaging and calls '
+                                                        'worldwide.'}}},
+    'Media & Entertainment': {   'VLC media player': {   'id': 'VideoLAN.VLC',
+                                                         'url': 'https://www.videolan.org/',
+                                                         'note': {   'el': 'Universal '
+                                                                           'player '
+                                                                           'για '
+                                                                           'κάθε '
+                                                                           'είδους '
+                                                                           'αρχείο '
+                                                                           'βίντεο '
+                                                                           'και '
+                                                                           'ήχου.',
+                                                                     'en': 'Universal '
+                                                                           'player '
+                                                                           'for '
+                                                                           'all '
+                                                                           'types '
+                                                                           'of '
+                                                                           'video '
+                                                                           'and '
+                                                                           'audio '
+                                                                           'files.'}},
+                                 'Spotify': {   'id': 'Spotify.Spotify',
+                                                'url': 'https://www.spotify.com/',
+                                                'note': {   'el': 'Η κορυφαία '
+                                                                  'υπηρεσία '
+                                                                  'streaming '
+                                                                  'μουσικής.',
+                                                            'en': 'The leading '
+                                                                  'music '
+                                                                  'streaming '
+                                                                  'service.'}},
+                                 'K-Lite Codec Pack': {   'id': 'CodecGuide.K-LiteCodecPack.Full',
+                                                          'url': 'https://codecguide.com/',
+                                                          'note': {   'el': 'Συλλογή '
+                                                                            'από '
+                                                                            'codecs '
+                                                                            'για '
+                                                                            'αναπαραγωγή '
+                                                                            'οποιασδήποτε '
+                                                                            'ταινίας.',
+                                                                      'en': 'Collection '
+                                                                            'of '
+                                                                            'codecs '
+                                                                            'for '
+                                                                            'playing '
+                                                                            'any '
+                                                                            'video.'}},
+                                 'Steam': {   'id': 'Valve.Steam',
+                                              'url': 'https://store.steampowered.com/',
+                                              'note': {   'el': 'Η μεγαλύτερη '
+                                                                'πλατφόρμα '
+                                                                'διανομής '
+                                                                'παιχνιδιών.',
+                                                          'en': 'The largest '
+                                                                'game '
+                                                                'distribution '
+                                                                'platform.'}}},
+    'System & Cloud': {   '7-Zip': {   'id': '7zip.7zip',
+                                       'url': 'https://www.7-zip.org/',
+                                       'note': {   'el': 'Κορυφαίο εργαλείο '
+                                                         'για συμπίεση και '
+                                                         'αποσυμπίεση αρχείων.',
+                                                   'en': 'Top tool for file '
+                                                         'compression and '
+                                                         'extraction.'}},
+                          'pCloud': {   'id': 'pCloudAG.pCloudDrive',
+                                        'url': 'https://www.pcloud.com/',
+                                        'note': {   'el': 'Ασφαλής ευρωπαϊκή '
+                                                          'υπηρεσία cloud '
+                                                          'storage (Ελβετία).',
+                                                    'en': 'Secure European '
+                                                          'cloud storage '
+                                                          'service '
+                                                          '(Switzerland).'}},
+                          'Proton Drive': {   'id': 'Proton.ProtonDrive',
+                                              'url': 'https://proton.me/drive',
+                                              'note': {   'el': 'Πλήρως '
+                                                                'κρυπτογραφημένο '
+                                                                'cloud storage '
+                                                                'από την '
+                                                                'Proton '
+                                                                '(Ελβετία).',
+                                                          'en': 'Fully '
+                                                                'encrypted '
+                                                                'cloud storage '
+                                                                'from Proton '
+                                                                '(Switzerland).'}},
+                          'Nextcloud Desktop': {   'id': 'Nextcloud.NextcloudDesktop',
+                                                   'url': 'https://nextcloud.com/',
+                                                   'note': {   'el': 'Ανοιχτού '
+                                                                     'κώδικα '
+                                                                     'πλατφόρμα '
+                                                                     'για '
+                                                                     'προσωπικό '
+                                                                     'cloud '
+                                                                     'και '
+                                                                     'συγχρονισμό.',
+                                                               'en': 'Open-source '
+                                                                     'platform '
+                                                                     'for '
+                                                                     'personal '
+                                                                     'cloud '
+                                                                     'and '
+                                                                     'sync.'}},
+                          'Google Earth Pro': {   'id': 'Google.EarthPro',
+                                                  'url': 'https://www.google.com/earth/',
+                                                  'note': {   'el': 'Εξερευνήστε '
+                                                                    'τον κόσμο '
+                                                                    'με '
+                                                                    'τρισδιάστατες '
+                                                                    'δορυφορικές '
+                                                                    'εικόνες.',
+                                                              'en': 'Explore '
+                                                                    'the world '
+                                                                    'with 3D '
+                                                                    'satellite '
+                                                                    'imagery.'}},
+                          'Everything': {   'id': 'voidtools.Everything',
+                                            'url': 'https://www.voidtools.com/',
+                                            'note': {   'el': 'Άμεση αναζήτηση '
+                                                              'αρχείων στο '
+                                                              'σύστημα.',
+                                                        'en': 'Instant file '
+                                                              'search on the '
+                                                              'system.'}},
+                          'Sysinternals Suite': {   'id': 'Microsoft.SysinternalsSuite',
+                                                    'url': 'https://learn.microsoft.com/en-us/sysinternals/',
+                                                    'type': 'winget',
+                                                    'note': {   'el': 'Η '
+                                                                      'συλλογή '
+                                                                      'εργαλείων '
+                                                                      'της '
+                                                                      'Microsoft '
+                                                                      'για '
+                                                                      'διαχείριση '
+                                                                      'και '
+                                                                      'debugging.',
+                                                                'en': 'Microsoft '
+                                                                      'utility '
+                                                                      'collection '
+                                                                      'for '
+                                                                      'management '
+                                                                      'and '
+                                                                      'debugging.'}},
+                          'CrystalDiskInfo': {   'id': 'CrystalDewWorld.CrystalDiskInfo',
+                                                 'url': 'https://crystalmark.info/en/software/crystaldiskinfo/',
+                                                 'type': 'winget',
+                                                 'note': {   'el': 'Έλεγχος '
+                                                                   'υγείας και '
+                                                                   'θερμοκρασίας '
+                                                                   'των '
+                                                                   'δίσκων.',
+                                                             'en': 'Disk '
+                                                                   'health and '
+                                                                   'temperature '
+                                                                   'monitoring.'}},
+                          'CPU-Z': {   'id': 'CPUID.CPU-Z',
+                                       'url': 'https://www.cpuid.com/softwares/cpu-z.html',
+                                       'type': 'winget',
+                                       'note': {   'el': 'Λεπτομερείς '
+                                                         'πληροφορίες για τον '
+                                                         'επεξεργαστή και τη '
+                                                         'μνήμη.',
+                                                   'en': 'Detailed information '
+                                                         'about CPU and '
+                                                         'memory.'}},
+                          'GPU-Z': {   'id': 'TechPowerUp.GPU-Z',
+                                       'url': 'https://www.techpowerup.com/gpuz/',
+                                       'type': 'winget',
+                                       'note': {   'el': 'Λεπτομερείς '
+                                                         'πληροφορίες για την '
+                                                         'κάρτα γραφικών.',
+                                                   'en': 'Detailed information '
+                                                         'about the graphics '
+                                                         'card.'}}},
+    'Privacy & Security': {   'ProtonVPN': {   'id': 'Proton.ProtonVPN',
+                                               'url': 'https://protonvpn.com/',
+                                               'note': {   'el': 'Ασφαλές και '
+                                                                 'γρήγορο VPN '
+                                                                 'από την '
+                                                                 'Proton.',
+                                                           'en': 'Secure and '
+                                                                 'fast VPN by '
+                                                                 'Proton.'}},
+                              'Proton Mail': {   'id': 'Proton.ProtonMail',
+                                                 'url': 'https://proton.me/mail',
+                                                 'note': {   'el': 'Η κορυφαία '
+                                                                   'υπηρεσία '
+                                                                   'κρυπτογραφημένου '
+                                                                   'email '
+                                                                   'παγκοσμίως.',
+                                                             'en': 'The '
+                                                                   'leading '
+                                                                   'encrypted '
+                                                                   'email '
+                                                                   'service '
+                                                                   'worldwide.'}}},
+    'IDEs & Editors': {   'VS Code': {   'id': 'Microsoft.VisualStudioCode',
+                                         'url': 'https://code.visualstudio.com/',
+                                         'note': {   'el': 'Ο πιο δημοφιλής '
+                                                           'open-source editor '
+                                                           'από την Microsoft.',
+                                                     'en': 'The most popular '
+                                                           'open-source editor '
+                                                           'from Microsoft.'}},
+                          'VS Code Insiders': {   'id': 'Microsoft.VisualStudioCode.Insiders',
+                                                  'url': 'https://code.visualstudio.com/insiders/',
+                                                  'note': {   'el': 'Η έκδοση '
+                                                                    'προεπισκόπησης '
+                                                                    'του VS '
+                                                                    'Code με '
+                                                                    'νέες '
+                                                                    'δυνατότητες.',
+                                                              'en': 'Preview '
+                                                                    'version '
+                                                                    'of VS '
+                                                                    'Code with '
+                                                                    'new '
+                                                                    'features.'}},
+                          'PyCharm Community': {   'id': 'JetBrains.PyCharm.Community',
+                                                   'url': 'https://www.jetbrains.com/pycharm/',
+                                                   'note': {   'el': 'Πανίσχυρο '
+                                                                     'IDE για '
+                                                                     'Python '
+                                                                     'ανάπτυξη.',
+                                                               'en': 'Powerful '
+                                                                     'IDE for '
+                                                                     'Python '
+                                                                     'development.'}},
+                          'Android Studio': {   'id': 'Google.AndroidStudio',
+                                                'url': 'https://developer.android.com/studio',
+                                                'note': {   'el': 'Το επίσημο '
+                                                                  'IDE για '
+                                                                  'ανάπτυξη '
+                                                                  'εφαρμογών '
+                                                                  'Android.',
+                                                            'en': 'The '
+                                                                  'official '
+                                                                  'IDE for '
+                                                                  'Android app '
+                                                                  'development.'}},
+                          'Arduino IDE': {   'id': 'Arduino.IDE.2',
+                                             'url': 'https://www.arduino.cc/en/software',
+                                             'note': {   'el': 'Περιβάλλον '
+                                                               'προγραμματισμού '
+                                                               'για Arduino '
+                                                               'και hardware.',
+                                                         'en': 'Programming '
+                                                               'environment '
+                                                               'for Arduino '
+                                                               'and '
+                                                               'hardware.'}},
+                          'Notepad++': {   'id': 'Notepad++.Notepad++',
+                                           'url': 'https://notepad-plus-plus.org/',
+                                           'note': {   'el': 'Ελαφρύς και '
+                                                             'ταχύτατος text '
+                                                             'editor.',
+                                                       'en': 'Lightweight and '
+                                                             'fast text '
+                                                             'editor.'}},
+                          'Dev-C++': {   'id': 'Embarcadero.Dev-CPP',
+                                         'url': 'https://sourceforge.net/projects/orwelldevcpp/',
+                                         'note': {   'el': 'Κλασικό IDE για '
+                                                           'C/C++ (TDM-GCC).',
+                                                     'en': 'Classic IDE for '
+                                                           'C/C++ '
+                                                           '(TDM-GCC).'}}},
+    'Version Control': {   'Git': {   'id': 'Git.Git',
+                                      'url': 'https://git-scm.com/',
+                                      'note': {   'el': 'Το standard σύστημα '
+                                                        'ελέγχου εκδόσεων.',
+                                                  'en': 'The standard version '
+                                                        'control system.'}},
+                           'GitHub Desktop': {   'id': 'GitHub.GitHubDesktop',
+                                                 'url': 'https://desktop.github.com/',
+                                                 'note': {   'el': 'Γραφικό '
+                                                                   'περιβάλλον '
+                                                                   'για την '
+                                                                   'διαχείριση '
+                                                                   'Git repos.',
+                                                             'en': 'Graphical '
+                                                                   'user '
+                                                                   'interface '
+                                                                   'for '
+                                                                   'managing '
+                                                                   'Git '
+                                                                   'repositories.'}},
+                           'GitHub CLI (gh)': {   'id': 'GitHub.cli',
+                                                  'url': 'https://cli.github.com/',
+                                                  'note': {   'el': 'Εργαλείο '
+                                                                    'γραμμής '
+                                                                    'εντολών '
+                                                                    'για το '
+                                                                    'GitHub.',
+                                                              'en': 'Command '
+                                                                    'line tool '
+                                                                    'for '
+                                                                    'GitHub.'}},
+                           'lazygit': {   'id': 'JesseDuffield.lazygit',
+                                          'url': 'https://github.com/jesseduffield/lazygit',
+                                          'note': {   'el': 'Τερματικό '
+                                                            'περιβάλλον (TUI) '
+                                                            'για Git.',
+                                                      'en': 'Terminal user '
+                                                            'interface (TUI) '
+                                                            'for Git.'}},
+                           'Git LFS': {   'id': 'GitHub.GitLFS',
+                                          'url': 'https://git-lfs.github.com/',
+                                          'note': {   'el': 'Διαχείριση '
+                                                            'μεγάλων αρχείων '
+                                                            'στο Git.',
+                                                      'en': 'Large file '
+                                                            'management in '
+                                                            'Git.'}}},
+    'Runtimes & Languages': {   'Node.js (LTS)': {   'id': 'OpenJS.NodeJS.LTS',
+                                                     'url': 'https://nodejs.org/',
+                                                     'note': {   'el': 'JavaScript '
+                                                                       'runtime '
+                                                                       'για '
+                                                                       'server-side '
+                                                                       'ανάπτυξη.',
+                                                                 'en': 'JavaScript '
+                                                                       'runtime '
+                                                                       'for '
+                                                                       'server-side '
+                                                                       'development.'}},
+                                'Python 3.14': {   'id': 'Python.Python.3.14',
+                                                   'url': 'https://www.python.org/',
+                                                   'note': {   'el': 'Η '
+                                                                     'τελευταία '
+                                                                     'έκδοση '
+                                                                     'της '
+                                                                     'γλώσσας '
+                                                                     'Python.',
+                                                               'en': 'The '
+                                                                     'latest '
+                                                                     'version '
+                                                                     'of the '
+                                                                     'Python '
+                                                                     'language.'}},
+                                'Go': {   'id': 'Google.Go',
+                                          'url': 'https://go.dev/',
+                                          'note': {   'el': 'Η γλώσσα '
+                                                            'προγραμματισμού '
+                                                            'της Google.',
+                                                      'en': "Google's "
+                                                            'programming '
+                                                            'language.'}},
+                                'TDM-GCC': {   'id': 'jmeubank.tdm-gcc',
+                                               'url': 'https://jmeubank.github.io/tdm-gcc/',
+                                               'note': {   'el': 'Compiler '
+                                                                 'suite για '
+                                                                 'C/C++ στα '
+                                                                 'Windows.',
+                                                           'en': 'Compiler '
+                                                                 'suite for '
+                                                                 'C/C++ on '
+                                                                 'Windows.'}},
+                                'MSYS2': {   'id': 'MSYS2.MSYS2',
+                                             'url': 'https://www.msys2.org/',
+                                             'note': {   'el': 'Περιβάλλον '
+                                                               'Unix-like για '
+                                                               'Windows '
+                                                               'ανάπτυξη.',
+                                                         'en': 'Unix-like '
+                                                               'environment '
+                                                               'for Windows '
+                                                               'development.'}},
+                                'Rust (rustup)': {   'id': 'Rustlang.Rustup',
+                                                     'url': 'https://rustup.rs/',
+                                                     'note': {   'el': 'Installer '
+                                                                       'για '
+                                                                       'την '
+                                                                       'γλώσσα '
+                                                                       'Rust.',
+                                                                 'en': 'Installer '
+                                                                       'for '
+                                                                       'the '
+                                                                       'Rust '
+                                                                       'language.'}},
+                                'Zig': {   'id': 'zig.zig',
+                                           'url': 'https://ziglang.org/',
+                                           'note': {   'el': 'Σύγχρονη και '
+                                                             'ασφαλής γλώσσα '
+                                                             'επιπέδου '
+                                                             'συστήματος.',
+                                                       'en': 'Modern and safe '
+                                                             'systems '
+                                                             'language.'}},
+                                'Bun': {   'id': 'Oven-sh.Bun',
+                                           'url': 'https://bun.sh/',
+                                           'note': {   'el': 'Ταχύτατο '
+                                                             'JavaScript '
+                                                             'runtime & '
+                                                             'package manager.',
+                                                       'en': 'Extremely fast '
+                                                             'JavaScript '
+                                                             'runtime & '
+                                                             'package '
+                                                             'manager.'}},
+                                'Deno': {   'id': 'DenoLand.Deno',
+                                            'url': 'https://deno.land/',
+                                            'note': {   'el': 'Ασφαλές runtime '
+                                                              'για JavaScript '
+                                                              'και TypeScript.',
+                                                        'en': 'Secure runtime '
+                                                              'for JavaScript '
+                                                              'and '
+                                                              'TypeScript.'}},
+                                'Java 21 (Temurin)': {   'id': 'EclipseAdoptium.Temurin.21.JDK',
+                                                         'url': 'https://adoptium.net/',
+                                                         'note': {   'el': 'Open '
+                                                                           'source '
+                                                                           'διανομή '
+                                                                           'της '
+                                                                           'Java '
+                                                                           '(JDK).',
+                                                                     'en': 'Open '
+                                                                           'source '
+                                                                           'distribution '
+                                                                           'of '
+                                                                           'Java '
+                                                                           '(JDK).'}},
+                                'pyenv-win': {   'id': 'pyenv.pyenv',
+                                                 'url': 'https://github.com/pyenv-win/pyenv-win',
+                                                 'type': 'winget',
+                                                 'note': {   'el': 'Διαχείριση '
+                                                                   'πολλαπλών '
+                                                                   'εκδόσεων '
+                                                                   'Python στα '
+                                                                   'Windows.',
+                                                             'en': 'Manage '
+                                                                   'multiple '
+                                                                   'Python '
+                                                                   'versions '
+                                                                   'on '
+                                                                   'Windows.'}},
+                                'Miniconda3': {   'id': 'Anaconda.Miniconda3',
+                                                  'url': 'https://docs.conda.io/en/latest/miniconda.html',
+                                                  'type': 'winget',
+                                                  'note': {   'el': 'Διαχειριστής '
+                                                                    'περιβαλλόντων '
+                                                                    'Python '
+                                                                    'για AI '
+                                                                    'και Data '
+                                                                    'Science.',
+                                                              'en': 'Python '
+                                                                    'environment '
+                                                                    'manager '
+                                                                    'for AI '
+                                                                    'and Data '
+                                                                    'Science.'}},
+                                'Java 17 (Temurin)': {   'id': 'EclipseAdoptium.Temurin.17.JDK',
+                                                         'url': 'https://adoptium.net/',
+                                                         'type': 'winget',
+                                                         'note': {   'el': 'Η '
+                                                                           'έκδοση '
+                                                                           'LTS '
+                                                                           '17 '
+                                                                           'της '
+                                                                           'Java '
+                                                                           '(JDK).',
+                                                                     'en': 'Java '
+                                                                           'JDK '
+                                                                           'LTS '
+                                                                           'version '
+                                                                           '17.'}}},
+    'Package Managers': {   'Chocolatey': {   'id': 'Chocolatey.Chocolatey',
+                                              'url': 'https://chocolatey.org/',
+                                              'note': {   'el': 'Package '
+                                                                'manager για '
+                                                                'Windows '
+                                                                'παρόμοιο με '
+                                                                'το apt.',
+                                                          'en': 'Package '
+                                                                'manager for '
+                                                                'Windows '
+                                                                'similar to '
+                                                                'apt.'}},
+                            'uv (Fast Python)': {   'id': 'astral-sh.uv',
+                                                    'url': 'https://github.com/astral-sh/uv',
+                                                    'note': {   'el': 'Ταχύτατος '
+                                                                      'Python '
+                                                                      'package '
+                                                                      '& '
+                                                                      'project '
+                                                                      'manager.',
+                                                                'en': 'Extremely '
+                                                                      'fast '
+                                                                      'Python '
+                                                                      'package '
+                                                                      '& '
+                                                                      'project '
+                                                                      'manager.'}},
+                            'pnpm': {   'id': 'pnpm.pnpm',
+                                        'url': 'https://pnpm.io/',
+                                        'note': {   'el': 'Αποδοτικός Node '
+                                                          'package manager με '
+                                                          'symlinks.',
+                                                    'en': 'Efficient Node '
+                                                          'package manager '
+                                                          'using symlinks.'}},
+                            'Poetry': {   'id': 'poetry',
+                                          'url': 'https://python-poetry.org/',
+                                          'type': 'powershell',
+                                          'install_command': 'pipx install '
+                                                             'poetry',
+                                          'note': {   'el': 'Σύγχρονος python '
+                                                            'package manager '
+                                                            'και dependency '
+                                                            'resolver.',
+                                                      'en': 'Modern Python '
+                                                            'package manager '
+                                                            'and dependency '
+                                                            'resolver.'}}},
+    'Database Tools': {   'DB Browser (SQLite)': {   'id': 'DBBrowserForSQLite.DBBrowserForSQLite',
+                                                     'url': 'https://sqlitebrowser.org/',
+                                                     'note': {   'el': 'Γραφικό '
+                                                                       'περιβάλλον '
+                                                                       'για '
+                                                                       'βάσεις '
+                                                                       'δεδομένων '
+                                                                       'SQLite.',
+                                                                 'en': 'Graphical '
+                                                                       'interface '
+                                                                       'for '
+                                                                       'SQLite '
+                                                                       'databases.'}},
+                          'DBeaver Community': {   'id': 'dbeaver.dbeaver',
+                                                   'url': 'https://dbeaver.io/',
+                                                   'note': {   'el': 'Universal '
+                                                                     'database '
+                                                                     'manager '
+                                                                     'για όλες '
+                                                                     'τις '
+                                                                     'βάσεις.',
+                                                               'en': 'Universal '
+                                                                     'database '
+                                                                     'manager '
+                                                                     'for all '
+                                                                     'databases.'}}},
+    'Virtualization': {   'Docker Desktop': {   'id': 'Docker.DockerDesktop',
+                                                'url': 'https://www.docker.com/',
+                                                'note': {   'el': 'Διαχείριση '
+                                                                  'containers '
+                                                                  'για '
+                                                                  'ανάπτυξη '
+                                                                  'εφαρμογών.',
+                                                            'en': 'Container '
+                                                                  'management '
+                                                                  'for '
+                                                                  'application '
+                                                                  'development.'},
+                                                'requirements': {   'min_ram_gb': 8,
+                                                                    'min_disk_gb': 20}},
+                          'VMware Player': {   'id': 'VMware.WorkstationPlayer',
+                                               'url': 'https://www.vmware.com/',
+                                               'note': {   'el': 'Δωρεάν '
+                                                                 'virtualization '
+                                                                 'για εκτέλεση '
+                                                                 'εικονικών '
+                                                                 'μηχανών.',
+                                                           'en': 'Free '
+                                                                 'virtualization '
+                                                                 'for running '
+                                                                 'virtual '
+                                                                 'machines.'}},
+                          'WSL': {   'id': 'Microsoft.WSL',
+                                     'url': 'https://learn.microsoft.com/en-us/windows/wsl/',
+                                     'note': {   'el': 'Υποσύστημα Linux μέσα '
+                                                       'στα Windows.',
+                                                 'en': 'Linux subsystem inside '
+                                                       'Windows.'}},
+                          'Ubuntu (WSL)': {   'id': 'Canonical.Ubuntu',
+                                              'url': 'https://ubuntu.com/wsl',
+                                              'type': 'winget',
+                                              'note': {   'el': 'Η επίσημη '
+                                                                'διανομή '
+                                                                'Ubuntu Linux '
+                                                                'για το WSL.',
+                                                          'en': 'The official '
+                                                                'Ubuntu Linux '
+                                                                'distribution '
+                                                                'for WSL.'}},
+                          'LxRunOffline': {   'id': 'DmitrySokolyuk.LxRunOffline',
+                                              'url': 'https://github.com/DmitrySokolyuk/LxRunOffline',
+                                              'type': 'winget',
+                                              'note': {   'el': 'Ένας '
+                                                                'πανίσχυρος '
+                                                                'WSL manager '
+                                                                'για backups '
+                                                                'και μεταφορές '
+                                                                'διανομών.',
+                                                          'en': 'A powerful '
+                                                                'WSL manager '
+                                                                'for backups '
+                                                                'and distro '
+                                                                'migrations.'}}},
+    'Hardware & AI': {   'Raspberry Pi Imager': {   'id': 'RaspberryPi.RaspberryPiImager',
+                                                    'url': 'https://www.raspberrypi.com/software/',
+                                                    'note': {   'el': 'Εργαλείο '
+                                                                      'εγγραφής '
+                                                                      'OS σε '
+                                                                      'SD '
+                                                                      'κάρτες '
+                                                                      'για '
+                                                                      'Raspberry '
+                                                                      'Pi.',
+                                                                'en': 'OS '
+                                                                      'writing '
+                                                                      'tool to '
+                                                                      'SD '
+                                                                      'cards '
+                                                                      'for '
+                                                                      'Raspberry '
+                                                                      'Pi.'}},
+                         'Logisim Evolution': {   'id': 'Logisim-Evolution.Logisim-Evolution',
+                                                  'url': 'https://github.com/logisim-evolution/logisim-evolution',
+                                                  'note': {   'el': 'Προσομοιωτής '
+                                                                    'ψηφιακών '
+                                                                    'κυκλωμάτων.',
+                                                              'en': 'Digital '
+                                                                    'circuit '
+                                                                    'simulator.'}},
+                         'LM Studio': {   'id': 'LMStudio.LMStudio',
+                                          'url': 'https://lmstudio.ai/',
+                                          'note': {   'el': 'Τοπική εκτέλεση '
+                                                            'μεγάλων γλωσσικών '
+                                                            'μοντέλων (LLMs).',
+                                                      'en': 'Run LLMs '
+                                                            'locally.'},
+                                          'requirements': {   'min_ram_gb': 8,
+                                                              'requires_gpu': True}},
+                         'Ollama': {   'id': 'Ollama.Ollama',
+                                       'url': 'https://ollama.com/',
+                                       'type': 'winget',
+                                       'requirements': {   'min_ram_gb': 8,
+                                                           'min_disk_gb': 10,
+                                                           'requires_gpu': True},
+                                       'note': {   'el': 'Τοπική εκτέλεση '
+                                                         'μεγάλων γλωσσικών '
+                                                         'μοντέλων (LLMs).',
+                                                   'en': 'Run LLMs locally.'}},
+                         'Open WebUI': {   'id': 'open-webui',
+                                           'url': 'https://github.com/open-webui/open-webui',
+                                           'type': 'powershell',
+                                           'install_command': 'pip install '
+                                                              'open-webui',
+                                           'requirements': {'min_ram_gb': 8},
+                                           'note': {   'el': 'ChatGPT-like Web '
+                                                             'UI για το '
+                                                             'Ollama.',
+                                                       'en': 'ChatGPT-like Web '
+                                                             'UI for Ollama.'}},
+                         'Hugging Face CLI': {   'id': 'huggingface-cli',
+                                                 'url': 'https://huggingface.co/docs/huggingface_hub/guides/cli',
+                                                 'type': 'powershell',
+                                                 'install_command': 'pip '
+                                                                    'install '
+                                                                    'huggingface_hub[cli]',
+                                                 'note': {   'el': 'Εργαλείο '
+                                                                   'γραμμής '
+                                                                   'εντολών '
+                                                                   'για λήψη '
+                                                                   'μοντέλων '
+                                                                   'και '
+                                                                   'datasets.',
+                                                             'en': 'Command '
+                                                                   'line tool '
+                                                                   'for '
+                                                                   'downloading '
+                                                                   'models and '
+                                                                   'datasets.'}}},
+    'System & Shell': {   'Windows Terminal': {   'id': 'Microsoft.WindowsTerminal',
+                                                  'url': 'https://aka.ms/terminal',
+                                                  'note': {   'el': 'Σύγχρονο '
+                                                                    'τερματικό '
+                                                                    'για '
+                                                                    'command '
+                                                                    'line '
+                                                                    'εργαλεία.',
+                                                              'en': 'Modern '
+                                                                    'terminal '
+                                                                    'for '
+                                                                    'command '
+                                                                    'line '
+                                                                    'tools.'}},
+                          'Oh My Posh': {   'id': 'JanDeDobbeleer.OhMyPosh',
+                                            'url': 'https://ohmyposh.dev/',
+                                            'note': {   'el': 'Engine για '
+                                                              'πανέμορφα '
+                                                              'prompt στα '
+                                                              'shells.',
+                                                        'en': 'Engine for '
+                                                              'beautiful shell '
+                                                              'prompts.'}},
+                          'zoxide': {   'id': 'ajeetdsouza.zoxide',
+                                        'url': 'https://github.com/ajeetdsouza/zoxide',
+                                        'note': {   'el': 'Έξυπνη εντολή cd '
+                                                          'που μαθαίνει τις '
+                                                          'συνήθειές σας.',
+                                                    'en': 'Smart cd command '
+                                                          'that learns your '
+                                                          'habits.'}},
+                          'PowerShell 7': {   'id': 'Microsoft.PowerShell',
+                                              'url': 'https://github.com/PowerShell/PowerShell',
+                                              'note': {   'el': 'Η τελευταία '
+                                                                'έκδοση του '
+                                                                'PowerShell.',
+                                                          'en': 'The latest '
+                                                                'version of '
+                                                                'PowerShell.'}},
+                          'PuTTY': {   'id': 'PuTTY.PuTTY',
+                                       'url': 'https://www.putty.org/',
+                                       'note': {   'el': 'SSH και Telnet '
+                                                         'client για Windows.',
+                                                   'en': 'SSH and Telnet '
+                                                         'client for '
+                                                         'Windows.'}},
+                          'fastfetch': {   'id': 'fastfetch-cli.fastfetch',
+                                           'url': 'https://github.com/fastfetch-cli/fastfetch',
+                                           'note': {   'el': 'Εργαλείο '
+                                                             'πληροφοριών '
+                                                             'συστήματος.',
+                                                       'en': 'System '
+                                                             'information '
+                                                             'tool.'}},
+                          'FileZilla': {   'id': 'FileZilla.FileZilla',
+                                           'url': 'https://filezilla-project.org/',
+                                           'note': {   'el': 'Κλασικός '
+                                                             'FTP/SFTP client.',
+                                                       'en': 'Classic FTP/SFTP '
+                                                             'client.'}},
+                          'Warp Terminal': {   'id': 'Warp.Warp',
+                                               'url': 'https://www.warp.dev/',
+                                               'note': {   'el': 'Σύγχρονο '
+                                                                 'AI-powered '
+                                                                 'τερματικό.',
+                                                           'en': 'Modern '
+                                                                 'AI-powered '
+                                                                 'terminal.'}},
+                          'Starship Prompt': {   'id': 'Starship.Starship',
+                                                 'url': 'https://starship.rs/',
+                                                 'note': {   'el': 'Customizable '
+                                                                   'και '
+                                                                   'γρήγορο '
+                                                                   'shell '
+                                                                   'prompt.',
+                                                             'en': 'Customizable '
+                                                                   'and fast '
+                                                                   'shell '
+                                                                   'prompt.'}},
+                          'bat': {   'id': 'sharkdp.bat',
+                                     'url': 'https://github.com/sharkdp/bat',
+                                     'note': {   'el': 'Βελτιωμένη έκδοση της '
+                                                       'εντολής cat με syntax '
+                                                       'highlighting.',
+                                                 'en': 'Improved version of '
+                                                       'the cat command with '
+                                                       'syntax highlighting.'}},
+                          'ripgrep': {   'id': 'BurntSushi.ripgrep.MSVC',
+                                         'url': 'https://github.com/BurntSushi/ripgrep',
+                                         'note': {   'el': 'Ταχύτατη αναζήτηση '
+                                                           'κειμένου σε '
+                                                           'αρχεία.',
+                                                     'en': 'Blazing fast text '
+                                                           'search within '
+                                                           'files.'}},
+                          'fd': {   'id': 'sharkdp.fd',
+                                    'url': 'https://github.com/sharkdp/fd',
+                                    'note': {   'el': 'Γρήγορη και φιλική '
+                                                      'εναλλακτική της εντολής '
+                                                      'find.',
+                                                'en': 'Fast and user-friendly '
+                                                      'alternative to the find '
+                                                      'command.'}},
+                          'fzf': {   'id': 'junegunn.fzf',
+                                     'url': 'https://github.com/junegunn/fzf',
+                                     'note': {   'el': 'Fuzzy finder για την '
+                                                       'γραμμή εντολών.',
+                                                 'en': 'Fuzzy finder for the '
+                                                       'command line.'}},
+                          'tldr': {   'id': 'tldr-pages.tlrc',
+                                      'url': 'https://tldr.sh/',
+                                      'note': {   'el': 'Συνοπτικά help pages '
+                                                        'για εντολές '
+                                                        'τερματικού.',
+                                                  'en': 'Concise help pages '
+                                                        'for terminal '
+                                                        'commands.'}}},
+    'AI Coding Assistants': {   'Claude Code (CLI)': {   'id': 'Anthropic.ClaudeCode',
+                                                         'url': 'https://claude.com/claude-code',
+                                                         'note': {   'el': 'Agentic '
+                                                                           'τερματικό '
+                                                                           'για '
+                                                                           'AI-assisted '
+                                                                           'προγραμματισμό.',
+                                                                     'en': 'Agentic '
+                                                                           'terminal '
+                                                                           'for '
+                                                                           'AI-assisted '
+                                                                           'programming.'}},
+                                'Cursor IDE': {   'id': 'Anysphere.Cursor',
+                                                  'url': 'https://cursor.sh/',
+                                                  'note': {   'el': 'AI-first '
+                                                                    'editor, '
+                                                                    'βασισμένος '
+                                                                    'στον VS '
+                                                                    'Code.',
+                                                              'en': 'AI-first '
+                                                                    'editor '
+                                                                    'based on '
+                                                                    'VS '
+                                                                    'Code.'}},
+                                'Windsurf IDE': {   'id': 'Codeium.Windsurf',
+                                                    'url': 'https://codeium.com/windsurf',
+                                                    'note': {   'el': 'Agentic '
+                                                                      'IDE από '
+                                                                      'την '
+                                                                      'ομάδα '
+                                                                      'του '
+                                                                      'Codeium.',
+                                                                'en': 'Agentic '
+                                                                      'IDE by '
+                                                                      'the '
+                                                                      'Codeium '
+                                                                      'team.'}},
+                                'OpenCode': {   'id': 'SST.opencode',
+                                                'url': 'https://opencode.ai/',
+                                                'note': {   'el': 'AI coding '
+                                                                  'agent για '
+                                                                  'το '
+                                                                  'τερματικό.',
+                                                            'en': 'AI coding '
+                                                                  'agent for '
+                                                                  'the '
+                                                                  'terminal.'}},
+                                'Gemini CLI': {   'id': 'npm install -g '
+                                                        '@google/gemini-cli',
+                                                  'url': 'https://github.com/google/gemini-cli',
+                                                  'note': {   'el': 'CLI για '
+                                                                    'το '
+                                                                    'μοντέλο '
+                                                                    'Gemini '
+                                                                    'της '
+                                                                    'Google.',
+                                                              'en': 'CLI for '
+                                                                    "Google's "
+                                                                    'Gemini '
+                                                                    'model.'}},
+                                'GitHub Copilot': {   'id': 'gh extension '
+                                                            'install '
+                                                            'github/gh-copilot',
+                                                      'url': 'https://github.com/github/copilot-cli',
+                                                      'note': {   'el': 'Extension '
+                                                                        'για '
+                                                                        'το '
+                                                                        'GitHub '
+                                                                        'CLI.',
+                                                                  'en': 'Extension '
+                                                                        'for '
+                                                                        'GitHub '
+                                                                        'CLI.'}},
+                                'Antigravity': {   'id': 'Google.Antigravity',
+                                                   'url': 'https://antigravity.google/download',
+                                                   'note': {   'el': 'Η '
+                                                                     'agent-first '
+                                                                     'πλατφόρμα '
+                                                                     'ανάπτυξης '
+                                                                     'της '
+                                                                     'Google '
+                                                                     'για AI '
+                                                                     'coding.',
+                                                               'en': "Google's "
+                                                                     'agent-first '
+                                                                     'development '
+                                                                     'platform '
+                                                                     'for AI '
+                                                                     'coding.'}}},
+    'Productivity': {   'PowerToys': {   'id': 'Microsoft.PowerToys',
+                                         'url': 'https://aka.ms/powertoys',
+                                         'note': {   'el': 'Χρήσιμα utilities '
+                                                           'για Windows power '
+                                                           'users.',
+                                                     'en': 'Useful utilities '
+                                                           'for Windows power '
+                                                           'users.'}},
+                        'Fira Code Font': {   'id': 'SoftwareDesign.FiraCode',
+                                              'url': 'https://github.com/tonsky/FiraCode',
+                                              'note': {   'el': 'Γραμματοσειρά '
+                                                                'με '
+                                                                'προγραμματιστικά '
+                                                                'ligatures.',
+                                                          'en': 'Font with '
+                                                                'programming '
+                                                                'ligatures.'}},
+                        'Notion': {   'id': 'Notion.Notion',
+                                      'url': 'https://www.notion.so/',
+                                      'note': {   'el': 'Πλατφόρμα οργάνωσης '
+                                                        'σημειώσεων και tasks.',
+                                                  'en': 'Platform for '
+                                                        'organizing notes and '
+                                                        'tasks.'}},
+                        'Obsidian': {   'id': 'Obsidian.Obsidian',
+                                        'url': 'https://obsidian.md/',
+                                        'note': {   'el': 'Εργαλείο '
+                                                          'διαχείρισης γνώσης '
+                                                          'με Markdown.',
+                                                    'en': 'Knowledge '
+                                                          'management tool '
+                                                          'using Markdown.'}},
+                        'Flameshot': {   'id': 'Flameshot.Flameshot',
+                                         'url': 'https://flameshot.org/',
+                                         'note': {   'el': 'Ευέλικτο εργαλείο '
+                                                           'για screenshots.',
+                                                     'en': 'Flexible tool for '
+                                                           'screenshots.'}},
+                        'Greenshot': {   'id': 'Greenshot.Greenshot',
+                                         'url': 'https://getgreenshot.org/',
+                                         'note': {   'el': 'Ελαφρύ και ισχυρό '
+                                                           'εργαλείο για λήψη '
+                                                           'και επεξεργασία '
+                                                           'screenshots.',
+                                                     'en': 'Lightweight and '
+                                                           'powerful tool for '
+                                                           'capturing and '
+                                                           'editing '
+                                                           'screenshots.'}}},
+    'Remote': {   'AnyDesk': {   'id': 'AnyDeskSoftwareGmbH.AnyDesk',
+                                 'url': 'https://anydesk.com/',
+                                 'note': {   'el': 'Εφαρμογή απομακρυσμένης '
+                                                   'επιφάνειας εργασίας.',
+                                             'en': 'Remote desktop '
+                                                   'application.'}},
+                  'RealVNC Viewer': {   'id': 'RealVNC.VNCViewer',
+                                        'url': 'https://www.realvnc.com/',
+                                        'note': {   'el': 'Viewer για '
+                                                          'συνδέσεις VNC.',
+                                                    'en': 'Viewer for VNC '
+                                                          'connections.'}},
+                  'RustDesk': {   'id': 'RustDesk.RustDesk',
+                                  'url': 'https://rustdesk.com/',
+                                  'note': {   'el': 'Open source εναλλακτική '
+                                                    'του AnyDesk/TeamViewer.',
+                                              'en': 'Open source alternative '
+                                                    'to AnyDesk/TeamViewer.'}},
+                  'TeamViewer': {   'id': 'TeamViewer.TeamViewer',
+                                    'url': 'https://www.teamviewer.com/',
+                                    'note': {   'el': 'Επαγγελματική '
+                                                      'απομακρυσμένη πρόσβαση '
+                                                      'και υποστήριξη.',
+                                                'en': 'Professional remote '
+                                                      'access and support.'}}},
+    'Design & Media': {   'Figma': {   'id': 'Figma.Figma',
+                                       'url': 'https://www.figma.com/',
+                                       'note': {   'el': 'Εργαλείο design για '
+                                                         'UI/UX επαγγελματίες.',
+                                                   'en': 'Design tool for '
+                                                         'UI/UX '
+                                                         'professionals.'}},
+                          'DaVinci Resolve': {   'id': 'BlackmagicDesign.DaVinciResolve',
+                                                 'url': 'https://www.blackmagicdesign.com/',
+                                                 'note': {   'el': 'Κορυφαίο '
+                                                                   'πρόγραμμα '
+                                                                   'video '
+                                                                   'editing & '
+                                                                   'color '
+                                                                   'grading.',
+                                                             'en': 'Industry-leading '
+                                                                   'video '
+                                                                   'editing & '
+                                                                   'color '
+                                                                   'grading '
+                                                                   'program.'}},
+                          'OBS Studio': {   'id': 'OBSProject.OBSStudio',
+                                            'url': 'https://obsproject.com/',
+                                            'note': {   'el': 'Λογισμικό για '
+                                                              'live streaming '
+                                                              'και εγγραφή '
+                                                              'οθόνης.',
+                                                        'en': 'Software for '
+                                                              'live streaming '
+                                                              'and screen '
+                                                              'recording.'}},
+                          'Adobe Cloud': {   'id': 'Adobe.CreativeCloud',
+                                             'url': 'https://www.adobe.com/',
+                                             'note': {   'el': 'Πρόσβαση στις '
+                                                               'εφαρμογές της '
+                                                               'Adobe '
+                                                               '(Photoshop, '
+                                                               'κλπ).',
+                                                         'en': 'Access to '
+                                                               'Adobe '
+                                                               'applications '
+                                                               '(Photoshop, '
+                                                               'etc.).'}}},
+    'C & Systems Dev': {   'CMake': {   'id': 'Kitware.CMake',
+                                        'url': 'https://cmake.org/',
+                                        'note': {   'el': 'Standard εργαλείο '
+                                                          'build automation '
+                                                          'για C/C++.',
+                                                    'en': 'Standard build '
+                                                          'automation tool for '
+                                                          'C/C++.'}},
+                           'Ninja': {   'id': 'ninja-build.ninja',
+                                        'url': 'https://ninja-build.org/',
+                                        'note': {   'el': 'Ταχύτατο build '
+                                                          'system με έμφαση '
+                                                          'στην ταχύτητα.',
+                                                    'en': 'Blazing fast build '
+                                                          'system focusing on '
+                                                          'speed.'}},
+                           'LLVM / Clang': {   'id': 'LLVM.LLVM',
+                                               'url': 'https://llvm.org/',
+                                               'note': {   'el': 'Σύγχρονο '
+                                                                 'compiler '
+                                                                 'infrastructure.',
+                                                           'en': 'Modern '
+                                                                 'compiler '
+                                                                 'infrastructure.'}},
+                           'Make (GnuWin32)': {   'id': 'GnuWin32.Make',
+                                                  'url': 'http://gnuwin32.sourceforge.net/',
+                                                  'note': {   'el': 'Το '
+                                                                    'κλασικό '
+                                                                    'εργαλείο '
+                                                                    'Make για '
+                                                                    'Windows.',
+                                                              'en': 'The '
+                                                                    'classic '
+                                                                    'Make tool '
+                                                                    'for '
+                                                                    'Windows.'}}},
+    'API & Testing': {   'Postman': {   'id': 'Postman.Postman',
+                                        'url': 'https://www.postman.com/',
+                                        'note': {   'el': 'Η κορυφαία '
+                                                          'πλατφόρμα για '
+                                                          'ανάπτυξη και δοκιμή '
+                                                          'APIs.',
+                                                    'en': 'The leading '
+                                                          'platform for API '
+                                                          'development and '
+                                                          'testing.'}},
+                         'Bruno': {   'id': 'Bruno.Bruno',
+                                      'url': 'https://www.usebruno.com/',
+                                      'note': {   'el': 'Open-source, '
+                                                        'local-first API '
+                                                        'client (ελαφρύς).',
+                                                  'en': 'Open-source, '
+                                                        'local-first API '
+                                                        'client '
+                                                        '(lightweight).'}},
+                         'Insomnia': {   'id': 'Insomnia.Insomnia',
+                                         'url': 'https://insomnia.rest/',
+                                         'note': {   'el': 'Σχεδιασμός και '
+                                                           'δοκιμή REST, '
+                                                           'GraphQL, gRPC '
+                                                           'APIs.',
+                                                     'en': 'Design and test '
+                                                           'REST, GraphQL, '
+                                                           'gRPC APIs.'}}},
+    'Security & Networking': {   'Wireshark': {   'id': 'WiresharkFoundation.Wireshark',
+                                                  'url': 'https://www.wireshark.org/',
+                                                  'note': {   'el': 'Αναλυτής '
+                                                                    'πακέτων '
+                                                                    'δικτύου '
+                                                                    '(packet '
+                                                                    'sniffer).',
+                                                              'en': 'Network '
+                                                                    'packet '
+                                                                    'analyzer '
+                                                                    '(packet '
+                                                                    'sniffer).'}},
+                                 'Nmap': {   'id': 'Insecure.Nmap',
+                                             'url': 'https://nmap.org/',
+                                             'note': {   'el': 'Εργαλείο '
+                                                               'ανακάλυψης '
+                                                               'δικτύου και '
+                                                               'ελέγχου '
+                                                               'ασφαλείας.',
+                                                         'en': 'Network '
+                                                               'discovery and '
+                                                               'security '
+                                                               'auditing '
+                                                               'tool.'}},
+                                 'Burp Suite Community': {   'id': 'manual',
+                                                             'url': 'https://portswigger.net/burp/communitydownload',
+                                                             'note': {   'el': 'Manual '
+                                                                               'λήψη: '
+                                                                               'Εργαλείο '
+                                                                               'ελέγχου '
+                                                                               'ασφαλείας '
+                                                                               'web '
+                                                                               'εφαρμογών.',
+                                                                         'en': 'Manual '
+                                                                               'download: '
+                                                                               'Web '
+                                                                               'application '
+                                                                               'security '
+                                                                               'testing '
+                                                                               'tool.'}}},
+    'Cloud & DevOps': {   'Kubectl': {   'id': 'Kubernetes.kubectl',
+                                         'url': 'https://kubernetes.io/docs/tasks/tools/',
+                                         'note': {   'el': 'CLI για την '
+                                                           'διαχείριση '
+                                                           'clusters '
+                                                           'Kubernetes.',
+                                                     'en': 'CLI for managing '
+                                                           'Kubernetes '
+                                                           'clusters.'}},
+                          'Terraform': {   'id': 'Hashicorp.Terraform',
+                                           'url': 'https://www.terraform.io/',
+                                           'note': {   'el': 'Infrastructure '
+                                                             'as Code (IaC) '
+                                                             'από την '
+                                                             'HashiCorp.',
+                                                       'en': 'Infrastructure '
+                                                             'as Code (IaC) by '
+                                                             'HashiCorp.'}},
+                          'Azure CLI': {   'id': 'Microsoft.AzureCLI',
+                                           'url': 'https://docs.microsoft.com/en-us/cli/azure/install-azure-cli',
+                                           'note': {   'el': 'Εργαλείο γραμμής '
+                                                             'εντολών για το '
+                                                             'Microsoft Azure.',
+                                                       'en': 'Command line '
+                                                             'tool for '
+                                                             'Microsoft '
+                                                             'Azure.'}},
+                          'Minikube': {   'id': 'Kubernetes.minikube',
+                                          'url': 'https://minikube.sigs.k8s.io/',
+                                          'type': 'winget',
+                                          'requirements': {   'min_ram_gb': 6,
+                                                              'min_disk_gb': 20},
+                                          'note': {   'el': 'Τοπικό Kubernetes '
+                                                            'cluster για '
+                                                            'δοκιμές.',
+                                                      'en': 'Local Kubernetes '
+                                                            'cluster for '
+                                                            'testing.'}},
+                          'Helm CLI': {   'id': 'Helm.Helm',
+                                          'url': 'https://helm.sh/',
+                                          'type': 'winget',
+                                          'note': {   'el': 'Ο package manager '
+                                                            'για το '
+                                                            'Kubernetes.',
+                                                      'en': 'The package '
+                                                            'manager for '
+                                                            'Kubernetes.'}},
+                          'AWS CLI': {   'id': 'Amazon.AWSCLI',
+                                         'url': 'https://aws.amazon.com/cli/',
+                                         'type': 'winget',
+                                         'note': {   'el': 'Εργαλείο γραμμής '
+                                                           'εντολών για το '
+                                                           'Amazon Web '
+                                                           'Services.',
+                                                     'en': 'Command line tool '
+                                                           'for Amazon Web '
+                                                           'Services.'}}}}
+
+
+
+
 
 STACKS = {
     "Fresh Windows Kit": [
@@ -1190,7 +1611,23 @@ class TranslationManager:
             "C & Systems Dev": "C & Systems Dev",
             "API & Testing": "API & Testing",
             "Security & Networking": "Ασφάλεια & Δίκτυα",
-            "Cloud & DevOps": "Cloud & DevOps"
+            "Cloud & DevOps": "Cloud & DevOps",
+            "nav_skills": "AI Agent Skills",
+            "warning_requirements_title": "Προειδοποίηση Απαιτήσεων",
+            "warning_requirements_msg": "Το σύστημά σας δεν πληροί τις ελάχιστες απαιτήσεις για το εργαλείο {name}.\n\nΑπαιτήσεις:\n{reasons}\n\nΕίστε σίγουροι ότι θέλετε να το επιλέξετε;",
+            "skills_title": "Διαχείριση AI Skills & Prompts",
+            "skills_repo_label": "GitHub Repository URL:",
+            "skills_btn_download": "Λήψη / Συγχρονισμός",
+            "skills_destination": "Προορισμός Εξαγωγής (Project):",
+            "skills_btn_export": "Εξαγωγή στο Project",
+            "skills_global_path": "Global Φάκελος: {path}",
+            "skills_status_prefix": "Κατάσταση: {status}",
+            "diag_title": "AI Διάγνωση Σφάλματος",
+            "diag_btn_search": "Αναζήτηση Λύσης στο Web",
+            "diag_btn_ollama": "Ανάλυση με Τοπικό AI (Ollama)",
+            "diag_exec_fix": "Εκτέλεση Διόρθωσης",
+            "diag_expl_label": "Εξήγηση Σφάλματος:",
+            "diag_cmd_label": "Προτεινόμενη Εντολή:"
         },
         "en": {
             "menu_header": "NAVIGATION MENU",
@@ -1274,7 +1711,23 @@ class TranslationManager:
             "C & Systems Dev": "C & Systems Dev",
             "API & Testing": "API & Testing",
             "Security & Networking": "Security & Networking",
-            "Cloud & DevOps": "Cloud & DevOps"
+            "Cloud & DevOps": "Cloud & DevOps",
+            "nav_skills": "AI Agent Skills",
+            "warning_requirements_title": "Requirements Warning",
+            "warning_requirements_msg": "Your system does not meet the minimum requirements for {name}.\n\nRequirements:\n{reasons}\n\nAre you sure you want to select it?",
+            "skills_title": "AI Agent Skills & Prompts",
+            "skills_repo_label": "GitHub Repository URL:",
+            "skills_btn_download": "Download / Sync",
+            "skills_destination": "Export Destination (Project):",
+            "skills_btn_export": "Export to Project",
+            "skills_global_path": "Global Directory: {path}",
+            "skills_status_prefix": "Status: {status}",
+            "diag_title": "AI Error Diagnosis",
+            "diag_btn_search": "Search Solution on Web",
+            "diag_btn_ollama": "Analyze with Local AI (Ollama)",
+            "diag_exec_fix": "Execute Fix",
+            "diag_expl_label": "Error Explanation:",
+            "diag_cmd_label": "Proposed Command:"
         }
     }
 
@@ -1936,6 +2389,36 @@ class ScrollableFrame(tk.Frame):
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
 
+class Tooltip:
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tip_window = None
+        widget.bind("<Enter>", self.show_tip)
+        widget.bind("<Leave>", self.hide_tip)
+
+    def show_tip(self, event=None):
+        if self.tip_window or not self.text:
+            return
+        x = self.widget.winfo_rootx() + 25
+        y = self.widget.winfo_rooty() + 20
+        self.tip_window = tw = tk.Toplevel(self.widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(tw, text=self.text, justify="left",
+                         background="#ffffe0" if ThemeManager.get_current_theme() != "dark" else "#2c2c2c",
+                         foreground="#000000" if ThemeManager.get_current_theme() != "dark" else "#ffffff",
+                         relief="solid", borderwidth=1,
+                         font=("Segoe UI", 9, "normal"))
+        label.pack(ipadx=5, ipady=3)
+
+    def hide_tip(self, event=None):
+        tw = self.tip_window
+        self.tip_window = None
+        if tw:
+            tw.destroy()
+
+
 class ToolCard(tk.Frame):
     def __init__(self, parent, name, details, on_toggle, on_link, on_retry=None, **kwargs):
         super().__init__(parent, bg=COLORS["card_bg"], relief="flat", bd=0, **kwargs)
@@ -1948,6 +2431,8 @@ class ToolCard(tk.Frame):
         self._selected = False
         self._status = "PENDING"
         self.visible = True
+        self.warn_label = None
+        self.missing_reasons = []
 
         self.config(highlightbackground=COLORS["border"], highlightthickness=1, bd=0)
 
@@ -1982,7 +2467,7 @@ class ToolCard(tk.Frame):
             bd=0,
             padx=4,
         )
-        self.link_btn.grid(row=0, column=1, sticky="e")
+        self.link_btn.grid(row=0, column=2, sticky="e")
 
         # Middle Section: ID and Note
         self.id_label = tk.Label(
@@ -2070,8 +2555,37 @@ class ToolCard(tk.Frame):
     def get_status(self) -> str:
         return self._status
 
+    def show_warning(self, reasons: List[str]):
+        self.missing_reasons = reasons
+        if not self.warn_label:
+            self.warn_label = tk.Label(
+                self.header_frame,
+                text="⚠️",
+                bg=self.cget("bg"),
+                fg="orange",
+                font=("Segoe UI", 12),
+                cursor="hand2"
+            )
+            self.warn_label.grid(row=0, column=1, sticky="e", padx=(0, 5))
+            
+            reasons_str = "\n".join(reasons)
+            Tooltip(self.warn_label, f"{_('warning_requirements_title')}:\n{reasons_str}")
+
     def _on_check(self):
-        self._selected = self.toggle.get()
+        checked = self.toggle.get()
+        if checked and self.missing_reasons:
+            from tkinter import messagebox
+            reasons_str = "\n".join([f"- {r}" for r in self.missing_reasons])
+            msg = _("warning_requirements_msg", name=self.name, reasons=reasons_str)
+            title = _("warning_requirements_title")
+            ans = messagebox.askyesno(title, msg, parent=self)
+            if not ans:
+                self.toggle.set(False)
+                self._selected = False
+                self._update_style()
+                return
+        
+        self._selected = checked
         self.on_toggle(self)
 
     def _on_enter(self, event):
@@ -2098,6 +2612,8 @@ class ToolCard(tk.Frame):
         self.header_frame.config(bg=bg)
         self.name_label.config(bg=bg)
         self.link_btn.config(bg=bg)
+        if self.warn_label:
+            self.warn_label.config(bg=bg)
         self.id_label.config(bg=bg)
         if hasattr(self, "note_label"):
             self.note_label.config(bg=bg)
@@ -2403,6 +2919,217 @@ class BackupRestorePanel(tk.Frame):
         self.restore_btn._draw()
 
 
+class SkillsPanel(tk.Frame):
+    def __init__(self, parent, app_instance, **kwargs):
+        super().__init__(parent, bg=COLORS["bg"], **kwargs)
+        self.app = app_instance
+        self.selected_file_path = ""
+
+        # Header Title
+        self.header_label = tk.Label(
+            self,
+            text=_("skills_title"),
+            bg=COLORS["bg"],
+            fg="white" if ThemeManager.get_current_theme() == "dark" else "black",
+            font=FONTS["title"]
+        )
+        self.header_label.pack(anchor="w", padx=25, pady=(30, 20))
+
+        # Main Layout Frame
+        self.main_container = tk.Frame(self, bg=COLORS["bg"])
+        self.main_container.pack(fill="both", expand=True, padx=25, pady=10)
+        self.main_container.columnconfigure(0, weight=1, minsize=400)
+        self.main_container.columnconfigure(1, weight=1, minsize=400)
+        self.main_container.rowconfigure(0, weight=1)
+
+        # Left Column: Downloader Card
+        self.left_card = tk.Frame(self.main_container, bg=COLORS["card_bg"], highlightbackground=COLORS["border"], highlightthickness=1, bd=0)
+        self.left_card.grid(row=0, column=0, sticky="nsew", padx=15, pady=15)
+        self.left_card.columnconfigure(0, weight=1)
+
+        tk.Label(self.left_card, text=_("skills_repo_label"), bg=COLORS["card_bg"], fg=COLORS["text"], font=FONTS["header"]).pack(anchor="w", padx=20, pady=(20, 10))
+
+        # Curated repo dropdown
+        self.curated_repo_var = tk.StringVar()
+        curated_repos = [repo["url"] for repo in SkillsManager.DEFAULT_REPOS]
+        self.repo_dropdown = ttk.Combobox(self.left_card, textvariable=self.curated_repo_var, values=curated_repos, width=45, style="TCombobox")
+        self.repo_dropdown.pack(anchor="w", padx=20, pady=(0, 10))
+        if curated_repos:
+            self.repo_dropdown.set(curated_repos[0])
+
+        # Status & Path Labels
+        self.global_path_label = tk.Label(self.left_card, text=_("skills_global_path", path=SkillsManager.get_global_dir()), bg=COLORS["card_bg"], fg=COLORS["text_dim"], font=FONTS["small"])
+        self.global_path_label.pack(anchor="w", padx=20, pady=(0, 10))
+
+        self.status_var = tk.StringVar(value=_("skills_status_prefix", status=_("status_ready")))
+        self.status_lbl = tk.Label(self.left_card, textvariable=self.status_var, bg=COLORS["card_bg"], fg=COLORS["accent"], font=FONTS["body"])
+        self.status_lbl.pack(anchor="w", padx=20, pady=(0, 20))
+
+        self.download_btn = StyledButton(
+            self.left_card,
+            text=_("skills_btn_download"),
+            command=self.start_download,
+            primary=True,
+            width=180,
+            height=36
+        )
+        self.download_btn.pack(anchor="w", padx=20, pady=(0, 20))
+
+        # Right Column: Local Repos & Export Card
+        self.right_card = tk.Frame(self.main_container, bg=COLORS["card_bg"], highlightbackground=COLORS["border"], highlightthickness=1, bd=0)
+        self.right_card.grid(row=0, column=1, sticky="nsew", padx=15, pady=15)
+        self.right_card.columnconfigure(0, weight=1)
+
+        tk.Label(self.right_card, text=_("skills_destination"), bg=COLORS["card_bg"], fg=COLORS["text"], font=FONTS["header"]).pack(anchor="w", padx=20, pady=(20, 10))
+
+        # Destination input & Browse Button
+        self.dest_frame = tk.Frame(self.right_card, bg=COLORS["card_bg"])
+        self.dest_frame.pack(fill="x", padx=20, pady=(0, 15))
+        self.dest_frame.columnconfigure(0, weight=1)
+
+        self.dest_var = tk.StringVar()
+        self.dest_entry = tk.Entry(self.dest_frame, textvariable=self.dest_var, bg=COLORS["bg"], fg=COLORS["text"], font=FONTS["body"], relief="flat", highlightbackground=COLORS["border"], highlightthickness=1)
+        self.dest_entry.grid(row=0, column=0, sticky="ew", ipady=4)
+
+        self.browse_btn = StyledButton(
+            self.dest_frame,
+            text="...",
+            command=self.browse_dest,
+            width=40,
+            height=28
+        )
+        self.browse_btn.grid(row=0, column=1, padx=(10, 0), sticky="e")
+
+        # Local Skills tree / file list
+        tk.Label(self.right_card, text="Τοπικά Αρχεία Prompts/Rules:", bg=COLORS["card_bg"], fg=COLORS["text_dim"], font=FONTS["small"]).pack(anchor="w", padx=20, pady=(0, 5))
+
+        self.files_listbox = tk.Listbox(
+            self.right_card,
+            bg=COLORS["bg"],
+            fg=COLORS["text"],
+            selectbackground=COLORS["accent"],
+            selectforeground="white",
+            relief="flat",
+            font=FONTS["small"],
+            height=6,
+            highlightbackground=COLORS["border"],
+            highlightthickness=1
+        )
+        self.files_listbox.pack(fill="both", expand=True, padx=20, pady=(0, 15))
+        self.files_listbox.bind("<<ListboxSelect>>", self.on_file_select)
+
+        self.export_btn = StyledButton(
+            self.right_card,
+            text=_("skills_btn_export"),
+            command=self.export_skill,
+            primary=True,
+            width=180,
+            height=36
+        )
+        self.export_btn.pack(anchor="w", padx=20, pady=(0, 20))
+
+        self.refresh_local_files()
+
+    def start_download(self):
+        url = self.curated_repo_var.get().strip()
+        if not url:
+            return
+        
+        self.status_var.set(_("skills_status_prefix", status="Downloading..."))
+        
+        def run():
+            repo_name = url.split("/")[-1].replace(".git", "")
+            success, msg = SkillsManager.download_repo(url, repo_name)
+            def done():
+                self.status_var.set(_("skills_status_prefix", status=msg))
+                self.refresh_local_files()
+            self.after(0, done)
+            
+        threading.Thread(target=run, daemon=True).start()
+
+    def browse_dest(self):
+        from tkinter import filedialog
+        path = filedialog.askdirectory(title="Επιλογή φακέλου Project")
+        if path:
+            self.dest_var.set(path)
+
+    def refresh_local_files(self):
+        self.files_listbox.delete(0, tk.END)
+        self.local_files_map = {}
+        
+        local_repos = SkillsManager.list_local_skills()
+        for repo in local_repos:
+            repo_path = repo["full_path"]
+            repo_folder = repo["folder_name"]
+            
+            for root, dirs, files in os.walk(repo_path):
+                if ".git" in root:
+                    continue
+                for f in files:
+                    if f.endswith("rules") or f.endswith(".cursorrules") or f.endswith(".windsurfrules") or f.endswith(".md") or "prompt" in f.lower():
+                        rel_path = os.path.relpath(os.path.join(root, f), SkillsManager.get_global_dir())
+                        display_name = f"{repo_folder} -> {os.path.basename(f)}"
+                        self.files_listbox.insert(tk.END, display_name)
+                        self.local_files_map[display_name] = os.path.join(root, f)
+
+    def on_file_select(self, event):
+        selection = self.files_listbox.curselection()
+        if selection:
+            display_name = self.files_listbox.get(selection[0])
+            self.selected_file_path = self.local_files_map.get(display_name, "")
+
+    def export_skill(self):
+        if not self.selected_file_path:
+            from tkinter import messagebox
+            messagebox.showwarning("Προειδοποίηση", "Παρακαλώ επιλέξτε ένα αρχείο από τη λίστα.")
+            return
+            
+        dest = self.dest_var.get().strip()
+        if not dest or not os.path.exists(dest):
+            from tkinter import messagebox
+            messagebox.showwarning("Προειδοποίηση", "Παρακαλώ επιλέξτε έναν έγκυρο φάκελο project.")
+            return
+            
+        file_name = os.path.basename(self.selected_file_path)
+        if "cursorrules" in file_name.lower():
+            file_name = ".cursorrules"
+        elif "windsurfrules" in file_name.lower():
+            file_name = ".windsurfrules"
+            
+        success, msg = SkillsManager.export_skill_to_project(self.selected_file_path, dest, file_name)
+        from tkinter import messagebox
+        if success:
+            messagebox.showinfo("Επιτυχία", msg)
+        else:
+            messagebox.showerror("Σφάλμα", msg)
+
+    def update_theme(self):
+        self.config(bg=COLORS["bg"])
+        self.header_label.config(bg=COLORS["bg"], fg="white" if ThemeManager.get_current_theme() == "dark" else "black")
+        self.left_card.config(bg=COLORS["card_bg"], highlightbackground=COLORS["border"])
+        self.right_card.config(bg=COLORS["card_bg"], highlightbackground=COLORS["border"])
+        self.global_path_label.config(bg=COLORS["card_bg"], fg=COLORS["text_dim"])
+        self.status_lbl.config(bg=COLORS["card_bg"])
+        self.dest_frame.config(bg=COLORS["card_bg"])
+        self.dest_entry.config(bg=COLORS["bg"], fg=COLORS["text"], highlightbackground=COLORS["border"])
+        self.files_listbox.config(bg=COLORS["bg"], fg=COLORS["text"], highlightbackground=COLORS["border"])
+        self.download_btn.config(bg=COLORS["card_bg"])
+        self.download_btn._draw()
+        self.browse_btn.config(bg=COLORS["card_bg"])
+        self.browse_btn._draw()
+        self.export_btn.config(bg=COLORS["card_bg"])
+        self.export_btn._draw()
+
+    def update_language(self):
+        self.header_label.config(text=_("skills_title"))
+        self.global_path_label.config(text=_("skills_global_path", path=SkillsManager.get_global_dir()))
+        self.status_var.set(_("skills_status_prefix", status=_("status_ready")))
+        self.download_btn.text = _("skills_btn_download")
+        self.download_btn._draw()
+        self.export_btn.text = _("skills_btn_export")
+        self.export_btn._draw()
+
+
 class ModernInstaller(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -2417,10 +3144,39 @@ class ModernInstaller(tk.Tk):
         self._search_after_id: Optional[str] = None
         self._resize_after_id: Optional[str] = None
 
+        self.system_specs = {
+            "ram_gb": 0.0,
+            "free_disk_gb": 0.0,
+            "has_gpu": False,
+            "gpu_name": ""
+        }
+        self._detect_system_specs()
+
         self._setup_styles()
         self._init_ui()
         self._process_queue()
         self.after(500, self.check_installed_tools)
+
+    def _detect_system_specs(self):
+        def detect():
+            specs = SystemSpecChecker.get_system_specs()
+            # Έλεγχος αν το παράθυρο της εφαρμογής είναι ακόμα ενεργό και δεν έχει κλείσει (π.χ. κατά τα unit tests).
+            # Αυτό αποτρέπει σφάλματα τύπου 'main thread is not in main loop' όταν καλείται η self.after().
+            try:
+                if self.winfo_exists():
+                    self.system_specs.update(specs)
+                    self.after(100, self._refresh_requirements_on_cards)
+            except (tk.TclError, RuntimeError, Exception):
+                pass
+        threading.Thread(target=detect, daemon=True).start()
+
+    def _refresh_requirements_on_cards(self):
+        for card in self.cards:
+            requirements = card.details.get("requirements")
+            if requirements:
+                is_ok, reasons = SystemSpecChecker.check_requirements(requirements, self.system_specs)
+                if not is_ok:
+                    card.show_warning(reasons)
 
     def _setup_styles(self):
         style = ttk.Style()
@@ -2548,6 +3304,7 @@ class ModernInstaller(tk.Tk):
 
         self.stacks_panel = StacksPanel(self.content, self)
         self.backup_restore_panel = BackupRestorePanel(self.content, self)
+        self.skills_panel = SkillsPanel(self.content, self)
 
         self.console_expanded = False
         self.console_container = tk.Frame(self.content, bg=COLORS["bg"])
@@ -2599,6 +3356,7 @@ class ModernInstaller(tk.Tk):
         self.install_panel.grid_forget()
         self.stacks_panel.grid_forget()
         self.backup_restore_panel.grid_forget()
+        self.skills_panel.grid_forget()
 
         for k, btn in self.nav_buttons.items():
             btn.set_active(k == name)
@@ -2610,6 +3368,8 @@ class ModernInstaller(tk.Tk):
             self.stacks_panel._reposition_cards()
         elif name == "backup_restore":
             self.backup_restore_panel.grid(row=0, column=0, sticky="nsew")
+        elif name == "skills":
+            self.skills_panel.grid(row=0, column=0, sticky="nsew")
 
     def _build_sidebar(self, sidebar: tk.Frame):
         sidebar.columnconfigure(0, weight = 1)
@@ -2667,7 +3427,8 @@ class ModernInstaller(tk.Tk):
         nav_items = [
             ("install", _("nav_install")),
             ("stacks", _("nav_stacks")),
-            ("backup_restore", _("nav_backup_restore"))
+            ("backup_restore", _("nav_backup_restore")),
+            ("skills", _("nav_skills"))
         ]
         
         for i, (key, label) in enumerate(nav_items):
@@ -2955,6 +3716,7 @@ class ModernInstaller(tk.Tk):
 
         self.stacks_panel.update_language()
         self.backup_restore_panel.update_language()
+        self.skills_panel.update_language()
 
     def _toggle_theme(self):
         current = ThemeManager.get_current_theme()
@@ -3055,6 +3817,7 @@ class ModernInstaller(tk.Tk):
 
         self.stacks_panel.update_theme()
         self.backup_restore_panel.update_theme()
+        self.skills_panel.update_theme()
 
     def _on_card_toggle(self, card: ToolCard):
         pass
@@ -3204,11 +3967,31 @@ class ModernInstaller(tk.Tk):
 
             self.after(0, lambda: self.update_progress(i, total))
 
-            if name == "WSL":
+            # Εύρεση του τρόπου εγκατάστασης από το TOOLS_REGISTRY
+            tool_details = None
+            for category, category_tools in TOOLS_REGISTRY.items():
+                if name in category_tools:
+                    tool_details = category_tools[name]
+                    break
+
+            install_type = "winget"
+            install_cmd = ""
+            if tool_details:
+                install_type = tool_details.get("type", "winget")
+                install_cmd = tool_details.get("install_command", "")
+
+            if install_type == "powershell" and install_cmd:
+                cmd = install_cmd
+            elif install_type == "npm":
+                cmd = f"npm install -g {winget_id}"
+            elif install_type == "gh_extension":
+                cmd = f"gh extension install {winget_id}"
+            elif name == "WSL":
                 cmd = "wsl --install"
             else:
                 cmd = f"winget install --id {winget_id} --silent --accept-package-agreements --accept-source-agreements"
 
+            error_lines = []
             try:
                 process = subprocess.Popen(
                     ["powershell.exe", "-Command", cmd],
@@ -3228,6 +4011,7 @@ class ModernInstaller(tk.Tk):
                                     "tag": "info",
                                 }
                             )
+                            error_lines.append(line.strip())
 
                 process.wait()
 
@@ -3251,6 +4035,10 @@ class ModernInstaller(tk.Tk):
                     )
                     if card:
                         card.set_status("ERROR")
+                    
+                    # Άνοιγμα του AI Diagnostic Dialog
+                    error_log_str = "\n".join(error_lines) if error_lines else f"PowerShell returned non-zero exit code: {process.returncode}"
+                    self.after(0, lambda n=name, l=error_log_str: self.show_ai_diagnostic_dialog(n, l))
 
             except Exception as e:
                 self.install_queue.put(
@@ -3260,6 +4048,7 @@ class ModernInstaller(tk.Tk):
                         "tag": "error",
                     }
                 )
+                self.after(0, lambda n=name, err=str(e): self.show_ai_diagnostic_dialog(n, f"Exception: {err}"))
 
         self.install_queue.put(
             {
@@ -3269,6 +4058,10 @@ class ModernInstaller(tk.Tk):
             }
         )
         self.install_queue.put({"type": "finished"})
+
+    def show_ai_diagnostic_dialog(self, name: str, error_log: str):
+        dialog = AIDiagnosticDialog(self, name, error_log)
+
 
     def _on_install_finished(self):
         self.is_installing = False
@@ -3607,6 +4400,202 @@ class ModernInstaller(tk.Tk):
             percentage = (current / total) * 100
             self.progress_bar["value"] = percentage
             self.update_idletasks()
+
+class AIDiagnosticDialog(tk.Toplevel):
+    def __init__(self, parent, tool_name: str, error_log: str):
+        super().__init__(parent)
+        self.title(_("diag_title"))
+        self.geometry("700x600")
+        self.resizable(True, True)
+        self.configure(bg=COLORS["bg"])
+        self.transient(parent)
+        self.grab_set()
+
+        self.tool_name = tool_name
+        self.error_log = error_log
+        self.proposed_cmd = ""
+
+        self._build_ui()
+        self.geometry(f"+{parent.winfo_x() + 100}+{parent.winfo_y() + 100}")
+
+    def _build_ui(self):
+        main_frame = tk.Frame(self, bg=COLORS["bg"])
+        main_frame.pack(fill="both", expand=True, padx=20, pady=20)
+
+        # Title
+        tk.Label(
+            main_frame,
+            text=f"{_('diag_title')}: {self.tool_name}",
+            bg=COLORS["bg"],
+            fg=COLORS["text"],
+            font=FONTS["header"],
+        ).pack(anchor="w", pady=(0, 10))
+
+        # Log frame
+        tk.Label(main_frame, text="Log Σφάλματος:", bg=COLORS["bg"], fg=COLORS["text_dim"], font=FONTS["small"]).pack(anchor="w")
+        log_text = tk.Text(main_frame, height=5, bg="#0d0d0d", fg="#ff3333", font=FONTS["mono"], relief="flat", highlightbackground=COLORS["border"], highlightthickness=1)
+        log_text.pack(fill="x", pady=(0, 15))
+        log_text.insert("1.0", self.error_log)
+        log_text.config(state="disabled")
+
+        # Action Buttons frame
+        btn_frame = tk.Frame(main_frame, bg=COLORS["bg"])
+        btn_frame.pack(fill="x", pady=(0, 15))
+
+        self.search_btn = StyledButton(
+            btn_frame,
+            text=_("diag_btn_search"),
+            command=self.run_web_search,
+            primary=True,
+            width=200,
+        )
+        self.search_btn.pack(side="left", padx=(0, 10))
+
+        self.ollama_btn = StyledButton(
+            btn_frame,
+            text=_("diag_btn_ollama"),
+            command=self.run_ollama_diag,
+            primary=False,
+            width=220,
+        )
+        self.ollama_btn.pack(side="left")
+
+        # Results area
+        tk.Label(main_frame, text=_("diag_expl_label"), bg=COLORS["bg"], fg=COLORS["text_dim"], font=FONTS["small"]).pack(anchor="w")
+        
+        self.result_text = tk.Text(
+            main_frame,
+            bg=COLORS["card_bg"],
+            fg=COLORS["text"],
+            font=FONTS["body"],
+            wrap="word",
+            relief="flat",
+            highlightbackground=COLORS["border"],
+            highlightthickness=1
+        )
+        self.result_text.pack(fill="both", expand=True, pady=(0, 15))
+        
+        # Proposed fix CLI area
+        self.fix_frame = tk.Frame(main_frame, bg=COLORS["bg"])
+        self.fix_frame.pack(fill="x", pady=(0, 10))
+        
+        self.cmd_lbl = tk.Label(self.fix_frame, text=_("diag_cmd_label"), bg=COLORS["bg"], fg=COLORS["text_dim"], font=FONTS["small"])
+        self.cmd_var = tk.StringVar()
+        self.cmd_entry = tk.Entry(self.fix_frame, textvariable=self.cmd_var, bg=COLORS["card_bg"], fg=COLORS["accent"], font=FONTS["mono"], state="readonly", relief="flat", highlightbackground=COLORS["border"], highlightthickness=1)
+        
+        self.run_fix_btn = StyledButton(
+            self.fix_frame,
+            text=_("diag_exec_fix"),
+            command=self.execute_proposed_command,
+            primary=True,
+            width=180,
+        )
+
+        # Bottom Close Button
+        close_btn = StyledButton(
+            main_frame,
+            text=_("cancel"),
+            command=self.destroy,
+            width=100,
+        )
+        close_btn.pack(side="right")
+
+    def run_web_search(self):
+        self.result_text.delete("1.0", "end")
+        self.result_text.insert("1.0", "Αναζήτηση στο διαδίκτυο σε εξέλιξη...")
+        self.update_idletasks()
+        
+        query = f"winget install {self.tool_name} error " + self.error_log.replace("\n", " ")[:100]
+        
+        def run():
+            results = AIDiagnosticAgent.search_web(query)
+            
+            def done():
+                self.result_text.delete("1.0", "end")
+                if not results:
+                    self.result_text.insert("1.0", "Δεν βρέθηκαν αποτελέσματα στο διαδίκτυο ή το API Rate Limit μπλόκαρε την αναζήτηση.")
+                    return
+                
+                text_out = "Βρέθηκαν οι εξής πιθανές λύσεις:\n\n"
+                for i, r in enumerate(results, 1):
+                    text_out += f"{i}. {r['title']}\n   Σύνδεσμος: {r['link']}\n   Πληροφορίες: {r['snippet']}\n\n"
+                self.result_text.insert("1.0", text_out)
+                
+            self.after(0, done)
+            
+        threading.Thread(target=run, daemon=True).start()
+
+    def run_ollama_diag(self):
+        if not AIDiagnosticAgent.is_ollama_running():
+            from tkinter import messagebox
+            messagebox.showwarning("Ollama Offline", "Το Ollama δεν εκτελείται τοπικά. Εκκινήστε το Ollama και δοκιμάστε ξανά.")
+            return
+
+        self.result_text.delete("1.0", "end")
+        self.result_text.insert("1.0", "Το τοπικό AI αναλύει τα σφάλματα και τα αποτελέσματα αναζήτησης. Παρακαλώ περιμένετε...")
+        self.update_idletasks()
+
+        query = f"winget install {self.tool_name} error " + self.error_log.replace("\n", " ")[:100]
+        
+        def run():
+            search_results = AIDiagnosticAgent.search_web(query)
+            
+            success, explanation, cmd = AIDiagnosticAgent.diagnose_with_ollama(
+                self.tool_name, 
+                self.error_log, 
+                search_results
+            )
+            
+            def done():
+                self.result_text.delete("1.0", "end")
+                self.result_text.insert("1.0", explanation)
+                
+                if success and cmd:
+                    self.proposed_cmd = cmd
+                    self.cmd_var.set(cmd)
+                    
+                    self.cmd_lbl.pack(anchor="w")
+                    self.cmd_entry.pack(fill="x", pady=(0, 10), ipady=4)
+                    self.run_fix_btn.pack(side="left")
+                else:
+                    self.cmd_lbl.pack_forget()
+                    self.cmd_entry.pack_forget()
+                    self.run_fix_btn.pack_forget()
+                    
+            self.after(0, done)
+            
+        threading.Thread(target=run, daemon=True).start()
+
+    def execute_proposed_command(self):
+        if not self.proposed_cmd:
+            return
+            
+        def run():
+            try:
+                process = subprocess.Popen(
+                    ["powershell.exe", "-Command", self.proposed_cmd],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    creationflags=subprocess.CREATE_NO_WINDOW
+                )
+                output, _ = process.communicate()
+                
+                def done():
+                    from tkinter import messagebox
+                    if process.returncode == 0:
+                        messagebox.showinfo("Επιτυχία", "Η εντολή διόρθωσης εκτελέστηκε με επιτυχία!")
+                    else:
+                        messagebox.showerror("Σφάλμα", f"Η εντολή διόρθωσης απέτυχε με κωδικό {process.returncode}.\n\nΈξοδος:\n{output}")
+                self.after(0, done)
+            except Exception as e:
+                def done_err():
+                    from tkinter import messagebox
+                    messagebox.showerror("Σφάλμα", f"Αποτυχία εκτέλεσης εντολής: {str(e)}")
+                self.after(0, done_err)
+                
+        threading.Thread(target=run, daemon=True).start()
+
 
 class BackupSelectionDialog(tk.Toplevel):
     def __init__(self, parent, backup_paths: Dict[str, str]):

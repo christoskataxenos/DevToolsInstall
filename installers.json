@@ -215,6 +215,42 @@
         "el": "Άμεση αναζήτηση αρχείων στο σύστημα.",
         "en": "Instant file search on the system."
       }
+    },
+    "Sysinternals Suite": {
+      "id": "Microsoft.SysinternalsSuite",
+      "url": "https://learn.microsoft.com/en-us/sysinternals/",
+      "type": "winget",
+      "note": {
+        "el": "Η συλλογή εργαλείων της Microsoft για διαχείριση και debugging.",
+        "en": "Microsoft utility collection for management and debugging."
+      }
+    },
+    "CrystalDiskInfo": {
+      "id": "CrystalDewWorld.CrystalDiskInfo",
+      "url": "https://crystalmark.info/en/software/crystaldiskinfo/",
+      "type": "winget",
+      "note": {
+        "el": "Έλεγχος υγείας και θερμοκρασίας των δίσκων.",
+        "en": "Disk health and temperature monitoring."
+      }
+    },
+    "CPU-Z": {
+      "id": "CPUID.CPU-Z",
+      "url": "https://www.cpuid.com/softwares/cpu-z.html",
+      "type": "winget",
+      "note": {
+        "el": "Λεπτομερείς πληροφορίες για τον επεξεργαστή και τη μνήμη.",
+        "en": "Detailed information about CPU and memory."
+      }
+    },
+    "GPU-Z": {
+      "id": "TechPowerUp.GPU-Z",
+      "url": "https://www.techpowerup.com/gpuz/",
+      "type": "winget",
+      "note": {
+        "el": "Λεπτομερείς πληροφορίες για την κάρτα γραφικών.",
+        "en": "Detailed information about the graphics card."
+      }
     }
   },
   "Privacy & Security": {
@@ -415,6 +451,33 @@
         "el": "Open source διανομή της Java (JDK).",
         "en": "Open source distribution of Java (JDK)."
       }
+    },
+    "pyenv-win": {
+      "id": "pyenv.pyenv",
+      "url": "https://github.com/pyenv-win/pyenv-win",
+      "type": "winget",
+      "note": {
+        "el": "Διαχείριση πολλαπλών εκδόσεων Python στα Windows.",
+        "en": "Manage multiple Python versions on Windows."
+      }
+    },
+    "Miniconda3": {
+      "id": "Anaconda.Miniconda3",
+      "url": "https://docs.conda.io/en/latest/miniconda.html",
+      "type": "winget",
+      "note": {
+        "el": "Διαχειριστής περιβαλλόντων Python για AI και Data Science.",
+        "en": "Python environment manager for AI and Data Science."
+      }
+    },
+    "Java 17 (Temurin)": {
+      "id": "EclipseAdoptium.Temurin.17.JDK",
+      "url": "https://adoptium.net/",
+      "type": "winget",
+      "note": {
+        "el": "Η έκδοση LTS 17 της Java (JDK).",
+        "en": "Java JDK LTS version 17."
+      }
     }
   },
   "Package Managers": {
@@ -440,6 +503,16 @@
       "note": {
         "el": "Αποδοτικός Node package manager με symlinks.",
         "en": "Efficient Node package manager using symlinks."
+      }
+    },
+    "Poetry": {
+      "id": "poetry",
+      "url": "https://python-poetry.org/",
+      "type": "powershell",
+      "install_command": "pipx install poetry",
+      "note": {
+        "el": "Σύγχρονος python package manager και dependency resolver.",
+        "en": "Modern Python package manager and dependency resolver."
       }
     }
   },
@@ -468,6 +541,10 @@
       "note": {
         "el": "Διαχείριση containers για ανάπτυξη εφαρμογών.",
         "en": "Container management for application development."
+      },
+      "requirements": {
+        "min_ram_gb": 8,
+        "min_disk_gb": 20
       }
     },
     "VMware Player": {
@@ -484,6 +561,24 @@
       "note": {
         "el": "Υποσύστημα Linux μέσα στα Windows.",
         "en": "Linux subsystem inside Windows."
+      }
+    },
+    "Ubuntu (WSL)": {
+      "id": "Canonical.Ubuntu",
+      "url": "https://ubuntu.com/wsl",
+      "type": "winget",
+      "note": {
+        "el": "Η επίσημη διανομή Ubuntu Linux για το WSL.",
+        "en": "The official Ubuntu Linux distribution for WSL."
+      }
+    },
+    "LxRunOffline": {
+      "id": "DmitrySokolyuk.LxRunOffline",
+      "url": "https://github.com/DmitrySokolyuk/LxRunOffline",
+      "type": "winget",
+      "note": {
+        "el": "Ένας πανίσχυρος WSL manager για backups και μεταφορές διανομών.",
+        "en": "A powerful WSL manager for backups and distro migrations."
       }
     }
   },
@@ -510,6 +605,47 @@
       "note": {
         "el": "Τοπική εκτέλεση μεγάλων γλωσσικών μοντέλων (LLMs).",
         "en": "Run LLMs locally."
+      },
+      "requirements": {
+        "min_ram_gb": 8,
+        "requires_gpu": true
+      }
+    },
+    "Ollama": {
+      "id": "Ollama.Ollama",
+      "url": "https://ollama.com/",
+      "type": "winget",
+      "requirements": {
+        "min_ram_gb": 8,
+        "min_disk_gb": 10,
+        "requires_gpu": true
+      },
+      "note": {
+        "el": "Τοπική εκτέλεση μεγάλων γλωσσικών μοντέλων (LLMs).",
+        "en": "Run LLMs locally."
+      }
+    },
+    "Open WebUI": {
+      "id": "open-webui",
+      "url": "https://github.com/open-webui/open-webui",
+      "type": "powershell",
+      "install_command": "pip install open-webui",
+      "requirements": {
+        "min_ram_gb": 8
+      },
+      "note": {
+        "el": "ChatGPT-like Web UI για το Ollama.",
+        "en": "ChatGPT-like Web UI for Ollama."
+      }
+    },
+    "Hugging Face CLI": {
+      "id": "huggingface-cli",
+      "url": "https://huggingface.co/docs/huggingface_hub/guides/cli",
+      "type": "powershell",
+      "install_command": "pip install huggingface_hub[cli]",
+      "note": {
+        "el": "Εργαλείο γραμμής εντολών για λήψη μοντέλων και datasets.",
+        "en": "Command line tool for downloading models and datasets."
       }
     }
   },
@@ -912,6 +1048,37 @@
       "note": {
         "el": "Εργαλείο γραμμής εντολών για το Microsoft Azure.",
         "en": "Command line tool for Microsoft Azure."
+      }
+    },
+    "Minikube": {
+      "id": "Kubernetes.minikube",
+      "url": "https://minikube.sigs.k8s.io/",
+      "type": "winget",
+      "requirements": {
+        "min_ram_gb": 6,
+        "min_disk_gb": 20
+      },
+      "note": {
+        "el": "Τοπικό Kubernetes cluster για δοκιμές.",
+        "en": "Local Kubernetes cluster for testing."
+      }
+    },
+    "Helm CLI": {
+      "id": "Helm.Helm",
+      "url": "https://helm.sh/",
+      "type": "winget",
+      "note": {
+        "el": "Ο package manager για το Kubernetes.",
+        "en": "The package manager for Kubernetes."
+      }
+    },
+    "AWS CLI": {
+      "id": "Amazon.AWSCLI",
+      "url": "https://aws.amazon.com/cli/",
+      "type": "winget",
+      "note": {
+        "el": "Εργαλείο γραμμής εντολών για το Amazon Web Services.",
+        "en": "Command line tool for Amazon Web Services."
       }
     }
   }
