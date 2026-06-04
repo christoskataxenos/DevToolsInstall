@@ -23,41 +23,43 @@ class ToolsPanel(ctk.CTkFrame):
         self._build_ui()
 
     def _build_ui(self) -> None:
-        # Search Entry Bar
-        search_frame = ctk.CTkFrame(self, fg_color="transparent")
-        search_frame.pack(fill="x", padx=10, pady=(10, 5))
+        # Combined Top Search & Category Filter Bar
+        top_bar = ctk.CTkFrame(self, fg_color="transparent")
+        top_bar.pack(fill="x", padx=10, pady=(10, 5))
 
+        # Search box taking up expanded space
         self.search_entry = ctk.CTkEntry(
-            search_frame,
+            top_bar,
             placeholder_text=_("search_placeholder"),
             font=FONTS["body"],
             fg_color=COLORS["bg"],
             text_color=COLORS["text"],
             border_width=1,
-            border_color=COLORS["card_border"]
+            border_color=COLORS["card_border"],
+            height=32
         )
-        self.search_entry.pack(fill="x", expand=True)
+        self.search_entry.pack(side="left", fill="x", expand=True, padx=(0, 10))
         self.search_entry.bind("<KeyRelease>", self._on_search_key)
 
-        # Category segmented bar (or scrollable segmented button)
-        category_frame = ctk.CTkFrame(self, fg_color="transparent")
-        category_frame.pack(fill="x", padx=10, pady=5)
-
-        categories = ["All"] + sorted(list(self.registry.keys()))
-        
-        # Segmented buttons look beautiful for category switching
-        self.category_seg = ctk.CTkSegmentedButton(
-            category_frame,
-            values=categories,
-            font=FONTS["small"],
-            fg_color=COLORS["sidebar"],
-            selected_color=COLORS["accent"],
-            unselected_color=COLORS["bg"],
+        # OptionMenu for clean, non-overflowing categories selection
+        raw_categories = ["All"] + sorted(list(self.registry.keys()))
+        localized_categories = [_(c) for c in raw_categories]
+        self.category_option = ctk.CTkOptionMenu(
+            top_bar,
+            values=localized_categories,
+            font=FONTS["body"],
+            fg_color=COLORS["card"],
+            button_color=COLORS["accent"],
+            button_hover_color=COLORS["accent_hover"],
             text_color=COLORS["text"],
+            dropdown_fg_color=COLORS["card"],
+            dropdown_text_color=COLORS["text"],
+            height=32,
+            width=180,
             command=self._on_category_select
         )
-        self.category_seg.pack(fill="x", expand=True)
-        self.category_seg.set("All")
+        self.category_option.pack(side="right")
+        self.category_option.set(_("All"))
 
         # Scrollable Container for Tool Rows
         self.scroll_frame = ctk.CTkScrollableFrame(
@@ -135,9 +137,24 @@ class ToolsPanel(ctk.CTkFrame):
     def _on_row_check_changed(self, is_checked: bool) -> None:
         self.on_selection_changed()
 
-    def _on_category_select(self, category: str) -> None:
-        self.active_category = category
+    def _get_raw_category(self, localized_name: str) -> str:
+        if localized_name == _("All") or localized_name == "All":
+            return "All"
+        for key in self.registry.keys():
+            if _(key) == localized_name:
+                return key
+        return "All"
+
+    def _on_category_select(self, category_localized: str) -> None:
+        self.active_category = self._get_raw_category(category_localized)
         self._filter_rows()
+
+    def update_language(self) -> None:
+        """Updates translated categories values in option menu."""
+        raw_categories = ["All"] + sorted(list(self.registry.keys()))
+        localized_categories = [_(c) for c in raw_categories]
+        self.category_option.configure(values=localized_categories)
+        self.category_option.set(_(self.active_category))
 
     def _on_search_key(self, event) -> None:
         self._filter_rows()
@@ -189,7 +206,7 @@ class ToolsPanel(ctk.CTkFrame):
         self.select_all_btn.configure(state="normal" if enabled else "disabled")
         self.deselect_all_btn.configure(state="normal" if enabled else "disabled")
         self.search_entry.configure(state="normal" if enabled else "disabled")
-        self.category_seg.configure(state="normal" if enabled else "disabled")
+        self.category_option.configure(state="normal" if enabled else "disabled")
         for row in self.tool_rows:
             row.checkbox.configure(state="normal" if enabled else "disabled")
             if not enabled:

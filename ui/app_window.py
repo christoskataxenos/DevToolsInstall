@@ -206,11 +206,11 @@ class AppWindow(ctk.CTk):
             
         # Unhighlight other side navigation items
         for tid, btn in self.nav_buttons.items():
-            btn.configure(fg_color="transparent")
+            btn.configure(fg_color="transparent", text_color=COLORS["text"])
 
         # Display select panel row layout and highlight matching navigation tab
         self.panels[tab_id].pack(fill="both", expand=True)
-        self.nav_buttons[tab_id].configure(fg_color=COLORS["card"])
+        self.nav_buttons[tab_id].configure(fg_color=COLORS["accent"], text_color="#ffffff")
 
     def _load_specs(self) -> None:
         """Pulls system specification check list asynchronously."""
@@ -454,6 +454,7 @@ class AppWindow(ctk.CTk):
         self.panels["install"].select_all_btn.configure(text=_("select_all"))
         self.panels["install"].deselect_all_btn.configure(text=_("deselect_all"))
         self.panels["install"].search_entry.configure(placeholder_text=_("search_placeholder"))
+        self.panels["install"].update_language()
         self.panels["backup"]._build_ui() # Redraw card labels translation
         self.panels["skills"].update_language()
         
