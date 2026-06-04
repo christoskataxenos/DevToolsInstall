@@ -450,12 +450,12 @@ class AppWindow(ctk.CTk):
 
     def _set_ui_enabled(self, enabled: bool) -> None:
         """Toggles all control panels active states while background installers runs."""
+        # Απενεργοποίηση/Ενεργοποίηση των επιλογών σε κάθε panel
+        # για αποφυγή συγκρούσεων κατά την εγκατάσταση
         self.panels["install"].set_ui_enabled(enabled)
         self.panels["backup"].set_ui_enabled(enabled)
-        self.theme_switch.configure(state="normal" if enabled else "disabled")
-        self.lang_cb.configure(state="normal" if enabled else "disabled")
-        for tid, btn in self.nav_buttons.items():
-            btn.configure(state="normal" if enabled else "disabled")
+        self.panels["stacks"].set_ui_enabled(enabled)
+        self.panels["skills"].set_ui_enabled(enabled)
 
     def _process_log_queue(self) -> None:
         """Periodic checker looping queue logs thread-safely."""

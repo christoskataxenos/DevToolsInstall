@@ -269,3 +269,14 @@ class SkillsPanel(ctk.CTkFrame):
         self.status_label.configure(text=_("skills_status_prefix", status=_("status_ready")))
         self.download_btn.configure(text=_("skills_btn_download"))
         self.export_btn.configure(text=_("skills_btn_export"))
+
+    def set_ui_enabled(self, enabled: bool) -> None:
+        """
+        Ενεργοποιεί ή απενεργοποιεί τα στοιχεία ελέγχου των AI skills
+        κατά τη διάρκεια εκτέλεσης εργασιών εγκατάστασης.
+        """
+        self.download_btn.configure(state="normal" if enabled else "disabled")
+        self.export_btn.configure(state="normal" if enabled else "disabled")
+        self.browse_btn.configure(state="normal" if enabled else "disabled")
+        self.repo_dropdown.configure(state="normal" if enabled else "disabled")
+        self.dest_entry.configure(state="normal" if enabled else "disabled")

@@ -157,3 +157,32 @@ def test_get_installed_tool_ids_mock():
         assert "SomeApp.ID" in installed
         assert len(installed) == 3
 
+
+@requires_gui
+def test_navigation_remains_enabled_during_install(app):
+    """Validates that navigation and main window controls remain enabled while installer task is running."""
+    # Αρχικά όλα πρέπει να είναι ενεργοποιημένα
+    assert app.theme_switch.cget("state") == "normal"
+    assert app.lang_cb.cget("state") == "normal"
+    for btn in app.nav_buttons.values():
+        assert btn.cget("state") == "normal"
+        
+    # Απενεργοποίηση του UI (προσομοίωση έναρξης εγκατάστασης)
+    app._set_ui_enabled(False)
+    
+    # Τα κουμπιά πλοήγησης, η αλλαγή γλώσσας και θέματος πρέπει να παραμείνουν ενεργοποιημένα
+    assert app.theme_switch.cget("state") == "normal"
+    assert app.lang_cb.cget("state") == "normal"
+    for btn in app.nav_buttons.values():
+        assert btn.cget("state") == "normal"
+        
+    # Τα action buttons στα subpanels πρέπει να απενεργοποιηθούν
+    assert app.panels["install"].install_btn.cget("state") == "disabled"
+    assert app.panels["backup"].backup_btn.cget("state") == "disabled"
+    
+    for btn in app.panels["stacks"].apply_buttons:
+        assert btn.cget("state") == "disabled"
+        
+    assert app.panels["skills"].download_btn.cget("state") == "disabled"
+
+

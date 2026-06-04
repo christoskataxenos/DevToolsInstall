@@ -12,9 +12,12 @@ class StacksPanel(ctk.CTkFrame):
         super().__init__(parent, fg_color="transparent")
         self.apply_stack_callback = apply_stack_callback
         self.stacks = Config.load_stacks()
+        # Λίστα για την αποθήκευση των κουμπιών εφαρμογής πακέτων
+        self.apply_buttons: List[ctk.CTkButton] = []
         self._build_ui()
 
     def _build_ui(self) -> None:
+        self.apply_buttons.clear()
         # Title Header
         header = ctk.CTkFrame(self, fg_color="transparent")
         header.pack(fill="x", padx=10, pady=(10, 5))
@@ -81,6 +84,15 @@ class StacksPanel(ctk.CTkFrame):
                 command=lambda lst=tool_list: self._apply_stack(lst)
             )
             apply_btn.pack(side="right", padx=15, pady=12)
+            self.apply_buttons.append(apply_btn)
 
     def _apply_stack(self, tool_list: List[str]) -> None:
         self.apply_stack_callback(tool_list)
+
+    def set_ui_enabled(self, enabled: bool) -> None:
+        """
+        Ενεργοποιεί ή απενεργοποιεί τα κουμπιά εφαρμογής πακέτων
+        κατά τη διάρκεια εκτέλεσης εργασιών εγκατάστασης.
+        """
+        for btn in self.apply_buttons:
+            btn.configure(state="normal" if enabled else "disabled")

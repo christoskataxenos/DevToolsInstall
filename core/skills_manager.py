@@ -10,7 +10,15 @@ class SkillsManager:
     Handles fetching, updating, listing, and exporting AI Agent Skills (.cursorrules, prompts, templates) from GitHub.
     """
 
+    # Λίστα με τα προεπιλεγμένα αποθετήρια (repositories) για AI Skills.
+    # Περιλαμβάνει curated κανόνες για Cursor, patterns του Fabric,
+    # καθώς και awesome-skills για τη βελτιστοποίηση των builds.
     DEFAULT_REPOS = [
+        {
+            "name": "Antigravity Awesome Skills",
+            "url": "https://github.com/sickn33/antigravity-awesome-skills",
+            "desc": "Installable library of 1,500+ agentic skills for Claude Code, Cursor, Codex, Gemini, Antigravity, and more."
+        },
         {
             "name": "Cursor Rules (Curated)",
             "url": "https://github.com/PatrickJS/awesome-cursorrules",
@@ -20,8 +28,19 @@ class SkillsManager:
             "name": "Fabric Patterns",
             "url": "https://github.com/danielmiessler/fabric",
             "desc": "Sleek and modular prompt patterns for terminal-based AI orchestration."
+        },
+        {
+            "name": "Continue Dev Awesome Rules",
+            "url": "https://github.com/continuedev/awesome-rules",
+            "desc": "High-quality collection of rules compatible with Cursor, Continue, and other assistants."
+        },
+        {
+            "name": "Awesome Windsurf Rules",
+            "url": "https://github.com/detailobsessed/awesome-windsurf",
+            "desc": "Key resources, community prompts, and best practices for the Windsurf IDE."
         }
     ]
+
 
     @classmethod
     def get_global_dir(cls) -> str:
