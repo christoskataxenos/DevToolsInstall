@@ -4,6 +4,8 @@ import shutil
 import subprocess
 import threading
 import zipfile
+import urllib.request
+import webbrowser
 from datetime import datetime
 from typing import List, Tuple, Dict, Any, Callable, Optional, Set
 
@@ -126,6 +128,222 @@ class InstallerService:
         return installed_ids
 
 
+    def _is_choco_installed(self) -> bool:
+        # Έλεγχος αν το Chocolatey είναι εγκατεστημένο στο σύστημα
+        # Ελέγχουμε αν η εντολή choco υπάρχει στο PATH
+        if shutil.which("choco"):
+            return True
+        # Ελέγχουμε την προεπιλεγμένη διαδρομή εγκατάστασης του Chocolatey
+        choco_path = os.path.expandvars(r"%ALLUSERSPROFILE%\chocolatey\bin\choco.exe")
+        return os.path.exists(choco_path)
+
+    def _is_scoop_installed(self) -> bool:
+        # Έλεγχος αν το Scoop είναι εγκατεστημένο στο σύστημα
+        # Ελέγχουμε αν η εντολή scoop υπάρχει στο PATH
+        if shutil.which("scoop"):
+            return True
+        # Ελέγχουμε την προεπιλεγμένη διαδρομή εγκατάστασης του Scoop
+        scoop_path = os.path.expandvars(r"%USERPROFILE%\scoop\shims\scoop.cmd")
+        return os.path.exists(scoop_path)
+
+    def _install_choco(self) -> bool:
+        # Αυτόματη εγκατάσταση του Chocolatey
+        self.log_queue.put({
+            "type": "log",
+            "text": _("install_choco_missing"),
+            "tag": "info"
+        })
+        # Εντολή PowerShell για την εγκατάσταση του Chocolatey
+        cmd = "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+        try:
+            process = subprocess.Popen(
+                ["powershell.exe", "-Command", cmd],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding="utf-8",
+                errors="ignore",
+                creationflags=subprocess.CREATE_NO_WINDOW
+            )
+            self.active_processes.append(process)
+            process.wait()
+            if process in self.active_processes:
+                self.active_processes.remove(process)
+            
+            # Έλεγχος επιτυχίας
+            if process.returncode == 0 or self._is_choco_installed():
+                self.log_queue.put({
+                    "type": "log",
+                    "text": _("install_choco_install_success"),
+                    "tag": "success"
+                })
+                # Προσθήκη του choco bin στο PATH της τρέχουσας διεργασίας
+                choco_bin = os.path.expandvars(r"%ALLUSERSPROFILE%\chocolatey\bin")
+                if choco_bin not in os.environ["PATH"]:
+                    os.environ["PATH"] += os.path.pathsep + choco_bin
+                return True
+        except Exception as e:
+            self.log_queue.put({
+                "type": "log",
+                "text": f"Error installing Chocolatey: {str(e)}",
+                "tag": "error"
+            })
+        return False
+
+    def _install_scoop(self) -> bool:
+        # Αυτόματη εγκατάσταση του Scoop
+        self.log_queue.put({
+            "type": "log",
+            "text": _("install_scoop_missing"),
+            "tag": "info"
+        })
+        # Εντολή PowerShell για την εγκατάσταση του Scoop
+        cmd = "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process; iwr -useb get.scoop.sh | iex"
+        try:
+            process = subprocess.Popen(
+                ["powershell.exe", "-Command", cmd],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding="utf-8",
+                errors="ignore",
+                creationflags=subprocess.CREATE_NO_WINDOW
+            )
+            self.active_processes.append(process)
+            process.wait()
+            if process in self.active_processes:
+                self.active_processes.remove(process)
+            
+            # Έλεγχος επιτυχίας
+            if process.returncode == 0 or self._is_scoop_installed():
+                self.log_queue.put({
+                    "type": "log",
+                    "text": _("install_scoop_install_success"),
+                    "tag": "success"
+                })
+                # Προσθήκη του scoop shims στο PATH της τρέχουσας διεργασίας
+                scoop_bin = os.path.expandvars(r"%USERPROFILE%\scoop\shims")
+                if scoop_bin not in os.environ["PATH"]:
+                    os.environ["PATH"] += os.path.pathsep + scoop_bin
+                return True
+        except Exception as e:
+            self.log_queue.put({
+                "type": "log",
+                "text": f"Error installing Scoop: {str(e)}",
+                "tag": "error"
+            })
+        return False
+
+    def _run_installer_process(self, cmd: str) -> Tuple[int, List[str]]:
+        # Εκτέλεση μιας εντολής εγκατάστασης και συλλογή/καταγραφή των αποτελεσμάτων της
+        log_lines = []
+        try:
+            process = subprocess.Popen(
+                ["powershell.exe", "-Command", cmd],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding="utf-8",
+                errors="ignore",
+                creationflags=subprocess.CREATE_NO_WINDOW
+            )
+            self.active_processes.append(process)
+            
+            if process.stdout:
+                for line in process.stdout:
+                    cleaned = clean_log_line(line)
+                    if cleaned:
+                        self.log_queue.put({
+                            "type": "log",
+                            "text": f"  > {cleaned}",
+                            "tag": "info"
+                        })
+                        log_lines.append(cleaned)
+            
+            process.wait()
+            if process in self.active_processes:
+                self.active_processes.remove(process)
+            return process.returncode, log_lines
+        except Exception as e:
+            return -1, [str(e)]
+
+    def _download_and_install_url(self, name: str, url: str, tool_details: dict) -> bool:
+        # Λήψη αρχείου εγκατάστασης από απευθείας σύνδεσμο και εκτέλεσή του
+        self.log_queue.put({
+            "type": "log",
+            "text": _("install_downloading_url", url=url),
+            "tag": "info"
+        })
+        try:
+            # Καθορισμός του temp φακέλου και του ονόματος του αρχείου
+            temp_dir = os.environ.get("TEMP", os.path.expanduser("~\\AppData\\Local\\Temp"))
+            filename = url.split("/")[-1].split("?")[0] or f"installer_{name}.exe"
+            if not filename.endswith((".exe", ".msi")):
+                filename += ".exe"
+            
+            temp_path = os.path.join(temp_dir, f"devtools_{filename}")
+            
+            # Λήψη του αρχείου εγκατάστασης
+            urllib.request.urlretrieve(url, temp_path)
+            
+            self.log_queue.put({
+                "type": "log",
+                "text": _("install_running_installer"),
+                "tag": "info"
+            })
+            
+            install_args = tool_details.get("install_args", "")
+            
+            # Επιλογή της σωστής εντολής ανάλογα με τον τύπο του αρχείου (.msi ή .exe)
+            if filename.endswith(".msi"):
+                # Χρήση msiexec για αθόρυβη εγκατάσταση MSI
+                cmd = f'msiexec.exe /i "{temp_path}" /quiet /qn /norestart {install_args}'
+            else:
+                # Χρήση Start-Process για EXE. Αν δεν υπάρχουν args, δοκιμάζουμε κοινά silent args
+                if install_args:
+                    cmd = f'Start-Process -FilePath "{temp_path}" -ArgumentList "{install_args}" -Wait'
+                else:
+                    cmd = f'Start-Process -FilePath "{temp_path}" -ArgumentList "/S", "/silent", "/quiet", "/qn" -Wait'
+            
+            # Εκτέλεση της εγκατάστασης με ορατό παράθυρο (creationflags=0)
+            # ώστε αν το πρόγραμμα απαιτεί αλληλεπίδραση ο χρήστης να μπορεί να το δει
+            process = subprocess.Popen(
+                ["powershell.exe", "-Command", cmd],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                creationflags=0
+            )
+            self.active_processes.append(process)
+            process.wait()
+            if process in self.active_processes:
+                self.active_processes.remove(process)
+            
+            # Διαγραφή του προσωρινού αρχείου μετά την εγκατάσταση
+            try:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+            except Exception:
+                pass
+            
+            return process.returncode == 0
+        except Exception as e:
+            self.log_queue.put({
+                "type": "log",
+                "text": f"Error during direct URL download/install: {str(e)}",
+                "tag": "error"
+            })
+            return False
+
+    def _open_browser_fallback(self, url: str) -> None:
+        # Άνοιγμα της επίσημης ιστοσελίδας του εργαλείου στον προεπιλεγμένο περιηγητή
+        self.log_queue.put({
+            "type": "log",
+            "text": _("install_manual_fallback", url=url),
+            "tag": "warning"
+        })
+        webbrowser.open(url)
+
     def start_install_task(
         self, 
         tools: List[Tuple[str, str]], 
@@ -164,10 +382,10 @@ class InstallerService:
                 "tag": "info"
             })
             
-            # Request UI thread to update progress bar
+            # Ενημέρωση της μπάρας προόδου στο UI
             on_progress_update(i, total)
 
-            # Find installation details in registry
+            # Εύρεση των λεπτομερειών της εφαρμογής από το registry
             tool_details = None
             for category, category_tools in registry.items():
                 if name in category_tools:
@@ -180,7 +398,7 @@ class InstallerService:
                 install_type = tool_details.get("type", "winget")
                 install_cmd = tool_details.get("install_command", "")
 
-            # Compose commands
+            # Σύνθεση της αρχικής εντολής εγκατάστασης
             if install_type == "powershell" and install_cmd:
                 cmd = install_cmd
             elif install_type == "npm":
@@ -192,60 +410,132 @@ class InstallerService:
             else:
                 cmd = f"winget install --id {winget_id} --silent --accept-package-agreements --accept-source-agreements"
 
-            error_lines = []
-            try:
-                process = subprocess.Popen(
-                    ["powershell.exe", "-Command", cmd],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                    encoding="utf-8",
-                    errors="ignore",
-                    creationflags=subprocess.CREATE_NO_WINDOW,
-                )
-                self.active_processes.append(process)
+            # Εκτέλεση της κύριας προσπάθειας εγκατάστασης
+            ret_code, error_lines = self._run_installer_process(cmd)
 
-                if process.stdout:
-                    for line in process.stdout:
-                        cleaned = clean_log_line(line)
-                        if cleaned:
-                            self.log_queue.put({
-                                "type": "log",
-                                "text": f"  > {cleaned}",
-                                "tag": "info"
-                            })
-                            error_lines.append(cleaned)
-
-                process.wait()
-                if process in self.active_processes:
-                    self.active_processes.remove(process)
-
-                if process.returncode == 0:
-                    self.log_queue.put({
-                        "type": "log",
-                        "text": _("install_completed", name=name),
-                        "tag": "success"
-                    })
-                    on_status_change(name, "INSTALLED")
-                else:
-                    self.log_queue.put({
-                        "type": "log",
-                        "text": _("install_error_code", code=process.returncode, name=name),
-                        "tag": "warning"
-                    })
-                    on_status_change(name, "ERROR")
-                    
-                    error_log_str = "\n".join(error_lines) if error_lines else f"PowerShell returned non-zero exit code: {process.returncode}"
-                    show_ai_diagnostic(name, error_log_str)
-
-            except Exception as e:
+            if ret_code == 0:
                 self.log_queue.put({
                     "type": "log",
-                    "text": _("install_error_exception", name=name, error=str(e)),
-                    "tag": "error"
+                    "text": _("install_completed", name=name),
+                    "tag": "success"
                 })
+                on_status_change(name, "INSTALLED")
+                continue
+
+            # Η αρχική εγκατάσταση απέτυχε. Ξεκινάμε την εναλλακτική διαδικασία (fallbacks).
+            installed = False
+
+            # 1. Δοκιμή μέσω Chocolatey
+            choco_id = tool_details.get("choco_id") if tool_details else None
+            if not choco_id and winget_id:
+                choco_id = winget_id.split(".")[-1].lower()
+
+            if choco_id:
+                self.log_queue.put({
+                    "type": "log",
+                    "text": _("install_trying_fallback", method="Chocolatey"),
+                    "tag": "info"
+                })
+                # Αν το Chocolatey λείπει, προσπαθούμε να το εγκαταστήσουμε δυναμικά
+                if not self._is_choco_installed():
+                    self._install_choco()
+
+                if self._is_choco_installed():
+                    choco_cmd = f"choco install {choco_id} -y"
+                    fallback_ret, fallback_logs = self._run_installer_process(choco_cmd)
+                    if fallback_ret == 0:
+                        self.log_queue.put({
+                            "type": "log",
+                            "text": _("install_fallback_success", method="Chocolatey"),
+                            "tag": "success"
+                        })
+                        on_status_change(name, "INSTALLED")
+                        installed = True
+                    else:
+                        self.log_queue.put({
+                            "type": "log",
+                            "text": _("install_fallback_failed", method="Chocolatey"),
+                            "tag": "warning"
+                        })
+                        if fallback_logs:
+                            error_lines.extend(fallback_logs)
+
+            # 2. Δοκιμή μέσω Scoop (αν η εγκατάσταση εκκρεμεί ακόμη)
+            if not installed:
+                scoop_id = tool_details.get("scoop_id") if tool_details else None
+                if not scoop_id and winget_id:
+                    scoop_id = winget_id.split(".")[-1].lower()
+
+                if scoop_id:
+                    self.log_queue.put({
+                        "type": "log",
+                        "text": _("install_trying_fallback", method="Scoop"),
+                        "tag": "info"
+                    })
+                    # Αν το Scoop λείπει, προσπαθούμε να το εγκαταστήσουμε δυναμικά
+                    if not self._is_scoop_installed():
+                        self._install_scoop()
+
+                    if self._is_scoop_installed():
+                        scoop_cmd = f"scoop install {scoop_id}"
+                        fallback_ret, fallback_logs = self._run_installer_process(scoop_cmd)
+                        if fallback_ret == 0:
+                            self.log_queue.put({
+                                "type": "log",
+                                "text": _("install_fallback_success", method="Scoop"),
+                                "tag": "success"
+                            })
+                            on_status_change(name, "INSTALLED")
+                            installed = True
+                        else:
+                            self.log_queue.put({
+                                "type": "log",
+                                "text": _("install_fallback_failed", method="Scoop"),
+                                "tag": "warning"
+                            })
+                            if fallback_logs:
+                                error_lines.extend(fallback_logs)
+
+            # 3. Δοκιμή μέσω Direct URL Download & Run
+            if not installed and tool_details:
+                download_url = tool_details.get("download_url")
+                if download_url:
+                    self.log_queue.put({
+                        "type": "log",
+                        "text": _("install_trying_fallback", method="Direct Download URL"),
+                        "tag": "info"
+                    })
+                    if self._download_and_install_url(name, download_url, tool_details):
+                        self.log_queue.put({
+                            "type": "log",
+                            "text": _("install_fallback_success", method="Direct Download URL"),
+                            "tag": "success"
+                        })
+                        on_status_change(name, "INSTALLED")
+                        installed = True
+                    else:
+                        self.log_queue.put({
+                            "type": "log",
+                            "text": _("install_fallback_failed", method="Direct Download URL"),
+                            "tag": "warning"
+                        })
+
+            # 4. Χειροκίνητη λήψη μέσω ανοίγματος της ιστοσελίδας του εργαλείου
+            if not installed:
                 on_status_change(name, "ERROR")
-                show_ai_diagnostic(name, f"Exception: {str(e)}")
+                self.log_queue.put({
+                    "type": "log",
+                    "text": _("install_error_code", code=ret_code, name=name),
+                    "tag": "warning"
+                })
+                
+                web_url = tool_details.get("url") if tool_details else None
+                if web_url:
+                    self._open_browser_fallback(web_url)
+
+                # Εμφάνιση της AI διάγνωσης σφάλματος
+                error_log_str = "\n".join(error_lines) if error_lines else f"PowerShell returned exit code: {ret_code}"
+                show_ai_diagnostic(name, error_log_str)
 
         on_progress_update(total, total)
         self.log_queue.put({

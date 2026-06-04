@@ -105,3 +105,59 @@ def test_clean_log_line():
     assert clean_log_line("13.0 MB / 767 MB") is None
     assert clean_log_line("50% 10 MB/s") is None
 
+
+def test_installer_fallbacks_flow():
+    # Έλεγχος ότι η διαδικασία fallback εκτελείται με τη σειρά choco -> scoop -> url -> browser
+    from unittest.mock import patch, MagicMock
+    from core.installer_service import InstallerService
+    import queue
+
+    log_queue = queue.Queue()
+    service = InstallerService(log_queue)
+
+    # Mocking των μεθόδων ελέγχου και εγκατάστασης
+    with patch.object(service, "_is_choco_installed", return_value=True), \
+         patch.object(service, "_is_scoop_installed", return_value=True), \
+         patch.object(service, "_run_installer_process") as mock_run, \
+         patch.object(service, "_download_and_install_url", return_value=False) as mock_download, \
+         patch.object(service, "_open_browser_fallback") as mock_browser:
+
+        # Προσομοίωση αποτυχίας για winget, choco και scoop
+        mock_run.return_value = (1, ["Error!"])
+
+        # Εκτέλεση της εγκατάστασης για ένα εργαλείο
+        tools = [("AnyDesk", "AnyDeskSoftwareGmbH.AnyDesk")]
+        on_progress = MagicMock()
+        on_status = MagicMock()
+        on_finished = MagicMock()
+        show_diag = MagicMock()
+
+        # Εκτελούμε απευθείας τη μέθοδο _run_installation
+        service._run_installation(tools, on_progress, on_status, on_finished, show_diag)
+
+        # Έλεγχος ότι κλήθηκαν οι κατάλληλες εναλλακτικές μέθοδοι
+        assert mock_run.call_count >= 3  # winget + choco + scoop
+        mock_download.assert_called_once()
+        mock_browser.assert_called_once_with("https://anydesk.com/")
+        on_status.assert_any_call("AnyDesk", "ERROR")
+
+
+def test_installer_fallbacks_url_edge_case():
+    # Edge case έλεγχος όταν το direct download URL επιστρέφει σφάλμα (π.χ. HTTP 404)
+    from unittest.mock import patch
+    from core.installer_service import InstallerService
+    import queue
+    import urllib.error
+
+    log_queue = queue.Queue()
+    service = InstallerService(log_queue)
+
+    # Mocking της λήψης αρχείου για προσομοίωση αποτυχίας δικτύου (HTTPError)
+    with patch("urllib.request.urlretrieve", side_effect=urllib.error.HTTPError("http://bad.url", 404, "Not Found", None, None)):
+        tool_details = {"download_url": "http://bad.url"}
+        success = service._download_and_install_url("TestTool", "http://bad.url", tool_details)
+
+        # Η λήψη πρέπει να αποτύχει με ασφάλεια (επιστρέφοντας False)
+        assert success is False
+
+

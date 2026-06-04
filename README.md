@@ -25,7 +25,6 @@ This project began as a personal solution to a recurring problem: after every fo
 - **Modern UI/UX** — Responsive grid‑based interface with dark/light themes, custom widgets, and smooth scrolling.
 - **European Focus** — Includes high‑quality European and open‑source alternatives (Vivaldi, Proton, pCloud, etc.) with emphasis on privacy.
 
-
 ## Why the Greek Language?
 
 The interface includes Greek labels and descriptions to provide a localized, intuitive experience for Greek‑speaking developers. This design choice improves accessibility and usability for the local ecosystem while maintaining a professional, international‑ready structure.
@@ -33,12 +32,15 @@ The interface includes Greek labels and descriptions to provide a localized, int
 ## Installation
 
 ### Quick Install (PowerShell One-Liner)
+
 Run the following command in a PowerShell window to automatically download, install dependencies, and launch the application:
+
 ```powershell
 irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
 ```
 
 ### Manual Installation
+
 1. Ensure you have **Python 3.10+** installed.
 2. Clone the repository:
    ```bash
@@ -56,8 +58,8 @@ irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
 
 ## Roadmap
 
-- [x] Add English/Greek multi-language support (i18n)
-- [x] Add full dark/light theme customization
+- [X] Add English/Greek multi-language support (i18n)
+- [X] Add full dark/light theme customization
 - [ ] Add customizable user-defined stacks
 - [ ] Add plugin system for community extensions
 - [ ] Add automatic detection of installed tools
@@ -67,6 +69,7 @@ irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
 ## Credits & Kudos
 
 Special thanks to the developers of the open-source projects and curated AI rules libraries used within this project:
+
 - **sickn33** for [antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills) (Installable library of 1,500+ agentic skills)
 - **PatrickJS** for [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) (Curated rules for Cursor)
 - **danielmiessler** for [fabric](https://github.com/danielmiessler/fabric) (Sleek prompt patterns)
@@ -102,12 +105,15 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ## Εγκατάσταση
 
 ### Γρήγορη Εγκατάσταση (PowerShell One-Liner)
+
 Εκτελέστε την παρακάτω εντολή σε ένα παράθυρο PowerShell για αυτόματη λήψη, εγκατάσταση εξαρτήσεων και εκκίνηση της εφαρμογής:
+
 ```powershell
 irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
 ```
 
 ### Χειροκίνητη Εγκατάσταση
+
 1. Βεβαιωθείτε ότι έχετε **Python 3.10+**.
 2. Κάντε clone το repository:
    ```bash
@@ -126,6 +132,7 @@ irm https://christoskataxenos.com/devtoolsinstall.ps1 | iex
 ## Credits & Kudos
 
 Ένα μεγάλο ευχαριστώ στους δημιουργούς των open-source έργων και βιβλιοθηκών κανόνων AI που ενσωματώνονται στο εργαλείο:
+
 - **sickn33** για το [antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills) (Εγκαταστάσιμη βιβλιοθήκη με 1.500+ agentic skills)
 - **PatrickJS** για το [awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) (Curated κανόνες για Cursor)
 - **danielmiessler** για το [fabric](https://github.com/danielmiessler/fabric) (Έξυπνα prompt patterns)
