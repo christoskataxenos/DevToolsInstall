@@ -1,8 +1,8 @@
 import os
 import shutil
 import subprocess
-import urllib.request
 import zipfile
+import requests
 from typing import Dict, Any, List, Optional, Tuple
 
 class SkillsManager:
@@ -95,6 +95,10 @@ class SkillsManager:
         # 3. Fallback: Download repository as a ZIP archive from GitHub
         try:
             base_url = repo_url.strip()
+            # Security check for URL scheme
+            if not (base_url.startswith("http://") or base_url.startswith("https://")):
+                return False, f"Invalid URL scheme: {repo_url}"
+
             if base_url.endswith(".git"):
                 base_url = base_url[:-4]
             
@@ -103,9 +107,13 @@ class SkillsManager:
             temp_zip = os.path.join(cls.get_global_dir(), f"{clean_name}_temp.zip")
             
             headers = {"User-Agent": "Mozilla/5.0"}
-            req = urllib.request.Request(zip_url, headers=headers)
-            with urllib.request.urlopen(req) as response, open(temp_zip, "wb") as out_file:
-                shutil.copyfileobj(response, out_file)
+            response = requests.get(zip_url, headers=headers, stream=True, timeout=60)
+            response.raise_for_status()
+
+            with open(temp_zip, "wb") as out_file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        out_file.write(chunk)
                 
             # Extract downloaded ZIP content
             with zipfile.ZipFile(temp_zip, "r") as zip_ref:

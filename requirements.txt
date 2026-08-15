@@ -4,4 +4,5 @@ black
 isort
 duckduckgo_search
 customtkinter
+requests
 

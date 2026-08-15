@@ -144,20 +144,40 @@ def test_installer_fallbacks_flow():
 
 def test_installer_fallbacks_url_edge_case():
     # Edge case έλεγχος όταν το direct download URL επιστρέφει σφάλμα (π.χ. HTTP 404)
-    from unittest.mock import patch
+    from unittest.mock import patch, MagicMock
     from core.installer_service import InstallerService
     import queue
-    import urllib.error
+    import requests
 
     log_queue = queue.Queue()
     service = InstallerService(log_queue)
 
-    # Mocking της λήψης αρχείου για προσομοίωση αποτυχίας δικτύου (HTTPError)
-    with patch("urllib.request.urlretrieve", side_effect=urllib.error.HTTPError("http://bad.url", 404, "Not Found", None, None)):
+    mock_resp = MagicMock()
+    mock_resp.raise_for_status.side_effect = requests.exceptions.HTTPError("404 Client Error")
+
+    with patch("requests.get", return_value=mock_resp):
         tool_details = {"download_url": "http://bad.url"}
         success = service._download_and_install_url("TestTool", "http://bad.url", tool_details)
-
-        # Η λήψη πρέπει να αποτύχει με ασφάλεια (επιστρέφοντας False)
         assert success is False
+
+def test_installer_fallbacks_url_invalid_scheme():
+    from core.installer_service import InstallerService
+    import queue
+
+    log_queue = queue.Queue()
+    service = InstallerService(log_queue)
+
+    tool_details = {"download_url": "file:///etc/passwd"}
+    success = service._download_and_install_url("TestTool", "file:///etc/passwd", tool_details)
+    assert success is False
+
+def test_skills_manager_invalid_url():
+    # Έλεγχος ότι απορρίπτονται μη έγκυρα URLs (file://, ftp:// κλπ)
+    import unittest.mock as mock
+    with mock.patch.object(SkillsManager, "is_git_installed", return_value=False):
+        success, msg = SkillsManager.download_repo("file:///etc/passwd", "test_exploit")
+        assert success is False
+        assert "Invalid URL scheme" in msg
+
 
 

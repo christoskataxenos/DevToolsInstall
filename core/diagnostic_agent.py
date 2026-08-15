@@ -1,6 +1,5 @@
 import json
-import urllib.request
-import urllib.error
+import requests
 from typing import List, Dict, Any, Tuple
 
 class AIDiagnosticAgent:
@@ -37,9 +36,8 @@ class AIDiagnosticAgent:
     def is_ollama_running(cls) -> bool:
         """Checks if a local Ollama server instance is active on localhost:11434."""
         try:
-            req = urllib.request.Request(f"{cls.OLLAMA_URL}/api/tags")
-            with urllib.request.urlopen(req, timeout=2) as response:
-                return response.status == 200
+            response = requests.get(f"{cls.OLLAMA_URL}/api/tags", timeout=2)
+            return response.status_code == 200
         except Exception:
             return False
 
@@ -47,14 +45,14 @@ class AIDiagnosticAgent:
     def is_model_installed(cls, model_name: str = DEFAULT_MODEL) -> bool:
         """Verifies if the selected model is pulled locally in Ollama."""
         try:
-            req = urllib.request.Request(f"{cls.OLLAMA_URL}/api/tags")
-            with urllib.request.urlopen(req, timeout=2) as response:
-                data = json.loads(response.read().decode("utf-8"))
-                models = [m["name"] for m in data.get("models", [])]
+            response = requests.get(f"{cls.OLLAMA_URL}/api/tags", timeout=2)
+            if response.status_code == 200:
+                data = response.json()
+                models = [m.get("name", "") for m in data.get("models", [])]
                 for m in models:
                     if model_name in m or m in model_name:
                         return True
-                return False
+            return False
         except Exception:
             return False
 
@@ -63,12 +61,10 @@ class AIDiagnosticAgent:
         """Pulls/downloads the selected LLM model to Ollama."""
         try:
             url = f"{cls.OLLAMA_URL}/api/pull"
-            payload = json.dumps({"name": model_name, "stream": False}).encode("utf-8")
-            req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=120) as response:
-                if response.status == 200:
-                    return True, f"Model {model_name} successfully downloaded!"
-                return False, "Failed to download model from Ollama library."
+            response = requests.post(url, json={"name": model_name, "stream": False}, timeout=120)
+            if response.status_code == 200:
+                return True, f"Model {model_name} successfully downloaded!"
+            return False, f"Failed to download model from Ollama library (HTTP {response.status_code})."
         except Exception as e:
             return False, f"Error communicating with local Ollama: {str(e)}"
 
@@ -127,32 +123,31 @@ If no direct script applies, do not include the [FIX_CMD] tags.
 
         try:
             url = f"{cls.OLLAMA_URL}/api/generate"
-            payload = json.dumps({
+            payload = {
                 "model": model_name,
                 "prompt": prompt,
                 "stream": False
-            }).encode("utf-8")
+            }
             
-            req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=45) as response:
-                if response.status == 200:
-                    result_data = json.loads(response.read().decode("utf-8"))
-                    full_response = result_data.get("response", "").strip()
+            response = requests.post(url, json=payload, timeout=45)
+            if response.status_code == 200:
+                result_data = response.json()
+                full_response = result_data.get("response", "").strip()
+                
+                explanation = full_response
+                proposed_cmd = ""
+                
+                if "[FIX_CMD]" in full_response and "[/FIX_CMD]" in full_response:
+                    parts = full_response.split("[FIX_CMD]")
+                    explanation = parts[0].strip()
+                    cmd_part = parts[1].split("[/FIX_CMD]")
+                    proposed_cmd = cmd_part[0].strip()
                     
-                    explanation = full_response
-                    proposed_cmd = ""
-                    
-                    if "[FIX_CMD]" in full_response and "[/FIX_CMD]" in full_response:
-                        parts = full_response.split("[FIX_CMD]")
-                        explanation = parts[0].strip()
-                        cmd_part = parts[1].split("[/FIX_CMD]")
-                        proposed_cmd = cmd_part[0].strip()
+                    if len(cmd_part) > 1 and cmd_part[1].strip():
+                        explanation += "\n\n" + cmd_part[1].strip()
                         
-                        if len(cmd_part) > 1 and cmd_part[1].strip():
-                            explanation += "\n\n" + cmd_part[1].strip()
-                            
-                    return True, explanation, proposed_cmd
-                    
-                return False, "Failed connecting to local Ollama API endpoint.", ""
+                return True, explanation, proposed_cmd
+                
+            return False, f"Failed connecting to local Ollama API endpoint (HTTP {response.status_code}).", ""
         except Exception as e:
             return False, f"Exception diagnosing via Ollama: {str(e)}", ""

@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import threading
 import zipfile
-import urllib.request
+import requests
 import webbrowser
 from datetime import datetime
 from typing import List, Tuple, Dict, Any, Callable, Optional, Set
@@ -74,7 +74,9 @@ class InstallerService:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                creationflags=subprocess.CREATE_NO_WINDOW
+                encoding="utf-8",
+                errors="replace",
+                creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, "CREATE_NO_WINDOW") else 0
             )
             self.active_processes.append(process)
             stdout, stderr = process.communicate(timeout=20)
@@ -287,10 +289,26 @@ class InstallerService:
             if not filename.endswith((".exe", ".msi")):
                 filename += ".exe"
             
+            # Έλεγχος ασφαλείας για το σχήμα URL
+            if not (url.startswith("http://") or url.startswith("https://")):
+                self.log_queue.put({
+                    "type": "log",
+                    "text": f"Invalid download URL protocol: {url}",
+                    "tag": "error"
+                })
+                return False
+
             temp_path = os.path.join(temp_dir, f"devtools_{filename}")
             
-            # Λήψη του αρχείου εγκατάστασης
-            urllib.request.urlretrieve(url, temp_path)
+            # Λήψη του αρχείου εγκατάστασης μέσω requests
+            headers = {"User-Agent": "Mozilla/5.0"}
+            response = requests.get(url, headers=headers, stream=True, timeout=120)
+            response.raise_for_status()
+
+            with open(temp_path, "wb") as out_file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        out_file.write(chunk)
             
             self.log_queue.put({
                 "type": "log",
@@ -319,6 +337,8 @@ class InstallerService:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 creationflags=0
             )
             self.active_processes.append(process)
