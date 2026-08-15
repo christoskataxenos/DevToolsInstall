@@ -1,0 +1,180 @@
+{
+  "scan_metadata": {
+    "id": 74,
+    "project_path": "https://github.com/christoskataxenos/DevToolsInstall",
+    "scan_type": "sast",
+    "tool_name": "semgrep",
+    "status": "failed",
+    "findings_count": 14,
+    "critical_count": 14,
+    "high_count": 0,
+    "medium_count": 0,
+    "low_count": 0,
+    "started_at": "2026-08-15T20:25:31.118866244+02:00",
+    "raw_output_path": ".dikastis/results/semgrep-1786818331.json"
+  },
+  "target_repository": "christoskataxenos/DevToolsInstall",
+  "total_findings": 14,
+  "severity_breakdown": {
+    "critical": 14,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "findings": [
+    {
+      "id": 793,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen1",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 72,
+      "line_end": 80,
+      "message": "the `errors` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 794,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen2",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 72,
+      "line_end": 80,
+      "message": "the `encoding` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 795,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen1",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 95,
+      "line_end": 103,
+      "message": "the `errors` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 796,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen2",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 95,
+      "line_end": 103,
+      "message": "the `encoding` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 797,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen1",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 163,
+      "line_end": 171,
+      "message": "the `errors` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 798,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen2",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 163,
+      "line_end": 171,
+      "message": "the `encoding` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 799,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen1",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 209,
+      "line_end": 217,
+      "message": "the `errors` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 800,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen2",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 209,
+      "line_end": 217,
+      "message": "the `encoding` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 801,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen1",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 249,
+      "line_end": 257,
+      "message": "the `errors` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 802,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen2",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 249,
+      "line_end": 257,
+      "message": "the `encoding` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 803,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen1",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 335,
+      "line_end": 343,
+      "message": "the `errors` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 804,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen2",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/core/installer_service.py",
+      "line_start": 335,
+      "line_end": 343,
+      "message": "the `encoding` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 805,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen1",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/ui/app_window.py",
+      "line_start": 339,
+      "line_end": 347,
+      "message": "the `errors` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    },
+    {
+      "id": 806,
+      "scan_id": 74,
+      "rule_id": "python.lang.compatibility.python36.python36-compatibility-Popen2",
+      "severity": "critical",
+      "file_path": "/tmp/dikastis-clone-3638698481/ui/app_window.py",
+      "line_start": 339,
+      "line_end": 347,
+      "message": "the `encoding` argument to Popen is only available on Python 3.6+",
+      "created_at": "2026-08-15T18:25:46Z"
+    }
+  ]
+}

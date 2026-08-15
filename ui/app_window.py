@@ -340,14 +340,12 @@ class AppWindow(ctk.CTk):
                     ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", command],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
-                    text=True,
-                    encoding="utf-8",
-                    errors="ignore",
-                    creationflags=subprocess.CREATE_NO_WINDOW
+                    creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, "CREATE_NO_WINDOW") else 0
                 )
                 self.installer_service.active_processes.append(process)
                 if process.stdout:
-                    for line in process.stdout:
+                    for raw_line in process.stdout:
+                        line = raw_line.decode("utf-8", errors="replace") if isinstance(raw_line, bytes) else raw_line
                         cleaned = clean_log_line(line)
                         if cleaned:
                             self.log_queue.put({"type": "log", "text": f"  > {cleaned}", "tag": "info"})

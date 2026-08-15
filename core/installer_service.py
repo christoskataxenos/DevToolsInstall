@@ -73,16 +73,14 @@ class InstallerService:
                 ["winget", "list", "--id", tool_id, "--exact"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
                 creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, "CREATE_NO_WINDOW") else 0
             )
             self.active_processes.append(process)
             stdout, stderr = process.communicate(timeout=20)
             if process in self.active_processes:
                 self.active_processes.remove(process)
-            return tool_id in stdout
+            out_str = stdout.decode("utf-8", errors="replace") if isinstance(stdout, bytes) else (stdout or "")
+            return tool_id in out_str
         except Exception:
             return False
 
@@ -96,18 +94,16 @@ class InstallerService:
                 ["winget", "list", "--accept-source-agreements"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True,
-                encoding="utf-8",
-                errors="ignore",
-                creationflags=subprocess.CREATE_NO_WINDOW
+                creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, "CREATE_NO_WINDOW") else 0
             )
             self.active_processes.append(process)
             stdout, stderr = process.communicate()
             if process in self.active_processes:
                 self.active_processes.remove(process)
             
-            if process.returncode == 0 or stdout:
-                lines = stdout.splitlines()
+            stdout_text = stdout.decode("utf-8", errors="ignore") if isinstance(stdout, bytes) else (stdout or "")
+            if process.returncode == 0 or stdout_text:
+                lines = stdout_text.splitlines()
                 header_idx = -1
                 for idx, line in enumerate(lines):
                     if "Name" in line and "Id" in line:
@@ -164,10 +160,7 @@ class InstallerService:
                 ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                text=True,
-                encoding="utf-8",
-                errors="ignore",
-                creationflags=subprocess.CREATE_NO_WINDOW
+                creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, "CREATE_NO_WINDOW") else 0
             )
             self.active_processes.append(process)
             process.wait()
@@ -210,10 +203,7 @@ class InstallerService:
                 ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                text=True,
-                encoding="utf-8",
-                errors="ignore",
-                creationflags=subprocess.CREATE_NO_WINDOW
+                creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, "CREATE_NO_WINDOW") else 0
             )
             self.active_processes.append(process)
             process.wait()
@@ -250,15 +240,13 @@ class InstallerService:
                 ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                text=True,
-                encoding="utf-8",
-                errors="ignore",
-                creationflags=subprocess.CREATE_NO_WINDOW
+                creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, "CREATE_NO_WINDOW") else 0
             )
             self.active_processes.append(process)
             
             if process.stdout:
-                for line in process.stdout:
+                for raw_line in process.stdout:
+                    line = raw_line.decode("utf-8", errors="replace") if isinstance(raw_line, bytes) else raw_line
                     cleaned = clean_log_line(line)
                     if cleaned:
                         self.log_queue.put({
@@ -336,9 +324,6 @@ class InstallerService:
                 ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
                 creationflags=0
             )
             self.active_processes.append(process)
